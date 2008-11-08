@@ -1,0 +1,6 @@
+/* global skin ------------------------------------------------------------- */
+@import url(chrome://global/skin/);
+
+radio[pane=paneMain] {
+  list-style-image: url(chrome://pmogchat/skin/images/options-big.png);
+}

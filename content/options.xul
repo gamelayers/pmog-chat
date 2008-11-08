@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://pmogchat/skin/options.css" type="text/css"?>
+<prefwindow id="pmogChatPrefs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="PMOG Chat Preferences">
+  <prefpane id="paneMain" label="Main">
+    <preferences>
+      <preference id="pref_nick" name="extensions.pmog.chat.irc.nick" type="string"/>
+      <preference id="pref_realname" name="extensions.pmog.chat.irc.realname" type="string"/>
+      <preference id="pref_username" name="extensions.pmog.chat.irc.username" type="string" />
+      <preference id="pref_hostname" name="extensions.pmog.chat.irc.host" type="string" />
+      <preference id="pref_port" name="extensions.pmog.chat.irc.port" type="int" />
+    </preferences>
+    <groupbox id="userinfo">
+      <caption label="User Info"/>
+      <hbox align="center">
+        <label value="Nickname" control="nickname" width="100px" />
+        <textbox preference="pref_nick" id="nickname" width="250px"/>
+      </hbox>
+      <hbox align="center">
+        <label value="Real Name" control="realname" width="100px" />
+        <textbox preference="pref_realname" id="realname" width="250px"/>
+      </hbox>
+      <hbox align="center">
+        <label value="User Name" control="username" width="100px" />
+        <textbox preference="pref_username" id="username" width="250px"/>
+      </hbox>
+    </groupbox>
+    <groupbox id="Connection Info">
+      <caption label="Connection Info" />
+      <hbox align="center">
+        <label value="Host" control="hostname" width="100px" />
+        <textbox preference="pref_hostname" id="hostname" width="250px"/>
+      </hbox>
+      <hbox align="center">
+        <label value="Port" control="port" width="100px" />
+        <textbox preference="pref_port" id="port" width="250px"/>
+      </hbox>
+    </groupbox>
+    <hbox pack="end">
+        <button label="Close" oncommand="self.close();" />
+    </hbox>
+  </prefpane>
+</prefwindow>
+

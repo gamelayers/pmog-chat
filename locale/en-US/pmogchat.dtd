@@ -1,0 +1,44 @@
+<!ENTITY pmogchat.title              "PMOG Chat">
+
+<!ENTITY file.label                  "File">
+<!ENTITY file.accesskey              "F">
+
+<!ENTITY fileExit.label              "Exit">
+<!ENTITY fileExit.accesskey          "X">
+
+<!ENTITY view.label                  "View">
+<!ENTITY view.accesskey              "V">
+
+<!ENTITY connection.label            "Connection">
+
+<!ENTITY connectionConnect.label     "Connect">
+<!ENTITY connectionConnect.accesskey "C">
+<!ENTITY connectionConnect.tooltip   "Connect to the chat server">
+
+<!ENTITY connectionDisconnect.label     "Disconnect">
+<!ENTITY connectionDisconnect.accesskey "D">
+<!ENTITY connectionDisconnect.tooltip   "Disconnect from the chat server">
+
+<!ENTITY refresh.label                  "Refresh">
+<!ENTITY refresh.accesskey              "R">
+<!ENTITY refresh.tooltip                "Refresh the channel info for the current URL">
+
+<!ENTITY join.label                  "Join">
+<!ENTITY join.accesskey              "J">
+<!ENTITY join.tooltip                "Join the conversation on the current URL">
+
+<!ENTITY tools.label                 "Tools">
+<!ENTITY tools.accesskey             "T">
+
+<!ENTITY toolsOptions.label          "Options...">
+<!ENTITY toolsOptions.accesskey      "O">
+
+<!ENTITY help.label                  "Help">
+<!ENTITY help.accesskey              "H">
+
+<!ENTITY helpAbout.label             "About">
+<!ENTITY helpAbout.accesskey         "A">
+
+<!ENTITY openPlayerProfile.label         "Open Player Profile">
+
+<!ENTITY consoleTab.label                "Console">

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://pmogchat/skin/irc/irc.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://pmogchat/locale/pmogchat.dtd">
+
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+        xmlns:html="http://www.w3.org/1999/xhtml" 
+        id="pmogChatWindow" 
+        title="&pmogchat.title;" 
+        width="600" 
+        height="400">
+
+  <commandset id="fileCommandSet">
+    <command id="Tasks:CloseWindow" oncommand="CommandUpdater.doCommand(this.id);" />
+  </commandset>
+ 
+  <!-- Commands -->
+  <commandset id="chatCommandSet">
+    <command id="Tasks:Connect"     oncommand="CommandUpdater.doCommand(this.id);" />
+    <command id="Tasks:Disconnect"  oncommand="CommandUpdater.doCommand(this.id);" />
+    <command id="Tasks:Refresh"     oncommand="CommandUpdater.doCommand(this.id);" />
+    <command id="Tasks:OpenProfile" oncommand="CommandUpdater.doCommand(this.id);" />
+    <command id="Tasks:JoinChannel" oncommand="CommandUpdater.doCommand(this.id);" />
+  </commandset>
+
+  <commandset id="toolCommandSet">
+    <command id="Tasks:ChatOptions" oncommand="CommandUpdater.doCommand(this.id);" />
+  </commandset>
+  
+  <commandset id="update_chat" commandupdater="true" events="PmogConnect" oncommandupdate="CommandUpdater.updateCommands('Tasks:Connect,Tasks:Disconnect');" />
+  
+  <!-- Key bindings -->
+  <keyset>
+    <key id="Key:CloseWindow" modifiers="alt" key="&fileExit.accesskey;" command="Tasks:CloseWindow" />
+    <key id="Key:Connect" modifiers="control, alt" key="&connectionConnect.accesskey;" command="Tasks:Connect" />
+    <key id="Key:Disconnect" modifiers="control, alt" key="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" />
+    <key id="Key:Options" modifiers="control, alt" key="&toolsOptions.accesskey;" command="Tasks:ChatOptions" />
+  </keyset>
+  
+  <menubar id="pmogChatMenubar">
+    <menu id="menu_chatFile" label="&file.label;" accesskey="&file.accesskey;">
+      <menupopup id="file-popup">
+        <menuitem label="&fileExit.label;" command="Tasks:CloseWindow" accesskey="&fileExit.accesskey;" key="Key:CloseWindow" />
+      </menupopup>
+    </menu>
+    <menu id="menu_chatConnect" label="&connection.label;">
+      <menupopup id="popup_chatconnect">
+        <menuitem label="&connectionConnect.label;" accesskey="&connectionConnect.accesskey;" command="Tasks:Connect" key="Key:Connect" />
+        <menuitem label="&connectionDisconnect.label;" accesskey="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" key="Key:Disconnect" />
+      </menupopup>
+    </menu>
+    <menu id="menu_chatTools" label="&tools.label;">
+      <menupopup id="popup_chattools">
+        <menuitem id="menu_chatpreferences" class="menuitem-iconic" label="&toolsOptions.label;" accesskey="&toolsOptions.accesskey;" key="Key:Options" command="Tasks:ChatOptions" />
+      </menupopup>
+    </menu>
+  </menubar>
+
+  <!-- Popup Menus -->
+  <popupset id="pmogChatPopupset">
+    <popup id="userContextPopup">
+      <menuitem id="pmogUserProfile" class="menuitem-iconic" label="&openPlayerProfile.label;" command="Tasks:OpenProfile" />
+    </popup>
+  </popupset>
+  
+  <toolbox>
+    <toolbar id="pmogChatToolbar">
+      <toolbarbutton orient="vertical" id="connectButton" label="&connectionConnect.label;" tooltiptext="&connectionConnect.tooltip;" command="Tasks:Connect" />
+      <toolbarbutton orient="vertical" id="disconnectButton" label="&connectionDisconnect.label;" tooltiptext="&connectionDisconnect.tooltip;" command="Tasks:Disconnect" />
+      <toolbarbutton orient="vertical" id="updateButton" label="&refresh.label;" tooltiptext="&refresh.tooltip;" command="Tasks:Refresh" />
+      <toolbarbutton orient="vertical" id="joinButton" label="&join.label;" tooltiptext="&join.tooltip;" command="Tasks:JoinChannel" />
+    </toolbar>
+  </toolbox>
+  
+  <vbox id="pmogChatMainContainer" flex="1">
+    <hbox flex="1">
+      <listbox id="pmogChatUsers"></listbox>
+      <splitter />
+      <tabbox id="tabboxid" flex="1">
+        <tabs class="tabbrowser-tabs" closebutton="true">
+          <tab label="&consoleTab.label;" linkedpanel="panel-console" />
+        </tabs>
+        <tabpanels flex="1">
+          <tabpanel id="panel-console" flex="1" style="border: 1px solid black;">
+            <scrollbox id="chat-output" style="overflow: auto;" orient="vertical" flex="1" />
+          </tabpanel>
+        </tabpanels>
+      </tabbox>
+    </hbox>
+    <hbox>
+      <textbox id="chat-input" flex="1" onkeypress="xul.chatWindow.onInput(event);" />
+      <!-- <button label="Send"/> -->
+    </hbox>
+  </vbox>
+  
+  <statusbar id="chat-status" persist="collapsed">
+    <statusbarpanel class="statusbarpanel-iconic" id="chat-icon" />
+    <statusbarpanel id="status-text" crop="right" />
+    <spacer flex="1" />
+    <statusbarpanel id="pmogChatConsole" crop="right" />
+  </statusbar>
+ 
+  <script type="application/x-javascript" src="chrome://pmogchat/content/lib/prototype.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/lib/builder.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/lib/effects.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/util.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/io.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/net.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/lib/irc.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/peekko.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/version.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/client.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/xul.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/view.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/overlay.js" />
+  <script type="application/x-javascript" src="chrome://pmogchat/content/utils/command.js"/>
+  <script type="application/x-javascript" src="chrome://pmogchat/content/javascript/controllers.js"/> 
+ 
+  <script type="application/x-javascript">
+    <![CDATA[
+      window.controllers.appendController(fileController);
+      window.controllers.appendController(chatController);
+      window.controllers.appendController(toolController);
+      
+      //window.addEventListener("onload", function() {
+      //  window.updateCommands('PmogConnect');
+      //})
+    ]]>
+  </script>
+</window>

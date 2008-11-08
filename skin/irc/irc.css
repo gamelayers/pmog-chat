@@ -1,0 +1,81 @@
+@namespace url('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+tab {
+  -moz-appearance:none;
+  height:22px;
+  background-color:transparent !important;
+  border:none !important;
+  border-bottom:2px solid #fff !important;
+}
+
+tab[selected=true] {
+  -moz-appearance:none;
+  padding:1px 4px 2px 4px;
+  background-color:#fff !important;
+  border-top:1px solid #000 !important;
+  border-left:1px solid #000 !important;
+  border-right:1px solid #000 !important;
+  border-bottom:2px solid #fff !important;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+}
+
+#connectButton {
+	list-style-image: url('chrome://pmogchat/skin/irc/connect.png');
+}
+
+#disconnectButton {
+	list-style-image: url('chrome://pmogchat/skin/irc/disconnect.png');
+}
+
+#updateButton {
+	list-style-image: url('chrome://pmogchat/skin/irc/refresh.png');
+}
+
+#joinButton {
+	list-style-image: url('chrome://pmogchat/skin/irc/join.png');
+}
+
+#chat-output {
+	padding: 5px;
+}
+
+toolbarbutton {
+	cursor: pointer;
+}
+
+toolbarbutton:hover {
+	opacity: 1.0;
+}
+
+#pmogchatChatMainContainer {
+	-moz-box-flex: 1;
+	margin-top: 5px;
+}
+
+html|*.nick {
+	margin-right: 5px;
+}
+
+html|*.user-nick {
+	color: #f81b09;
+	font-weight: bold;
+}
+
+html|*.self-nick {
+	color: blue;
+	font-weight: bold;
+}
+
+html|*.message-text {
+	color: #000;
+}
+
+.tabs-left {
+	display: none;
+}
+
+#tabboxid {
+	margin: 10px 10px 0 0;
+}

@@ -1,0 +1,5 @@
+content pmogchat content/ xpcnativewrappers=yes
+skin pmogchat classic/1.0 skin/
+locale  pmogchat en-US locale/en-US/
+
+overlay chrome://browser/content/browser.xul chrome://pmogchat/content/overlay.xul
