@@ -1,0 +1,5 @@
+h1. PMOG Chat Extension
+
+h2. Extension Local Install Process
+ 
+Oh Hai!

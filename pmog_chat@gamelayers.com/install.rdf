@@ -2,10 +2,10 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
-        <em:id>pmogchat@gamelayers.com</em:id>
-        <em:name>PMOG IRC</em:name>
+        <em:id>pmog_chat@gamelayers.com</em:id>
+        <em:name>PMOG Chat</em:name>
         <em:version>0.1</em:version>
-        <em:description>PMOG extension to allow IRC communication on your favorite websites</em:description>
+        <em:description>Chat with your PMOG friends on your favorite websites</em:description>
         <em:creator>GameLayers Inc;</em:creator>
         <em:homepageURL>http://pmog.com/firefox/irc</em:homepageURL>
         <em:type>2</em:type> <!-- type=extension --> 
