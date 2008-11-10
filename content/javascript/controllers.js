@@ -86,7 +86,7 @@ var chatController = {
       }
       case "Tasks:OpenProfile": 
       {
-        Peekko.profileButton(event);
+        Peekko.profileButton();
         break;
       }
       case "Tasks:JoinChannel": 
