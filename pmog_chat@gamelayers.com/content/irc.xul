@@ -23,13 +23,14 @@
     <command id="Tasks:Refresh"     oncommand="CommandUpdater.doCommand(this.id);" />
     <command id="Tasks:OpenProfile" oncommand="CommandUpdater.doCommand(this.id);" />
     <command id="Tasks:JoinChannel" oncommand="CommandUpdater.doCommand(this.id);" />
+    <command id="Tasks:JoinHelp"    oncommand="CommandUpdater.doCommand(this.id);" />
   </commandset>
 
   <commandset id="toolCommandSet">
     <command id="Tasks:ChatOptions" oncommand="CommandUpdater.doCommand(this.id);" />
   </commandset>
   
-  <commandset id="update_chat" commandupdater="true" events="PmogConnect" oncommandupdate="CommandUpdater.updateCommands('Tasks:Connect,Tasks:Disconnect,Tasks:JoinChannel');" />
+  <commandset id="update_chat" commandupdater="true" events="PmogConnect" oncommandupdate="CommandUpdater.updateCommands('Tasks:Connect,Tasks:Disconnect,Tasks:JoinChannel,Tasks:JoinHelp');" />
   
   <!-- Key bindings -->
   <keyset>
@@ -37,6 +38,7 @@
     <key id="Key:Connect" modifiers="control, alt" key="&connectionConnect.accesskey;" command="Tasks:Connect" />
     <key id="Key:Disconnect" modifiers="control, alt" key="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" />
     <key id="Key:Options" modifiers="control, alt" key="&toolsOptions.accesskey;" command="Tasks:ChatOptions" />
+    <key id="Key:Help" modifiers="control, alt" key="&help.accesskey;" command="Tasks:JoinHelp" />
   </keyset>
   
   <menubar id="pmogChatMenubar">
@@ -71,6 +73,8 @@
       <toolbarbutton orient="vertical" id="disconnectButton" label="&connectionDisconnect.label;" tooltiptext="&connectionDisconnect.tooltip;" command="Tasks:Disconnect" />
       <toolbarbutton orient="vertical" id="updateButton" label="&refresh.label;" tooltiptext="&refresh.tooltip;" command="Tasks:Refresh" />
       <toolbarbutton orient="vertical" id="joinButton" label="&join.label;" tooltiptext="&join.tooltip;" command="Tasks:JoinChannel" />
+      <toolbarspring flex="1" />
+      <toolbarbutton orient="vertical" id="helpButton" label="&help.label;" tooltiptext="&help.tooltip;" command="Tasks:JoinHelp" key="Key:Help" />
     </toolbar>
   </toolbox>
   

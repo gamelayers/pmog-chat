@@ -37,6 +37,10 @@ tab[selected=true] {
 	list-style-image: url('chrome://pmog_chat/skin/irc/join.png');
 }
 
+#helpButton {
+	list-style-image: url('chrome://pmog_chat/skin/images/help.png');
+}
+
 #chat-output {
 	padding: 5px;
 }
@@ -82,4 +86,5 @@ html|*.message-text {
 
 toolbarbutton[disabled=true] {
 	opacity: 0.5;
+	cursor: arrow;
 }

@@ -33,7 +33,8 @@
 <!ENTITY toolsOptions.label          "Options...">
 <!ENTITY toolsOptions.accesskey      "O">
 
-<!ENTITY help.label                  "Help">
+<!ENTITY help.label                  "#pmog-help">
+<!ENTITY help.tooltip                "Join the PMOG help chat channel">
 <!ENTITY help.accesskey              "H">
 
 <!ENTITY helpAbout.label             "About">

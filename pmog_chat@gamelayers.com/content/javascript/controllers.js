@@ -38,6 +38,7 @@ var chatController = {
       case "Tasks:Refresh":
       case "Tasks:OpenProfile":
       case "Tasks:JoinChannel":
+      case "Tasks:JoinHelp":
         isSupported = true;
         break;
       default:
@@ -61,6 +62,11 @@ var chatController = {
         }
         break;
       case "Tasks:JoinChannel":
+        if (Peekko.ircclient && Peekko.ircclient.isConnected()) {
+           isEnabled = true;
+        }
+        break;
+      case "Tasks:JoinHelp":
         if (Peekko.ircclient && Peekko.ircclient.isConnected()) {
            isEnabled = true;
         }
@@ -97,6 +103,11 @@ var chatController = {
       case "Tasks:JoinChannel": 
       {
         Peekko.joinButton();
+        break;
+      }
+      case "Tasks:JoinHelp": 
+      {
+        Peekko.joinChannel('#pmog-help');
         break;
       }
     }
