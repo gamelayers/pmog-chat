@@ -2,7 +2,15 @@ h1. PMOG Chat Extension
 
 h2. Extension Local Install Process
  
-* Find your Firefox profile extensions directory in ~/Library/Application Support/Firefox/Profiles/<profile folder>/extensions
+* Find your Firefox profile extensions directory in ~/Library/Application Support/Firefox/Profiles/[profile folder]/extensions
 * Create a file in the extensions folder called pmog_chat@gamelayers.com
-* Put the full path to the pmog-chat source folder on the top line of the file created above.
-* Restart Firefox
+* Put the full path to the pmog-chat source folder on the top line of the file created above
+* Restart Firefox, and you should see "PMOG Chat" in your list of Tools: Add-ons.
+
+If you still have issues, try:
+
+* drag pmog_chat@gamelayers.com from the extensions folder to your desktop.
+* Restart Firefox.
+* Quit Firefox.
+* drag pmog_chat@gamelayers.com from your desktop into your extensions folder.
+* Start Firefox.
