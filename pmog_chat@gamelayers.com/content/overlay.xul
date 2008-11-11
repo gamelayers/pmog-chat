@@ -7,15 +7,17 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/overlay.js" />
+
   <commandset id="mainCommandSet">
-    <command id="Tasks:OpenChat" oncommand="window.open('chrome://pmog_chat/content/irc.xul', 'pmogChatWindow', 'chrome=yes,centerscreen,menubar=yes,resizable=yes');" />
+    <command id="Tasks:OpenChat" oncommand="openChat();" />
   </commandset>
 
   <menupopup id="menu_ToolsPopup">
     <menuitem id="menu_pmogchat"
               label="PMOG Chat"
               observes="Tasks:OpenChat"
-              class="menu-iconic-wide"/>
+              class="menu-iconic-wide" />
   </menupopup>
     
   <menupopup id="pmog_actions">

@@ -10,7 +10,8 @@
         title="&pmogchat.title;" 
         width="600" 
         height="400"
-        persist="width height screenX screenY">
+        persist="width height screenX screenY"
+        windowtype="PMOG:Chat">
 
   <commandset id="fileCommandSet">
     <command id="Tasks:CloseWindow" oncommand="CommandUpdater.doCommand(this.id);" />
@@ -95,7 +96,6 @@
     </hbox>
     <hbox>
       <textbox id="chat-input" flex="1" onkeypress="xul.chatWindow.onInput(event);" />
-      <!-- <button label="Send"/> -->
     </hbox>
   </vbox>
   
@@ -127,10 +127,6 @@
       window.controllers.appendController(fileController);
       window.controllers.appendController(chatController);
       window.controllers.appendController(toolController);
-      
-      //window.addEventListener("onload", function() {
-      //  window.updateCommands('PmogConnect');
-      //})
     ]]>
   </script>
 </window>

@@ -61,12 +61,8 @@ var chatController = {
           isEnabled = true; 
         }
         break;
-      case "Tasks:JoinChannel":
-        if (Peekko.ircclient && Peekko.ircclient.isConnected()) {
-           isEnabled = true;
-        }
-        break;
       case "Tasks:JoinHelp":
+      case "Tasks:JoinChannel":
         if (Peekko.ircclient && Peekko.ircclient.isConnected()) {
            isEnabled = true;
         }
