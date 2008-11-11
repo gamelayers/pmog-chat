@@ -490,6 +490,7 @@ irc.Client.prototype = {
 
     onJoin : function(nick, channel) {
         this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
+        $('consoleTab').label = channel;
     },
     
     onChannelChange : function(channel) {
@@ -1204,10 +1205,7 @@ irc.Client.prototype = {
         case 000 : // other messages with no command code
             break;
         case 001 : //server welcome message
-            this.out.println("%%%%%%%% Connected Welcome %%%%%%%% " + oMsg.parameters[0] );
-            for (var i=0; i < oMsg.parameters.length; i++) {
-              this.out.println(oMsg.parameters[i]);
-            };
+            this.out.println("Welcome " + oMsg.parameters[0] );
             this.connected = true;
             this.nick = oMsg.parameters[0];
             this.foundANick = true;

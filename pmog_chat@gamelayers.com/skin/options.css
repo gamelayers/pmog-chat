@@ -2,5 +2,5 @@
 @import url(chrome://global/skin/);
 
 radio[pane=paneMain] {
-  list-style-image: url(chrome://pmogchat/skin/images/options-big.png);
+  list-style-image: url(chrome://pmog_chat/skin/images/options-big.png);
 }

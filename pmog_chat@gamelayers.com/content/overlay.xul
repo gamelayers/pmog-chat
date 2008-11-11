@@ -8,7 +8,7 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <commandset id="mainCommandSet">
-    <command id="Tasks:OpenChat" oncommand="window.open('chrome://pmogchat/content/irc.xul', 'pmogChatWindow', 'chrome=yes,centerscreen,menubar=yes,resizable=yes');" />
+    <command id="Tasks:OpenChat" oncommand="window.open('chrome://pmog_chat/content/irc.xul', 'pmogChatWindow', 'chrome=yes,centerscreen,menubar=yes,resizable=yes');" />
   </commandset>
 
   <menupopup id="menu_ToolsPopup">

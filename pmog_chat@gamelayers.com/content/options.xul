@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://pmogchat/skin/options.css" type="text/css"?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/options.css" type="text/css"?>
 <prefwindow id="pmogChatPrefs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="PMOG Chat Preferences">
   <prefpane id="paneMain" label="Main">
     <preferences>

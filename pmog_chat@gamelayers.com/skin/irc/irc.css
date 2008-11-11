@@ -22,19 +22,19 @@ tab[selected=true] {
 }
 
 #connectButton {
-	list-style-image: url('chrome://pmogchat/skin/irc/connect.png');
+	list-style-image: url('chrome://pmog_chat/skin/irc/connect.png');
 }
 
 #disconnectButton {
-	list-style-image: url('chrome://pmogchat/skin/irc/disconnect.png');
+	list-style-image: url('chrome://pmog_chat/skin/irc/disconnect.png');
 }
 
 #updateButton {
-	list-style-image: url('chrome://pmogchat/skin/irc/refresh.png');
+	list-style-image: url('chrome://pmog_chat/skin/irc/refresh.png');
 }
 
 #joinButton {
-	list-style-image: url('chrome://pmogchat/skin/irc/join.png');
+	list-style-image: url('chrome://pmog_chat/skin/irc/join.png');
 }
 
 #chat-output {
@@ -78,4 +78,8 @@ html|*.message-text {
 
 #tabboxid {
 	margin: 10px 10px 0 0;
+}
+
+toolbarbutton[disabled=true] {
+	opacity: 0.5;
 }

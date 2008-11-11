@@ -60,6 +60,11 @@ var chatController = {
           isEnabled = true; 
         }
         break;
+      case "Tasks:JoinChannel":
+        if (Peekko.ircclient && Peekko.ircclient.isConnected()) {
+           isEnabled = true;
+        }
+        break;
       default:
         isEnabled = true;
         break;
@@ -121,7 +126,7 @@ var toolController = {
     switch (cmd) {
       case "Tasks:ChatOptions": 
       {
-        window.openDialog("chrome://pmogchat/content/options.xul", "options", "chrome,titlebar,toolbar,centerscreen,modal");
+        window.openDialog("chrome://pmog_chat/content/options.xul", "options", "chrome,titlebar,toolbar,centerscreen,modal");
         break;
       }
     }
