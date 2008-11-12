@@ -13,7 +13,8 @@ tab[selected=true] {
 	background-color: #ccc !important;
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;
-	border-color: #333;
+	border-color: #e8e8e8;
+	border-style: outset;
 }
 
 #pmogChatTabPanels {
