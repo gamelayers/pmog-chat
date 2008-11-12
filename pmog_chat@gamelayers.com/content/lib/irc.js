@@ -312,12 +312,14 @@ irc.Channel = function(name) {
         //log("addUser: " + user);
         if (! this.hasUser(user)) {
             this.users.push(user)
+            Peekko.showUsers();
         }
     }
     
     this.removeUser = function(user) {
         if (this.hasUser(user)) {
             this.users = this.users.without(user);
+            Peekko.showUsers();
         }
     }
     
@@ -440,6 +442,7 @@ irc.Client.prototype = {
 
     onNickChange : function(newNick, oldNick) {
         this.out.println("*** " + oldNick + " is known as " + newNick);
+        this.sendCommand("NAMES");
     },
     
     onMyNickChange : function(newNick, oldNick) {
@@ -448,6 +451,7 @@ irc.Client.prototype = {
         } else {
             this.out.println("*** your nick is " + newNick);
         }
+        this.sendCommand("NAMES");
     },
 
     // Rename to onMessage?
@@ -542,7 +546,7 @@ irc.Client.prototype = {
     },
     
     onNameReplyEnd : function(oMsg) {
-        
+        Peekko.showUsers();
     },
     
     onChannelModeChange : function(change, channel, source) {
@@ -818,11 +822,11 @@ irc.Client.prototype = {
                 args = $PA();
             }
             
-/*
+
             this.err.println("command = " + command);
             this.err.println("body = " + body);
             this.err.println("args = " + args.join(', '));
-*/
+
             switch (command.toLowerCase()) {
                 case "channel":
                     if (this.channel.name) {

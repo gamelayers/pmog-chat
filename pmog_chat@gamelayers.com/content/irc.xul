@@ -87,8 +87,8 @@
         <tabs class="tabbrowser-tabs" closebutton="true">
           <tab id="consoleTab" label="&consoleTab.label;" linkedpanel="panel-console" />
         </tabs>
-        <tabpanels flex="1">
-          <tabpanel id="panel-console" flex="1" style="border: 1px solid black;">
+        <tabpanels id="pmogChatTabPanels">
+          <tabpanel id="panel-console" flex="1">
             <scrollbox id="chat-output" style="overflow: auto;" orient="vertical" flex="1" />
           </tabpanel>
         </tabpanels>

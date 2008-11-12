@@ -2,23 +2,23 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 tab {
-  -moz-appearance:none;
-  height:22px;
-  background-color:transparent !important;
-  border:none !important;
-  border-bottom:2px solid #fff !important;
+	-moz-appearance: none;
+	height: 22px;
+	background-color: transparent !important;
+	border: none !important;
 }
 
 tab[selected=true] {
-  -moz-appearance:none;
-  padding:1px 4px 2px 4px;
-  background-color:#fff !important;
-  border-top:1px solid #000 !important;
-  border-left:1px solid #000 !important;
-  border-right:1px solid #000 !important;
-  border-bottom:2px solid #fff !important;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
+	-moz-appearance: none;
+	background-color: #ccc !important;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	border-color: #333;
+}
+
+#pmogChatTabPanels {
+	padding: 0;
+	-moz-box-flex: 1;
 }
 
 #connectButton {
@@ -41,10 +41,6 @@ tab[selected=true] {
 	list-style-image: url('chrome://pmog_chat/skin/images/help.png');
 }
 
-#chat-output {
-	padding: 5px;
-}
-
 toolbarbutton {
 	cursor: pointer;
 }
@@ -56,6 +52,13 @@ toolbarbutton:hover {
 #pmogchatChatMainContainer {
 	-moz-box-flex: 1;
 	margin-top: 5px;
+}
+
+#chat-output {
+	background-color: white;
+	margin: 1px;
+	-moz-border-radius: 1px;
+	padding-left: 5px;
 }
 
 html|*.nick {
@@ -86,5 +89,5 @@ html|*.message-text {
 
 toolbarbutton[disabled=true] {
 	opacity: 0.5;
-	cursor: arrow;
+	cursor: auto;
 }

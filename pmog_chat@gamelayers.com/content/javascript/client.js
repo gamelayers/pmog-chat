@@ -22,23 +22,11 @@ Object.extend(peekko.Client.prototype, {
     },
     
     onConnect : function(params) {
-        //log("onConnect");
-        //this.updateRoomInfo();
-        //this.roomInfo.update(this.session.channel, this.session.window);
-        //this.roomInfo.update(this.session.channel);
         var channel = this.controller.getCurrentChannel();
-/*        if (! this.browseInvisibly()) {
-            var privateChannel = this.getPrivateChannel(channel);
-            this.ircclient.joinChannel(privateChannel);
-        }*/
+        
         this.controller.updateRoomInfo(channel);
         this.controller.setConnectState("connected");
         this.parent.onConnect.apply(this);
-
-        // if (this.onConnectHook) {
-        //     log("calling onConnectHook");
-        //     this.onConnectHook(params);
-        // }
 
         window.updateCommands('PmogConnect');
     },
@@ -155,6 +143,7 @@ Object.extend(peekko.Client.prototype, {
     onMyNickChange : function(newNick, oldNick) {
         this.controller.session.window.setNick(newNick);
         this.parent.onMyNickChange.call(this, newNick, oldNick);
+        Peekko.showUsers();
     },
 
     onChannelChange : function(channel) {
