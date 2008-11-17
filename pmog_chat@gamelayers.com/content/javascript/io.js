@@ -168,13 +168,15 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       return document.createElementNS(HTMLNS, "span");
     },
     
-    initialize : function() {
-      this.boxInterface = $('chat-output').boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
+    initialize : function(id) {
+      this.id = id + "-output";
+      //this.boxInterface = $(this.id).boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
+      this.boxInterface = $(this.id).contentBoxObject;
     },
     
     print : function(s) {
         if (! this.boxInterface.element) {
-            throw "error: cannot get 'chat-output' div";
+            throw "error: cannot get " + this.id + " container";
         }
         var child = this.createSpan();
         child.style.display = "block";

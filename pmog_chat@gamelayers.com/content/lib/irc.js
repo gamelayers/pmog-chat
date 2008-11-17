@@ -341,7 +341,7 @@ irc.Channel.isPrivateChannel = function(channel) {
 irc.Client = Class.create();
 irc.Client.prototype = {
     
-    initialize : function(oNickHandler, sUserName, sRealName) {
+    initialize : function(oNickHandler, sUserName, sRealName, peekko) {
         this.nickHandler = oNickHandler;//new irc.NickHandler(aNicks);
         this.nick = null;
         this.foundANick = false;
@@ -354,7 +354,7 @@ irc.Client.prototype = {
         this.connected = false;
         this.connectStartTime = 0;
         //this.out = new io.LogWriter();
-        this.out = new io.ChatWriter();
+        this.out = new io.ChatWriter("console");
         this.err = new io.LogWriter();
         //this.err = new io.ChatWriter();
         this.channel = new irc.Channel();
@@ -367,7 +367,10 @@ irc.Client.prototype = {
 
         this.onDCCSend = defaultHandler;
         this.onDCCSendConnect = defaultHandler;
+        
+        this.peekko = peekko;
     },
+    
 
     /**
         Parses and executes a command, sending any requests to the server if
@@ -430,19 +433,15 @@ irc.Client.prototype = {
     },
     
     onSentMessage : function(sentTo, message) {
-        if (sentTo == this.defaultChannel()) {
-          this.out.createMessage(sentTo, this.nick, message);
-            //this.out.println("<" + this.nick + "> " + message);
-        } else {
-          this.out.createMessage(sentTo, this.nick, message);
-            //this.out.println("-> *" + sentTo + "* " + message);
-        }
-        this.out.scrollDown();
+      var cSentTo = sentTo.replace(/#/, '');
+      
+      Peekko.session.window.ioMap.get(cSentTo).createMessage(sentTo, this.nick, message);
+      Peekko.session.window.ioMap.get(cSentTo).scrollDown();
     },
 
     onNickChange : function(newNick, oldNick) {
         this.out.println("*** " + oldNick + " is known as " + newNick);
-        this.sendCommand("NAMES");
+        this.controller.showUsers();
     },
     
     onMyNickChange : function(newNick, oldNick) {
@@ -451,7 +450,7 @@ irc.Client.prototype = {
         } else {
             this.out.println("*** your nick is " + newNick);
         }
-        this.sendCommand("NAMES");
+        this.controller.showUsers();
     },
 
     // Rename to onMessage?
@@ -460,14 +459,17 @@ irc.Client.prototype = {
             // Private message
             this.out.println("*" + nick + "* " + message);
         } else {
-            // Public message to the channel
-            if (this.channel.name == channel) {
-                //this.out.println("<" + nick + "> " + message);
-                this.out.createMessage(channel, nick, message);
-            } else {
-                //this.out.println("<" + nick + ":" + channel + "> " + message);
-                this.out.createMessage(channel, nick, message);
-            }
+            // // Public message to the channel
+            // if (this.channel.name == channel) {
+            //     //this.out.println("<" + nick + "> " + message);
+            //     this.out.createMessage(channel, nick, message);
+            // } else {
+            //     //this.out.println("<" + nick + ":" + channel + "> " + message);
+            //     this.out.createMessage(channel, nick, message);
+            // }
+            var cChannel = channel.replace(/#/, '');
+            Peekko.session.window.ioMap.get(cChannel).createMessage(channel, nick, message);
+            Peekko.session.window.ioMap.get(cChannel).scrollDown();
         }
         this.out.scrollDown();
     },
@@ -546,7 +548,7 @@ irc.Client.prototype = {
     },
     
     onNameReplyEnd : function(oMsg) {
-        Peekko.showUsers();
+        this.controller.showUsers();
     },
     
     onChannelModeChange : function(change, channel, source) {

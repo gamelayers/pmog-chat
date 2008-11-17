@@ -17,7 +17,7 @@ peekko.Controller.prototype = Object.extend(new peekko.Config(), {
         this.tabs = new PArray();
         // could also be called this.sessions
         this.toolbar = new view.Toolbar();
-        this.writer = new io.ChatWriter();
+        this.writer = new io.ChatWriter("console");
         this.chatEvents = new peekko.ChatEvents(this.toolbar);
         this.session = new peekko.Session();
 
@@ -149,18 +149,17 @@ joinButton: function(event) {
             var was;
             if (this.ircclient.channel) {
                 was = this.ircclient.channel.name;
-
             }
             if (was == current) {
                 this.writer.println("*** already in channel " + current);
-
             } else {
-                if (was != null && !this.isPrivateChannel(was)) {
-                    this.ircclient.partChannel(was);
-
-                }
-                this.ircclient.joinChannel(current);
-
+                // if (was != null && !this.isPrivateChannel(was)) {
+                //                     this.ircclient.partChannel(was);
+                //                 }
+                //                 this.ircclient.joinChannel(current);
+              var newTab = this.session.window.addTab(current);
+              this.session.window.selectTab(newTab);
+              this.ircclient.joinChannel(current);
             }
 
         }

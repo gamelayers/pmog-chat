@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://pmog_chat/skin/irc/irc.css" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/irc.css" type="text/css"?>
+<?xml-stylesheet href="chrome://browser/content/" type="text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?>
 
 <!DOCTYPE window SYSTEM "chrome://pmog_chat/locale/pmogchat.dtd">
 
@@ -79,21 +81,32 @@
     </toolbar>
   </toolbox>
   
-  <vbox id="pmogChatMainContainer" flex="1">
-    <hbox flex="1">
-      <listbox id="pmogChatUsers"></listbox>
-      <splitter />
-      <tabbox id="tabboxid" flex="1">
-        <tabs class="tabbrowser-tabs" closebutton="true">
-          <tab id="consoleTab" label="&consoleTab.label;" linkedpanel="panel-console" />
-        </tabs>
-        <tabpanels id="pmogChatTabPanels">
+  <vbox flex="1">
+    <tabbox flex="1">
+      <tabs class="tabbrowser-tabs" closebutton="true">
+        <tab id="consoleTab" label="&consoleTab.label;" class="tabbrowser-tab" linkedpanel="panel-console" />
+      </tabs>
+      <hbox flex="1">
+        <listbox id="pmogChatUsers">
+          <listhead>
+            <listheader label="Players"/>
+          </listhead>
+        </listbox>
+        <splitter collapse="before" resizeafter="grow">
+          <grippy />
+        </splitter>
+        <tabpanels flex="1" style="-moz-appearance: none; border: 0;">
           <tabpanel id="panel-console" flex="1">
-            <scrollbox id="chat-output" style="overflow: auto;" orient="vertical" flex="1" />
+            <chat-panel id="console-output" flex="1" />
+            <!-- <scrollbox id="console-output" class="chat-output">
+              <notificationbox id="chatTopic" flex="1">
+                
+              </notificationbox>
+            </scrollbox> -->
           </tabpanel>
         </tabpanels>
-      </tabbox>
-    </hbox>
+      </hbox>
+    </tabbox>
     <hbox>
       <textbox id="chat-input" flex="1" onkeypress="xul.chatWindow.onInput(event);" />
     </hbox>
@@ -109,6 +122,7 @@
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/prototype.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/builder.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/effects.js" />
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/AssociativeArray.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/util.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/io.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/net.js" />
