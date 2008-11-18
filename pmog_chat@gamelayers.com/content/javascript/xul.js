@@ -180,8 +180,8 @@ observe: function(subject, topic, data) {
     },
 
 addTab: function(title) {
-  
-        cTitle = title.replace(/#/, '');
+        var cTitle = title.replace(/#/, '');
+        var favicon = this.getFavicon(cTitle);
         
         var t = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tab");
@@ -191,9 +191,11 @@ addTab: function(title) {
         t.setAttribute("label", title);
         
         t.setAttribute("oncommand", "Peekko.session.window.closeTab(this);");
+        
+        t.setAttribute("image", favicon);
 
         this.tabcontainer.tabs.appendChild(t);
-
+        
         var tp = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tabpanel");
 
@@ -206,10 +208,13 @@ addTab: function(title) {
         sb.className = "chat-output";
         
         sb.id = cTitle + "-output";
-
+        
         tp.appendChild(sb);
 
         this.tabcontainer.tabpanels.appendChild(tp);
+        
+        sb.topicIcon = favicon;
+        sb.topic = title;
         
         this.ioMap.add(cTitle, new io.ChatWriter(cTitle));
         
@@ -232,6 +237,34 @@ closeTab: function(tab) {
   this.tabcontainer.tabpanels.removeChild(mPanel);
   
   this.tabcontainer.tabs.selectedItem = this.tabcontainer.tabs.getItemAtIndex(this.tabcontainer.tabs.itemCount - 1);
+},
+
+getChannelTab: function(channelName) {
+  var tabs = document.getElementsByTagName('tab');
+  var tab;
+  for (var i = tabs.length - 1; i >= 0; i--){
+    if (tabs[i].label == channelName) {
+      tab = tabs[i];
+    }
+  }
+  return tab;
+},
+
+getFavicon: function(url) {
+  var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"].getService(Components.interfaces.nsIFaviconService);
+  
+  var urlService = peekko.url.createInstance();
+  urlService = urlService.QueryInterface(Components.interfaces.nsIURL);
+  urlService.spec = "http://" + url;
+  
+  var iconUrl;
+  try {
+    iconUrl = faviconService.getFaviconForPage(urlService).spec
+  } catch(e) {
+    iconUrl = "https://developer.mozilla.org/favicon.ico";
+  }
+  
+  return iconUrl;
 }
 
 });

@@ -496,7 +496,6 @@ irc.Client.prototype = {
 
     onJoin : function(nick, channel) {
         this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
-        //$('consoleTab').label = channel;
     },
     
     onChannelChange : function(channel) {
@@ -537,7 +536,7 @@ irc.Client.prototype = {
             // Don't show any private channels to the term if I'm marked as novice.
             return;
         }
-        this.out.println("*** " + channel + " " + count + " " + topic);
+        this.out.println("*** List Reply: " + channel + " " + count + " " + topic);
     },
     
     onListEnd : function(success) {
@@ -585,7 +584,7 @@ irc.Client.prototype = {
     },
     
     onTopicChange : function(nick, channel, topic) {
-        this.out.println("*** " + nick + " has changed the topic on channel " 
+        this.err.println("*** " + nick + " has changed the topic on channel " 
                          + channel + " to " + topic);
     },
     
@@ -614,17 +613,10 @@ irc.Client.prototype = {
         //noop
     },
     
-    defaultHandler : function() {       
-        // Create an array of the arguments since arguments doesn't have a join method.
-        //var args = new Array();
-        //args.push.apply(args, arguments);
-        //var msg = args.join(", ");
-        //this.err.println("ircclient: " + msg);
-        this.err.println("defaultHandler called in ircclient.");
+    defaultHandler : function() {
     },
     
     printBody : function(oMsg) {
-        //if (oMsg.body != null)
         this.out.println("*** " + oMsg.body);
     },    
     
@@ -1123,6 +1115,7 @@ irc.Client.prototype = {
             this.onKick(channel, oMsg.parameters[1], nick, oMsg.body);
             break;
         case -8 : // TOPIC
+          this.err.println("PROCESSING TOPIC MESSAGE IN IRC.JS");
             this.onTopicChange(oMsg.nick, oMsg.parameters[0], oMsg.body);
             break;
         case -9 : // PRIVMSG
@@ -1320,6 +1313,10 @@ irc.Client.prototype = {
                 // 
             } else {
                 this.out.println("*** Topic for " + oMsg.parameters[1] + ": " + oMsg.body);
+                if (Peekko.session.window.getChannelTab(oMsg.parameters[1]) !== undefined) {
+                  var tpanel = document.getElementById(Peekko.session.window.getChannelTab(oMsg.parameters[1]).linkedPanel);
+                  tpanel.childNodes[0].topic = oMsg.body;
+                }
             }
             break;
         case 333 : // I have no idea what this one is about

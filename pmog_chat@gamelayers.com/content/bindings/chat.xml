@@ -10,7 +10,9 @@
   <binding id="chat-panel">
     <content>
       <xul:scrollbox anonid="contentScroll" class="chat-output" flex="1">
-        <xul:notificationbox anonid="chatTopic" flex="1" />
+        <xul:notificationbox anonid="chatTopic">
+          <xul:notification anonid="topicContent" label="" type="info" image="https://developer.mozilla.org/favicon.ico" />
+        </xul:notificationbox>
       </xul:scrollbox>
     </content>
     
@@ -23,6 +25,10 @@
         document.getAnonymousElementByAttribute(this, 'anonid', 'contentScroll');
       </field>
       
+      <field name="_topicContent">
+        document.getAnonymousElementByAttribute(this, 'anonid', 'topicContent');
+      </field>
+      
       <field name="contentBoxObject">
         this._contentBox.boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
       </field>
@@ -31,6 +37,20 @@
         document.getAnonymousElementByAttribute(this, 'anonid', 'chatTopic');
       </field>
       
+      <property name="topicIcon" onget="return this._topicContent.image"
+                                 onset="this._topicContent.image = val;" />
+                                 
+      <property name="topic" onget="return this._topicContent.label;"
+                             onset="this._setTopic(val);" />
+      
+      <method name="_setTopic">
+        <parameter name="topic" />
+        <body>
+          <![CDATA[
+            this._topicContent.label = topic;
+          ]]>
+        </body>
+      </method>
     </implementation>
     
     <handlers>

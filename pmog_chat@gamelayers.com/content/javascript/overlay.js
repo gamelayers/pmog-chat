@@ -593,7 +593,6 @@ showUsers: function() {
 
             var itm = list.appendItem(this.ircclient.channel.users[i], this.ircclient.channel.users[i]);
             itm.setAttribute("context", "userContextPopup");
-
         };
 
 

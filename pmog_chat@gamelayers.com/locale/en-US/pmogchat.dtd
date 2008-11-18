@@ -30,8 +30,9 @@
 <!ENTITY tools.label                 "Tools">
 <!ENTITY tools.accesskey             "T">
 
-<!ENTITY toolsOptions.label          "Options...">
+<!ENTITY toolsOptions.label          "Options">
 <!ENTITY toolsOptions.accesskey      "O">
+<!ENTITY toolsOptions.tooltip        "Edit chat preferences">
 
 <!ENTITY help.label                  "#pmog-help">
 <!ENTITY help.tooltip                "Join the PMOG help chat channel">

@@ -119,6 +119,7 @@ Object.extend(peekko.Client.prototype, {
     },
 
     onTopicChange : function() {
+      log("onTopicChange CALLED IN CLIENT.JS");
         if (! this.isPrivateChannel(arguments[1])) {
             this.parent.onTopicChange.apply(this, arguments);
             this.roomInfo.update(this.channel.name);

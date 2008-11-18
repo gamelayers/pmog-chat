@@ -21,6 +21,10 @@
 	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/help.png');
 }
 
+#preferencesButton {
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/preferences.png');
+}
+
 toolbarbutton:not([disabled=true]) {
 	cursor: pointer;
 	opacity: 1.0;
@@ -33,6 +37,10 @@ toolbarbutton[disabled=true] {
 
 toolbar {
 	border-bottom: 0;
+}
+
+notification toolbarbutton {
+	display: none;
 }
 
 .chat-output {
