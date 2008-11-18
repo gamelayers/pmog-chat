@@ -9,7 +9,7 @@ pref("extensions.pmog.chat.irc.port", 6667);
 pref("extensions.pmog.chat.irc.timeout", 60);
 pref("extensions.pmog.chat.filter.type", "domain");
 pref("extensions.pmog.chat.filter.strip.subdomain", true);
-pref("extensions.pmog.chat.auto.connect", false);
+pref("extensions.pmog.chat.auto.connect", true);
 pref("extensions.pmog.chat.browse.invisibly", false);
 pref("extensions.pmog.chat.audible.alert.enabled", true);
 pref("extensions.pmog.chat.audible.alert.on.messages", true);

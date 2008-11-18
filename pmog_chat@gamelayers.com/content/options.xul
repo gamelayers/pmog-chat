@@ -8,6 +8,7 @@
       <preference id="pref_username" name="extensions.pmog.chat.irc.username" type="string" />
       <preference id="pref_hostname" name="extensions.pmog.chat.irc.host" type="string" />
       <preference id="pref_port" name="extensions.pmog.chat.irc.port" type="int" />
+      <preference id="pref_auto" name="extensions.pmog.chat.auto.connect" type="bool" />
     </preferences>
     <groupbox id="userinfo">
       <caption label="User Info"/>
@@ -33,6 +34,10 @@
       <hbox align="center">
         <label value="Port" control="port" width="100px" />
         <textbox preference="pref_port" id="port" width="250px"/>
+      </hbox>
+      <hbox align="center">
+        <label value="Auto Connect" control="auto" width="100px" />
+        <checkbox preference="pref_auto" id="auto" width="250px"/>
       </hbox>
     </groupbox>
     <hbox pack="end">
