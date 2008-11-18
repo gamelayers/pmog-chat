@@ -29,13 +29,13 @@ var AssociativeArray = function() {
     return this.hash[key];
   };
 
-  this.remove = function() {
+  this.remove = function(key) {
     var value = this.hash[key];
     this.hash[key] = null;
     return value;
   };
   
-  this.contains_key = function() {
+  this.contains_key = function(key) {
     var exist = false;
     for(var i in this.hash) {
       if(i == key && this.hash[i] != null) {

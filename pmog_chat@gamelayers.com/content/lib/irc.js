@@ -496,7 +496,7 @@ irc.Client.prototype = {
 
     onJoin : function(nick, channel) {
         this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
-        $('consoleTab').label = channel;
+        //$('consoleTab').label = channel;
     },
     
     onChannelChange : function(channel) {
@@ -733,7 +733,6 @@ irc.Client.prototype = {
     },
 
     process : function() { // called from app specific timer
-      log("process called in irc.js for status: " + this.status);
         if (irc.aDCCSends.length) 
             for (var i=0; i<irc.aDCCSends.length; i++) 
                 if (irc.aDCCSends[i]) 

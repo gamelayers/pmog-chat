@@ -103,12 +103,6 @@ update: function(channel, count, topic) {
                 status.push("on");
             }
             status.push(channel);
-            
-            // var cChannel = channel.replace(/#/, '');
-            // var sb = document.getElementById(cChannel + '-output');
-            // if (sb != null) {
-            //   sb.notificationBox.appendNotification(topic, 'hi', null, 0, null);
-            // }
         }
         if (count != null && !isNaN(count)) {
             if (status.length > 0) {
@@ -195,6 +189,8 @@ addTab: function(title) {
         t.className = "tabbrowser-tab";
 
         t.setAttribute("label", title);
+        
+        t.setAttribute("oncommand", "Peekko.session.window.closeTab(this);");
 
         this.tabcontainer.tabs.appendChild(t);
 
@@ -222,6 +218,20 @@ addTab: function(title) {
     
 selectTab: function(tab) {
     this.tabcontainer.selectedTab = tab;
+},
+
+closeTab: function(tab) {
+  var channel = tab.getAttribute("label");
+  cLabel = channel.replace(/#/, '');
+  Peekko.ircclient.partChannel(channel);
+  this.ioMap.remove(cLabel);
+  
+  var mPanel = $(tab.linkedPanel);
+  
+  this.tabcontainer.tabs.removeChild(tab);
+  this.tabcontainer.tabpanels.removeChild(mPanel);
+  
+  this.tabcontainer.tabs.selectedItem = this.tabcontainer.tabs.getItemAtIndex(this.tabcontainer.tabs.itemCount - 1);
 }
 
 });
