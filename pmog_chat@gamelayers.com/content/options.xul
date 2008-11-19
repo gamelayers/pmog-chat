@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://pmog_chat/skin/options.css" type="text/css"?>
 <prefwindow id="pmogChatPrefs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="PMOG Chat Preferences">
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/options.js" />
   <prefpane id="paneMain" label="Main">
     <preferences>
       <preference id="pref_nick" name="extensions.pmog.chat.irc.nick" type="string"/>
@@ -41,7 +42,8 @@
       </hbox>
     </groupbox>
     <hbox pack="end">
-        <button label="Close" oncommand="self.close();" />
+      <button label="Reset" oncommand="resetPrefs();" />
+      <button label="Close" oncommand="self.close();" />
     </hbox>
   </prefpane>
 </prefwindow>

@@ -38,7 +38,7 @@ onInput: function(event) {
           case 14:
             var chatInput = $('chat-input');
             var input = chatInput.value;
-            if (input && input.length != 0) {
+            if (input && input.length !== 0) {
                 chatInput.value = '';
                 this.inputs.push(input);
                 if (!this.commandHistory.length || this.commandHistory[0] != input) {
@@ -95,26 +95,26 @@ setNick: function(sNick) {
 
 update: function(channel, count, topic) {
         var status = $PA();
-        if (this.nick != null) {
+        if (this.nick !== null) {
             status.push(this.nick);
         }
-        if (channel != null) {
+        if (channel !== null) {
             if (status.length > 0) {
                 status.push("on");
             }
             status.push(channel);
         }
-        if (count != null && !isNaN(count)) {
+        if (count !== null && !isNaN(count)) {
             if (status.length > 0) {
                 status.push("with");
             }
             //count--;  // don't count yourself.
-            status.push(count)
+            status.push(count);
             status.push((count == 1 ? "person": "people"));
 
 
         }
-        if (topic != null && topic.length != 0) {
+        if (topic !== null && topic.length !== 0) {
             if (status.length > 0) {
                 status = [status.join(' ') + ";"];
             }
@@ -261,7 +261,7 @@ getFavicon: function(url) {
   try {
     iconUrl = faviconService.getFaviconForPage(urlService).spec
   } catch(e) {
-    iconUrl = "https://developer.mozilla.org/favicon.ico";
+    iconUrl = faviconService.defaultFavicon.spec;
   }
   
   return iconUrl;
