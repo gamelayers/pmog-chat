@@ -157,9 +157,14 @@ joinButton: function(event) {
                 //                     this.ircclient.partChannel(was);
                 //                 }
                 //                 this.ircclient.joinChannel(current);
-              var newTab = this.session.window.addTab(current);
-              this.session.window.selectTab(newTab);
-              this.ircclient.joinChannel(current);
+              if (Peekko.session.window.getChannelTab(current) === undefined) {
+                var newTab = this.session.window.addTab(current);
+                this.session.window.selectTab(newTab);
+                this.ircclient.joinChannel(current);
+              } else {
+                Peekko.session.window.selectTab(Peekko.session.window.getChannelTab(current));
+                this.ircclient.joinChannel(current);
+              }
             }
 
         }
@@ -584,18 +589,15 @@ showUsers: function() {
             while (count--) {
                 var item = list.getItemAtIndex(0);
                 list.removeItemAt(list.getIndexOfItem(item));
-
             }
-
         }
 
-        for (var i = 0; i < this.ircclient.channel.users.length; i++) {
-
+        if (this.ircclient && this.ircclient.channel !== null) {
+          for (var i = 0; i < this.ircclient.channel.users.length; i++) {
             var itm = list.appendItem(this.ircclient.channel.users[i], this.ircclient.channel.users[i]);
             itm.setAttribute("context", "userContextPopup");
-        };
-
-
+          }
+        }
     },
 
 ircTimer: function() {

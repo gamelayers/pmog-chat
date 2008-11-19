@@ -801,7 +801,6 @@ irc.Client.prototype = {
         that can be sent to the IRC server to do some activity remotely.
     */
     executeLocalInput : function(sInput) {
-        this.err.println("executeLocalInput: " + sInput);
         var result = null;
         var reg = /^\/(\S+)\s*(.*)?$/;
         var m = reg.exec(sInput);
@@ -816,9 +815,9 @@ irc.Client.prototype = {
             }
             
 
-            this.err.println("command = " + command);
-            this.err.println("body = " + body);
-            this.err.println("args = " + args.join(', '));
+            //this.err.println("command = " + command);
+            //this.err.println("body = " + body);
+            //this.err.println("args = " + args.join(', '));
 
             switch (command.toLowerCase()) {
                 case "channel":
@@ -860,7 +859,7 @@ irc.Client.prototype = {
                     var oChannel = this.getChannel(channel);
                     if (oChannel) {
                         this.channel = oChannel;
-                        this.out.println("*** You are now talking to channel " + this.channel.name);
+                        //this.out.println("*** You are now talking to channel " + this.channel.name);
                         this.onChannelChange(this.channel.name);
                         result = null;
                     } else {
@@ -1031,7 +1030,6 @@ irc.Client.prototype = {
             }
             break;
         case -3 : // JOIN
-        this.err.println("processing join: " + sMsg);
             var nick = oMsg.nick;
             var channel = oMsg.body;
             if (nick == this.nick) {
@@ -1052,7 +1050,6 @@ irc.Client.prototype = {
             this.onJoin(nick, channel);
             break;
         case -4 : // MODE
-            this.err.println("processing mode: " + oMsg);
             var source = (oMsg.nick == "" ? oMsg.prefix : oMsg.nick);
             if (oMsg.parameters) {
                 var channel = oMsg.parameters.shift();

@@ -265,6 +265,18 @@ getFavicon: function(url) {
   }
   
   return iconUrl;
+},
+
+tabChange: function(tabbox) {
+  log("Tab Change Called");
+  if (Peekko.ircclient && tabbox.selectedItem.label.indexOf("#") != -1) {
+    log("Changing the channel to: " + tabbox.selectedItem.label);
+    Peekko.joinChannel(tabbox.selectedItem.label);
+    Peekko.ircclient.executeLocalInput("/join " + tabbox.selectedItem.label);
+  } else if (Peekko.ircclient && tabbox.selectedItem.label === "Console") {
+    Peekko.ircclient.channel = null;
+  }
+  Peekko.showUsers();
 }
 
 });

@@ -84,7 +84,7 @@
   
   <vbox flex="1">
     <tabbox flex="1">
-      <tabs class="tabbrowser-tabs" closebutton="true">
+      <tabs class="tabbrowser-tabs" onselect="Peekko.session.window.tabChange(this);" closebutton="true">
         <tab id="consoleTab" label="&consoleTab.label;" class="tabbrowser-tab" linkedpanel="panel-console" />
       </tabs>
       <hbox flex="1">
@@ -99,11 +99,6 @@
         <tabpanels flex="1" style="-moz-appearance: none; border: 0;">
           <tabpanel id="panel-console" flex="1">
             <chat-panel id="console-output" flex="1" />
-            <!-- <scrollbox id="console-output" class="chat-output">
-              <notificationbox id="chatTopic" flex="1">
-                
-              </notificationbox>
-            </scrollbox> -->
           </tabpanel>
         </tabpanels>
       </hbox>
