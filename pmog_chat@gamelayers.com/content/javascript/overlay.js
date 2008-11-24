@@ -98,7 +98,8 @@ profileButton: function() {
         var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
         .getService(Components.interfaces.nsIWindowMediator);
         var newWindow = wm.getMostRecentWindow("navigator:browser");
-        var user = document.getElementById("pmogChatUsers").selectedItem.value;
+        var user = channelTreeView.getCellText(channelTreeView.treeBox.view.selection.currentIndex);
+        //var user = document.getElementById("pmogChatUsers").selectedItem.value;
 
         user = user.replace(/\@/, '');
 
@@ -157,14 +158,14 @@ joinButton: function(event) {
                 //                     this.ircclient.partChannel(was);
                 //                 }
                 //                 this.ircclient.joinChannel(current);
-              if (Peekko.session.window.getChannelTab(current) === undefined) {
-                var newTab = this.session.window.addTab(current);
-                this.session.window.selectTab(newTab);
-                this.ircclient.joinChannel(current);
-              } else {
-                Peekko.session.window.selectTab(Peekko.session.window.getChannelTab(current));
-                this.ircclient.joinChannel(current);
-              }
+              // if (Peekko.session.window.getChannelTab(current) === undefined) {
+              //   var newTab = this.session.window.addTab(current);
+              //   this.session.window.selectTab(newTab);
+              this.ircclient.joinChannel(current);
+              // } else {
+              //   Peekko.session.window.selectTab(Peekko.session.window.getChannelTab(current));
+              //   this.ircclient.joinChannel(current);
+              // }
             }
 
         }
@@ -581,24 +582,71 @@ setConnectState: function(state) {
     },
 
 showUsers: function() {
-        var list = document.getElementById("pmogChatUsers");
-
-        var count = list.getRowCount();
-
-        if (count > 0) {
-            while (count--) {
-                var item = list.getItemAtIndex(0);
-                list.removeItemAt(list.getIndexOfItem(item));
-            }
-        }
-
-        if (this.ircclient && this.ircclient.channel !== null) {
-          for (var i = 0; i < this.ircclient.channel.users.length; i++) {
-            var itm = list.appendItem(this.ircclient.channel.users[i], this.ircclient.channel.users[i]);
-            itm.setAttribute("context", "userContextPopup");
+  log("showUsers called in overlay.js");
+        // var list = document.getElementById("pmogChatUsers");
+        // 
+        // var count = list.getRowCount();
+        // 
+        // if (count > 0) {
+        //     while (count--) {
+        //         var item = list.getItemAtIndex(0);
+        //         list.removeItemAt(list.getIndexOfItem(item));
+        //     }
+        // }
+        // 
+        // if (this.ircclient && this.ircclient.channel !== null) {
+        //   
+        //   var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+        //   .getService(Components.interfaces.nsIWindowMediator);
+        //   var newWindow = wm.getMostRecentWindow("navigator:browser");
+        //   
+        //   var db = new newWindow.PassiveRecord("pmog_users.sqlite");
+        //   
+        //   var users = this.ircclient.channel.users;
+        //   var items = [];
+        //   for (var i = users.length - 1; i >= 0; i--){
+        //     user = users[i].replace("@", '');
+        //     //var itm = document.createElement("listitem");
+        //     var itm = document.createElement("chat-listitem");
+        //     
+        //     var avatarSearch;
+        //     avatarSearch = db.find('players', { conditions : ['`name` = ?', user], limit : 1});
+        //     if (avatarSearch[0] !== undefined) {
+        //       itm.setAttribute("image", newWindow.jQuery.pmog.BASE_URL + avatarSearch[0].avatar);
+        //     } else {
+        //       var img = newWindow.jQuery.pmog.getPlayerAvatar(user);
+        //       var player = { attributes : { "name" : user, "avatar" : img } };
+        //       db.create('players', player);
+        //       itm.setAttribute("image", newWindow.jQuery.pmog.BASE_URL + img);
+        //     }
+        //     
+        //     itm.setAttribute("label", users[i]);
+        //     itm.setAttribute("context", "userContextPopup");
+        //     itm.className = "listitem-iconic";
+        //     
+        //     items.push(itm);
+        //   }
+        //   
+        //   for (var i = items.length - 1; i >= 0; i--){
+        //     list.appendChild(items[i]);
+        //   }
+        // }
+        if (Peekko.ircclient) {
+          var users = Peekko.ircclient.channel.users;
+          var channelName = Peekko.ircclient.channel.name.replace(/#/, '');
+          for (var i = users.length - 1; i >= 0; i--) {
+            var user = users[i].replace(/@/, "");
+            //if (!treeView.hasRow(user)) {
+              channelTreeView.addPlayer(channelName, user);
+              //}
           }
         }
     },
+
+setItemAvatar: function(item, avatar) {
+  log("Setting avatar to: " + avatar);
+  item.setAttribute("image", avatar);
+},
 
 ircTimer: function() {
         if (this.ircclient) {

@@ -25,6 +25,10 @@
 	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/preferences.png');
 }
 
+#elementList {
+	width: 175px;;
+}
+
 toolbarbutton:not([disabled=true]) {
 	cursor: pointer;
 	opacity: 1.0;
@@ -48,6 +52,7 @@ notification toolbarbutton {
 	overflow: auto;
 	-moz-box-orient: vertical;
 	-moz-box-flex: 1;
+	-moz-user-focus: normal;
 }
 
 html|*.nick {
@@ -66,6 +71,10 @@ html|*.self-nick {
 
 html|*.message-text {
 	color: #000;
+}
+
+html|span {
+	-moz-user-select: text;
 }
 
 splitter {
@@ -87,6 +96,9 @@ scrollbox {
 tabpanels {
 	margin: 0;
 	padding: 0;
+	border: 0;
+	-moz-box-flex: 1;
+	-moz-appearance: none;
 }
 
 tab {
@@ -109,4 +121,8 @@ tab toolbarbutton label {
 
 chat-panel {
   -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#chat-panel");
+}
+
+chat-listitem {
+  -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#chatListItem");
 }

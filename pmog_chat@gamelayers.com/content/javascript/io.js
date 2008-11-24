@@ -134,6 +134,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
     createMessage : function(channel, nick, message) {
       var wrapperSpan = this.createSpan();
       wrapperSpan.style.display = "block";
+      //wrapperSpan.style.MozUserSelect = "text";
       wrapperSpan.setAttribute("class", "single-message");
       
       var nickSpan = this.createSpan();
@@ -161,6 +162,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.appendChild(messageSpan);
       
       this.boxInterface.element.appendChild(wrapperSpan);
+      // this.boxInterface.element.style.MozUserSelect = "text";
       
     },
     

@@ -31,6 +31,14 @@ getInput: function() {
         }
         return null;
     },
+    
+     //  var prefs = Components.classes["@mozilla.org/preferences-service;1"].
+     //                getService(Components.interfaces.nsIPrefBranch);
+     //  prefs.setBoolPref("browser.formfill.enable",true);
+addHistory: function(value) {
+  var fhService = Components.classes["@mozilla.org/satchel/form-history;1"].getService(Components.interfaces.nsIFormHistory2);
+  fhService.addEntry("ircCommandHistory", value);
+},
 
 onInput: function(event) {
         switch (event.keyCode) {
@@ -41,41 +49,10 @@ onInput: function(event) {
             if (input && input.length !== 0) {
                 chatInput.value = '';
                 this.inputs.push(input);
-                if (!this.commandHistory.length || this.commandHistory[0] != input) {
-                  this.commandHistory.unshift(input);
-                }
-
-                if (this.commandHistory.length > this.MAX_HISTORY) {
-                  this.commandHistory.pop();
-                }
-
-                this.lastHistoryReferenced = -1;
+                this.addHistory(input);
             }
             break;
-            case 38:
-            /* up */
-            if (xul.chatWindow.lastHistoryReferenced == -2) {
-                xul.chatWindow.lastHistoryReferenced = -1;
-                event.target.value = "";
-            } else if (xul.chatWindow.lastHistoryReferenced < xul.chatWindow.commandHistory.length - 1) {
-                event.target.value = xul.chatWindow.commandHistory[++xul.chatWindow.lastHistoryReferenced];
-            }
-            event.preventDefault();
-            break;
-            case 40:
-            /* down */
-            if (xul.chatWindow.lastHistoryReferenced > 0) {
-                event.target.value = xul.chatWindow.commandHistory[--xul.chatWindow.lastHistoryReferenced];
-            } else if (xul.chatWindow.lastHistoryReferenced == -1) {
-                event.target.value = "";
-                xul.chatWindow.lastHistoryReferenced = -2;
-            } else {
-                xul.chatWindow.lastHistoryReferenced = -1;
-                event.target.value = "";
-            }
-            event.preventDefault();
-            break;
-            default:
+          default:
             break;
         }
     },
@@ -85,9 +62,9 @@ focusOnInput: function(event) {
         chatInput.focus();
     },
 
-    setStatus: function(sStatus) {
-        $("status-text").value = sStatus;
-    },
+setStatus: function(sStatus) {
+  $("status-text").value = sStatus;
+},
 
 setNick: function(sNick) {
         this.nick = sNick;
@@ -196,6 +173,8 @@ addTab: function(title) {
 
         this.tabcontainer.tabs.appendChild(t);
         
+        channelTreeView.addChannel(cTitle);
+        
         var tp = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tabpanel");
 
@@ -215,6 +194,7 @@ addTab: function(title) {
         
         sb.topicIcon = favicon;
         sb.topic = title;
+        sb.contextMenu = "contentAreaContextMenu";
         
         this.ioMap.add(cTitle, new io.ChatWriter(cTitle));
         
@@ -235,6 +215,8 @@ closeTab: function(tab) {
   
   this.tabcontainer.tabs.removeChild(tab);
   this.tabcontainer.tabpanels.removeChild(mPanel);
+  
+  channelTreeView.removeChannel(cLabel);
   
   this.tabcontainer.tabs.selectedItem = this.tabcontainer.tabs.getItemAtIndex(this.tabcontainer.tabs.itemCount - 1);
 },
@@ -276,8 +258,15 @@ tabChange: function(tabbox) {
   } else if (Peekko.ircclient && tabbox.selectedItem.label === "Console") {
     Peekko.ircclient.channel = null;
   }
-  Peekko.showUsers();
-}
+},
+
+getAvatar: function(player, callback) {
+  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+  .getService(Components.interfaces.nsIWindowMediator);
+  var newWindow = wm.getMostRecentWindow("navigator:browser");
+  
+  newWindow.jQuery.pmog.getAvatar(player, callback);
+},
 
 });
 

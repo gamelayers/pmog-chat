@@ -144,7 +144,6 @@ Object.extend(peekko.Client.prototype, {
     onMyNickChange : function(newNick, oldNick) {
         this.controller.session.window.setNick(newNick);
         this.parent.onMyNickChange.call(this, newNick, oldNick);
-        this.controller.showUsers();
     },
 
     onChannelChange : function(channel) {

@@ -11,7 +11,7 @@
     <content>
       <xul:scrollbox anonid="contentScroll" class="chat-output" flex="1">
         <xul:notificationbox anonid="chatTopic">
-          <xul:notification anonid="topicContent" label="" type="info" image="https://developer.mozilla.org/favicon.ico" />
+          <xul:notification anonid="topicContent" type="info" xbl:inherits="image=icon, label" image="https://developer.mozilla.org/favicon.ico" />
         </xul:notificationbox>
       </xul:scrollbox>
     </content>
@@ -56,5 +56,20 @@
     <handlers>
     </handlers>
   </binding>
+  
+  <binding id="chatListItem" extends="chrome://global/content/bindings/listbox.xml#listitem">
+    <content>
+      <children>
+        <xul:listcell class="listcell-iconic" xbl:inherits="label,image,crop,disabled,flexlabel">
+          <xul:vbox>
+            <xul:label value="One" />
+            <xul:label value="two" />
+            <xul:label value="three" />
+          </xul:vbox>
+        </xul:listcell>
+      </children>
+    </content>
+  </binding>
+    
 
 </bindings>

@@ -312,14 +312,12 @@ irc.Channel = function(name) {
         //log("addUser: " + user);
         if (! this.hasUser(user)) {
             this.users.push(user)
-            Peekko.showUsers();
         }
     }
     
     this.removeUser = function(user) {
         if (this.hasUser(user)) {
             this.users = this.users.without(user);
-            Peekko.showUsers();
         }
     }
     
@@ -371,6 +369,21 @@ irc.Client.prototype = {
         this.peekko = peekko;
     },
     
+    print: function(channel, msg) {
+      var cSentTo = this.cleanChannelName(channel);
+      Peekko.session.window.ioMap.get(cSentTo).println(msg);
+    },
+    
+    broadcast: function(msg) {
+      var ios = Peekko.session.window.ioMap.values;
+      for (var i = ios.length - 1; i >= 0; i--){
+        ios[i].println(msg);
+      }
+    },
+    
+    cleanChannelName: function(channel) {
+      return channel.replace(/#/, '');
+    },
 
     /**
         Parses and executes a command, sending any requests to the server if
@@ -441,7 +454,20 @@ irc.Client.prototype = {
 
     onNickChange : function(newNick, oldNick) {
         this.out.println("*** " + oldNick + " is known as " + newNick);
-        this.controller.showUsers();
+        for (var i = channelTreeView.childData.length - 1; i >= 0; i--){
+          for (var x = channelTreeView.childData[i].length - 1; x >= 0; x--) {
+            if (channelTreeView.childData[i][x] === oldNick) {
+              channelTreeView.childData[i][x] = newNick;
+            }
+          }
+        }
+        
+        for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
+          if (channelTreeView.visibleData[i][0] === oldNick) {
+            channelTreeView.visibleData[i][0] = newNick;
+            channelTreeView.treeBox.invalidate();
+          }
+        }
     },
     
     onMyNickChange : function(newNick, oldNick) {
@@ -450,7 +476,6 @@ irc.Client.prototype = {
         } else {
             this.out.println("*** your nick is " + newNick);
         }
-        this.controller.showUsers();
     },
 
     // Rename to onMessage?
@@ -495,7 +520,15 @@ irc.Client.prototype = {
     },
 
     onJoin : function(nick, channel) {
-        this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
+      var cSentTo = channel.replace("#", "");
+      var channelTab = Peekko.session.window.getChannelTab(channel);
+      if (channelTab === undefined) {
+        var channelTab = Peekko.session.window.addTab(channel);
+      }
+      Peekko.session.window.selectTab(Peekko.session.window.getChannelTab(channel));
+      //this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
+      //Peekko.session.window.ioMap.get(cSentTo).println("*** " + this.yourNick(nick) + " joined channel " + channel);
+      this.print(channel, "*** " + this.yourNick(nick) + " joined channel " + channel);
     },
     
     onChannelChange : function(channel) {
@@ -543,11 +576,11 @@ irc.Client.prototype = {
     },
     
     onNameReply : function(sPublic, sChannel, aNames) {
-        this.out.println(sPublic + " " + sChannel + ": " + aNames.join(', '));
+        this.print(sChannel, sPublic + " " + sChannel + ": " + aNames.join(', '));
     },
     
     onNameReplyEnd : function(oMsg) {
-        this.controller.showUsers();
+      Peekko.showUsers();
     },
     
     onChannelModeChange : function(change, channel, source) {
@@ -584,7 +617,7 @@ irc.Client.prototype = {
     },
     
     onTopicChange : function(nick, channel, topic) {
-        this.err.println("*** " + nick + " has changed the topic on channel " 
+        this.print(channel, "*** " + nick + " has changed the topic on channel " 
                          + channel + " to " + topic);
     },
     
@@ -1011,7 +1044,7 @@ irc.Client.prototype = {
         Reference: http://www.irchelp.org/irchelp/rfc/rfc2812.txt
     */
     processMsg : function(sMsg) {
-        this.err.println("processing message: " + sMsg);
+        //this.err.println("processing message: " + sMsg);
         if (sMsg == "" || sMsg.match(/^\s*$/)) {
             return;
         }
@@ -1112,7 +1145,7 @@ irc.Client.prototype = {
             this.onKick(channel, oMsg.parameters[1], nick, oMsg.body);
             break;
         case -8 : // TOPIC
-          this.err.println("PROCESSING TOPIC MESSAGE IN IRC.JS");
+            //this.err.println("PROCESSING TOPIC MESSAGE IN IRC.JS");
             this.onTopicChange(oMsg.nick, oMsg.parameters[0], oMsg.body);
             break;
         case -9 : // PRIVMSG
@@ -1283,9 +1316,11 @@ irc.Client.prototype = {
             this.onListStart();
             break;
         case 322 : // LIST
-            var topic = oMsg.body;
-            if (topic != null) {
-                topic = topic.replace(/^\[[\w\+-]+\] ?/, "");
+            var topic = oMsg.parameters[1];
+            if (oMsg.body !== undefined) {
+                topic = oMsg.body.replace(/^\[[\w\+-]+\] ?/, "");
+            } else {
+              topic = oMsg.parameters[2];
             }
             this.onListReply(oMsg.parameters[1], oMsg.parameters[2], topic);
             break;
@@ -1326,10 +1361,10 @@ irc.Client.prototype = {
             this.onWhoReply(oMsg);
             break;
         case 353 : // NAMREPLY
-            this.err.println("NAME Reply: " + oMsg);
+            //this.err.println("NAME Reply: " + oMsg);
             var nicks = $PA(oMsg.body.split(/ +/));
             var channel = oMsg.parameters[2];
-            this.err.println("NAME Reply Channel: " + channel);
+            //this.err.println("NAME Reply Channel: " + channel);
             var oChannel = this.getChannel(channel);
             if (oChannel && oChannel.operator == null) {
                 var r = new RegExp("^.?" + this.nick + "$");

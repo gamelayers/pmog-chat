@@ -356,9 +356,11 @@ Object.extend(peekko.RoomInfo.prototype, {
                 this.updateRoomInfoRunning = true;
                 this.startUpdate(this.channel);
                 if (this.channel != this.allToken) {
+                  log("LIST ONE CHANNEL: " + this.channel);
                     // List just one channel.
                     this.ircclient.list(this.channel);
                 } else {
+                  log("LIST ALL CHANNELS");
                     // List all the channels.
                     this.ircclient.list();
                 }
@@ -369,7 +371,7 @@ Object.extend(peekko.RoomInfo.prototype, {
                     this.notConnected(channel);
                 }
                 // Clear the queue.  No sense keeps its state around.
-                this.queue = $PA();
+                this.queue = null;
                 log("exit 3");
                 return;
             } else {

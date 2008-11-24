@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay [
+<!ENTITY % pmogChatDTD SYSTEM "chrome://pmog_chat/locale/pmogchat.dtd">
+%pmogChatDTD;
+<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://global/locale/editMenuOverlay.dtd">
+ %editMenuOverlayDTD; 
+]>
+
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<overlay id="chatMenuOverlay"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+         
+
+         <stringbundleset id="stringbundleset"/>
+
+         <commandset id="mainCommandSet"/>
+         <commandset id="baseMenuCommandSet"/>
+
+         <broadcasterset id="mainBroadcasterSet"/>
+
+  <menupopup id="menu_ToolsPopup">
+      <menuitem id="menu_chatpreferences" class="menuitem-iconic" label="&toolsOptions.label;" accesskey="&toolsOptions.accesskey;" key="Key:Options" command="Tasks:ChatOptions" />
+  </menupopup>
+  
+    <menupopup id="menu_FilePopup">
+      <menuitem label="&connectionConnect.label;" accesskey="&connectionConnect.accesskey;" command="Tasks:Connect" key="Key:Connect" />
+      <menuitem label="&connectionDisconnect.label;" accesskey="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" key="Key:Disconnect" />
+    </menupopup>
+    
+  <script>
+    <![CDATA[
+      function initMenus() {
+        var bookMenu = document.getElementById('bookmarksMenu');
+        bookMenu.hidden = true;
+        
+        var historyMenu = document.getElementById('history-menu');
+        historyMenu.hidden = true;
+        
+        var viewMenu = document.getElementById('view-menu');
+        viewMenu.hidden = true;
+      }
+      
+      window.addEventListener("load", initMenus, false);
+    ]]>
+  </script>
+    
+</overlay>
