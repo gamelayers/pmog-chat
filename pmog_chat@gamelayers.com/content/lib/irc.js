@@ -460,10 +460,12 @@ irc.Client.prototype = {
 
     onNickChange : function(newNick, oldNick) {
         this.broadcast("*** " + oldNick + " is known as " + newNick);
-        for (var i = channelTreeView.childData.length - 1; i >= 0; i--){
-          for (var x = channelTreeView.childData[i].length - 1; x >= 0; x--) {
-            if (channelTreeView.childData[i][x] === oldNick) {
-              channelTreeView.childData[i][x] = newNick;
+        for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
+          if (channelTreeView.isContainer(i)) {
+            var cKey = channelTreeView.visibleData[i][0];
+            var cData = channelTreeView.childData[cKey].indexOf(oldNick);
+            if (cData != -1) {
+              channelTreeView.childData[cKey][cData] = newNick;
             }
           }
         }
