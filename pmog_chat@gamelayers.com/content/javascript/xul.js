@@ -155,10 +155,37 @@ toString: function() {
 observe: function(subject, topic, data) {
         log("pref changed: " + data);
     },
+    
+setTabIcon: function(tabName, imagePath) {
+  var tab = this.getChannelTab(tabName);
+  if (tab == undefined) {
+    return;
+  }
+  
+  tab.setAttribute("image", imagePath);
+},
 
 addTab: function(title) {
-        var cTitle = title.replace(/#/, '');
-        var favicon = this.getFavicon(cTitle);
+    var type;
+    var cTitle; //= title.replace(/#/, '');
+    var favicon; //= this.getFavicon(cTitle);
+    
+    if (title.indexOf("#") != -1) {
+      type = "channel";
+      cTitle = title.replace(/#/, '');
+      favicon = this.getFavicon(cTitle);
+    } else {
+      type = "private";
+      cTitle = title;
+      //favicon = this.getAvatar(title);
+      //this.getAvatar(title, this.setTabIcon);
+      if (channelTreeView.userData[title] !== undefined) {
+        favicon = channelTreeView.userData[title].avatar;
+      } else {
+        channelTreeView.userData[title] = {};
+        Peekko.session.window.getAvatar(title, this.setTabIcon);
+      }
+    }
         
         var t = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tab");
@@ -169,11 +196,15 @@ addTab: function(title) {
         
         t.setAttribute("oncommand", "Peekko.session.window.closeTab(this);");
         
-        t.setAttribute("image", favicon);
+        if (favicon !== undefined) {
+          t.setAttribute("image", favicon);
+        }
+        
+        t.setAttribute("value", type);
 
         this.tabcontainer.tabs.appendChild(t);
         
-        channelTreeView.addChannel(cTitle);
+        channelTreeView.addChannel(cTitle, type);
         
         var tp = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tabpanel");
@@ -209,11 +240,15 @@ selectTab: function(tab) {
 },
 
 closeTab: function(tab) {
+  var type = tab.value;
   var channel = tab.getAttribute("label");
-  cLabel = channel.replace(/#/, '');
-  Peekko.ircclient.partChannel(channel);
-  this.ioMap.remove(cLabel);
+  var cLabel = channel.replace(/#/, '');
   
+  if (type === "channel") {
+    Peekko.ircclient.partChannel(channel);
+  }
+  
+  this.ioMap.remove(cLabel);
   var mPanel = $(tab.linkedPanel);
   
   this.tabcontainer.tabs.removeChild(tab);
@@ -255,7 +290,7 @@ getFavicon: function(url) {
 tabChange: function(tabbox) {
   log("Tab Change Called");
   if (Peekko.ircclient && tabbox.selectedItem.label.indexOf("#") != -1) {
-    log("Changing the channel to: " + tabbox.selectedItem.label);
+    //log("Changing the channel to: " + tabbox.selectedItem.label);
     Peekko.joinChannel(tabbox.selectedItem.label);
     Peekko.ircclient.executeLocalInput("/join " + tabbox.selectedItem.label);
   } else if (Peekko.ircclient && tabbox.selectedItem.label === "Console") {

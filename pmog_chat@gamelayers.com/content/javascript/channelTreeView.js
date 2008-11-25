@@ -19,7 +19,7 @@ getCellText: function(idx, column) {
         var chan = this.visibleData[idx][0];
         var label = chan.replace(/_/, ".");
 
-        if (this.isContainer(idx)) {
+        if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
             var userCount = this.childData[chan].length;
             var userLabel = (userCount == 1 ? "user": "users");
             label = label + " (" + userCount + " " + userLabel + ")";
@@ -123,7 +123,7 @@ setAvatar: function(player, avatarPath) {
 },
 
 getImageSrc: function(idx, column) {
-        if (this.isContainer(idx)) {
+        if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
           var chan = this.visibleData[idx][0].replace(/_/, ".");
           return Peekko.session.window.getFavicon(chan);
         } else {
@@ -182,8 +182,10 @@ addRow: function(containerName, value) {
 
     },
 
-addChannel: function(name) {
+addChannel: function(name, type) {
         name = this.cleanChannel(name);
+        type = type || "channel";
+        var open = (type == "channel" ? true : false);
         var matching = false;
         for (var i = 0; i < this.visibleData.length; i++) {
             if (this.isContainer(i) && this.visibleData[i][0] === name) {
@@ -194,7 +196,7 @@ addChannel: function(name) {
 
         if (!matching) {
             this.childData[name] = [];
-            this.visibleData.push([name, true, true]);
+            this.visibleData.push([name, true, open, type]);
             this.treeBox.rowCountChanged(this.visibleData.length - 1, 1);
         }
 
@@ -240,7 +242,6 @@ addPlayer: function(channel, player) {
         channel = this.cleanChannel(channel);
         if (!this.hasChannel(channel)) {
             this.addChannel(channel);
-
         }
         this.addRow(channel, player);
 
@@ -292,8 +293,22 @@ getRowIndex: function(name) {
 };
 
 function init() {
-    document.getElementById("elementList").view = channelTreeView;
+    var channelTree = document.getElementById("elementList");
+    channelTree.view = channelTreeView;
+    
+    channelTree.addEventListener("dblclick", treeDoubleClick, false);
+}
 
+function treeDoubleClick(event) {
+  var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
+  var selectedText = channelTreeView.getCellText(selectedIndex);
+  if (!channelTreeView.isContainer(selectedIndex)) {
+    var chatTab = Peekko.session.window.getChannelTab(selectedText);
+    if (chatTab === undefined) {
+      chatTab = Peekko.session.window.addTab(channelTreeView.getCellText(selectedIndex));
+    }
+    Peekko.session.window.selectTab(chatTab);
+  }
 }
 
 function validateSelection(event) {

@@ -27,8 +27,8 @@
   </menupopup>
   
     <menupopup id="menu_FilePopup">
-      <menuitem label="&connectionConnect.label;" accesskey="&connectionConnect.accesskey;" command="Tasks:Connect" key="Key:Connect" />
-      <menuitem label="&connectionDisconnect.label;" accesskey="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" key="Key:Disconnect" />
+      <menuitem class="menu-iconic" label="&connectionConnect.label;" accesskey="&connectionConnect.accesskey;" command="Tasks:Connect" key="Key:Connect" />
+      <menuitem class="menu-iconic" label="&connectionDisconnect.label;" accesskey="&connectionDisconnect.accesskey;" command="Tasks:Disconnect" key="Key:Disconnect" />
     </menupopup>
     
   <script>

@@ -666,7 +666,6 @@ ircTimer: function() {
                     try {
                         if (command) {
                             this.ircclient.sendCommandObject(command);
-
                         }
 
                     } catch(ex) {

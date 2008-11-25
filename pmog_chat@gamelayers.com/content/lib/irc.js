@@ -482,7 +482,14 @@ irc.Client.prototype = {
     onText : function(channel, nick, message) {
         if (channel == this.nick) {
             // Private message
-            this.out.println("*" + nick + "* " + message);
+            //this.out.println("*" + nick + "* " + message);
+            var privChat = Peekko.session.window.getChannelTab(nick);
+            if (privChat === undefined) {
+              privChat = Peekko.session.window.addTab(nick);
+            }
+            Peekko.session.window.ioMap.get(nick).createMessage(channel, nick, message);
+            Peekko.session.window.ioMap.get(nick).scrollDown();
+            //Peekko.session.window.selectTab(nick);
         } else {
             // // Public message to the channel
             // if (this.channel.name == channel) {
@@ -496,7 +503,7 @@ irc.Client.prototype = {
             Peekko.session.window.ioMap.get(cChannel).createMessage(channel, nick, message);
             Peekko.session.window.ioMap.get(cChannel).scrollDown();
         }
-        this.out.scrollDown();
+        //this.out.scrollDown();
     },
 
     onNotice : function(message, from) {
@@ -516,16 +523,16 @@ irc.Client.prototype = {
     },
     
     onErrorMessage : function(msg) {
-        this.out.println("*** " + msg);        
+        this.broadcast("*** " + msg);        
     },
 
     onJoin : function(nick, channel) {
       var cSentTo = channel.replace("#", "");
       var channelTab = Peekko.session.window.getChannelTab(channel);
       if (channelTab === undefined) {
-        var channelTab = Peekko.session.window.addTab(channel);
+        channelTab = Peekko.session.window.addTab(channel);
       }
-      Peekko.session.window.selectTab(Peekko.session.window.getChannelTab(channel));
+      Peekko.session.window.selectTab(channelTab);
       //this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
       //Peekko.session.window.ioMap.get(cSentTo).println("*** " + this.yourNick(nick) + " joined channel " + channel);
       this.print(channel, "*** " + this.yourNick(nick) + " joined channel " + channel);
@@ -910,17 +917,18 @@ irc.Client.prototype = {
                     result = new irc.Command("PART", this.argsOrChannel(args));
                     break;
                 case "me":
-                    var channel = this.defaultChannel();
-                    if (channel == null) {
+                    //var channel = this.defaultChannel();
+                    var channel = Peekko.session.window.tabcontainer.selectedTab.label;
+                    if (channel == null) {//|| Peekko.session.window.tabcontainer.selectedTab.value !== "private") {
                         this.out.println("*** message not sent; join a channel first.");
                         return null;
                     }
                     var token = String.fromCharCode(1);
                     result = new irc.Command("PRIVMSG", [ channel ], token + "ACTION " + body + token);
-                    var out = this.out;
+                    var out = this;
                     var msg = "* " + this.nick + " " + body;
                     result.event = function() {
-                        out.println(msg);
+                        out.print(channel, msg);
                     }
                     break;
                 case "msg":
@@ -997,7 +1005,8 @@ irc.Client.prototype = {
                 return this.executeLocalInput("/me " + m[1]);
             }
             // Not a command, so it must be a message.  Send it to the default channel.
-            var channel = this.defaultChannel()
+            //var channel = this.defaultChannel()
+            var channel = Peekko.session.window.tabcontainer.selectedTab.label;
             var ircclient = this;
             if (channel == null) {
                 this.out.println("*** message not sent; join a channel first.");
