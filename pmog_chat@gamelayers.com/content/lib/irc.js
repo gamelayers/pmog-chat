@@ -448,12 +448,18 @@ irc.Client.prototype = {
     onSentMessage : function(sentTo, message) {
       var cSentTo = sentTo.replace(/#/, '');
       
+      var tab = Peekko.session.window.getChannelTab(sentTo);
+      if (tab === undefined) {
+        tab = Peekko.session.window.addTab(sentTo);
+      }
+      Peekko.session.window.selectTab(tab);
+      
       Peekko.session.window.ioMap.get(cSentTo).createMessage(sentTo, this.nick, message);
       Peekko.session.window.ioMap.get(cSentTo).scrollDown();
     },
 
     onNickChange : function(newNick, oldNick) {
-        this.out.println("*** " + oldNick + " is known as " + newNick);
+        this.broadcast("*** " + oldNick + " is known as " + newNick);
         for (var i = channelTreeView.childData.length - 1; i >= 0; i--){
           for (var x = channelTreeView.childData[i].length - 1; x >= 0; x--) {
             if (channelTreeView.childData[i][x] === oldNick) {
@@ -536,6 +542,9 @@ irc.Client.prototype = {
       //this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
       //Peekko.session.window.ioMap.get(cSentTo).println("*** " + this.yourNick(nick) + " joined channel " + channel);
       this.print(channel, "*** " + this.yourNick(nick) + " joined channel " + channel);
+      if (this.nick !== nick) {
+        channelTreeView.addPlayer(channel, nick);
+      }
     },
     
     onChannelChange : function(channel) {
@@ -543,7 +552,10 @@ irc.Client.prototype = {
     },
 
     onPart : function(nick, channel) {
-        this.out.println("*** " + this.yourNick(nick) + " left channel " + channel);
+        this.print(channel, "*** " + this.yourNick(nick) + " left channel " + channel);
+        if (this.nick !== nick) {
+          channelTreeView.removePlayer(channel, nick);
+        }
     },
 
     onWhoReply : function(oMsg) {
@@ -934,6 +946,12 @@ irc.Client.prototype = {
                 case "msg":
                     var sendto = args.shift();
                     var msg = args.join(' ');
+                    
+                    // var tab = Peekko.session.window.getChannelTab(sendTo);
+                    // if (tab == null) {
+                    //   tab = Peekko.session.window.addTab(sendTo);
+                    // }
+                    // Peekko.session.window.selectTab(tab);
                     // This parsing will eat up any extra whitespace.  (Extra whitespace isn't shown anyhow
                     // in the html.)
                     result = new irc.Command("PRIVMSG", [ sendto ], msg);
@@ -1289,7 +1307,7 @@ irc.Client.prototype = {
             break;
 */
         case 301 : // away
-            this.out.println("*** " + oMsg.parameters[1] + " is away: " + oMsg.body);
+            this.print(oMsg.body, "*** " + oMsg.parameters[1] + " is away: " + oMsg.body);
             break;
         case 311 : // whois #1
             var params = oMsg.parameters;

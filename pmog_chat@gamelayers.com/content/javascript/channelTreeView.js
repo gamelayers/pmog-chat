@@ -43,6 +43,10 @@ getChannelName: function(idx) {
   return chan;
 },
 
+getChannelKey: function(idx) {
+  return this.visibleData[idx][0];
+},
+
 isContainer: function(idx) {
   var container = false;
   try {
@@ -161,8 +165,7 @@ getImageSrc: function(idx, column) {
     getColumnProperties: function(column, element, prop) {},
 
 cleanChannel: function(channelName) {
-        return channelName.replace(/\./, "_");
-
+        return channelName.replace(/\./, "_").replace(/#/, '');
     },
 
 addRow: function(containerName, value) {
@@ -260,13 +263,12 @@ addPlayer: function(channel, player) {
 
 hasChannel: function(name) {
         name = this.cleanChannel(name);
+        log("Looking to match channel name: " + name);
         var matching = false;
         for (var i = 0; i < this.visibleData.length; i++) {
             if (this.isContainer(i) && this.visibleData[i][0] === name) {
                 matching = true;
-
             }
-
         }
 
         return matching;
@@ -299,7 +301,39 @@ getRowIndex: function(name) {
         }
         return index;
 
-    }
+    },
+    
+    removePlayer: function(channel, name) {
+      channel = this.cleanChannel(channel);
+      
+      log("Removing: " + name + " from: " + channel);
+
+      // Get the index of the channel name from the visibleData array
+      var visIndex;  
+      for (var i = 0; i < this.visibleData.length; i++) {
+          if (this.isContainer(i) && this.visibleData[i][0] === channel) {
+            visIndex = i;
+          }
+      }
+
+      // Count up all the items to be removed from the list. Starting with a count of 1 for the channel node
+      // and adding each child of that channel to the total count to be removed.
+      var thisLevel = this.getLevel(visIndex);
+      for (var t = visIndex + 1; t < this.visibleData.length; t++) {
+        log("Checking index: " + t)
+          if (this.getLevel(t) > thisLevel && this.getCellText(t) == name) {
+            log("Removing index: " + t + " from visible data");
+            this.visibleData.splice(t, 1);
+            this.treeBox.rowCountChanged(t, -1);
+          }
+      }
+
+      // Finally, remove them from the actual data collection so we don't get them again.'
+      if (this.childData[channel]) {
+        var index = this.childData[channel].indexOf(name);
+        this.childData[channel].splice(index, 1);
+      }
+    },
 
 };
 
