@@ -31,6 +31,17 @@ getCellText: function(idx, column) {
         return label;
 
     },
+    
+getChannelName: function(idx) {
+  var chan = this.visibleData[idx][0];
+  chan = chan.replace(/_/, ".");
+  
+  if (this.visibleData[idx][3] === "channel") {
+    chan = "#" + chan;
+  }
+  
+  return chan;
+},
 
 isContainer: function(idx) {
   var container = false;
@@ -297,6 +308,7 @@ function init() {
     channelTree.view = channelTreeView;
     
     channelTree.addEventListener("dblclick", treeDoubleClick, false);
+    channelTree.addEventListener("click", selectTreeChannel, false);
 }
 
 function treeDoubleClick(event) {
@@ -308,6 +320,16 @@ function treeDoubleClick(event) {
       chatTab = Peekko.session.window.addTab(channelTreeView.getCellText(selectedIndex));
     }
     Peekko.session.window.selectTab(chatTab);
+  }
+}
+
+function selectTreeChannel(event) {
+  var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
+  var selectedText = channelTreeView.getChannelName(selectedIndex);
+  
+  if (channelTreeView.isContainer(selectedIndex)) {
+    var chatTab = Peekko.session.window.getChannelTab(selectedText);
+    Peekko.session.window.tabcontainer.selectedTab = chatTab;
   }
 }
 
