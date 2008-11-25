@@ -133,13 +133,12 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
     
     createMessage : function(channel, nick, message) {
       var wrapperSpan = this.createSpan();
-      wrapperSpan.style.display = "block";
-      //wrapperSpan.style.MozUserSelect = "text";
+      //wrapperSpan.style.display = "block";
       wrapperSpan.setAttribute("class", "single-message");
       
       var nickSpan = this.createSpan();
       nickSpan.textContent = nick + ":";
-      
+
       var nickClasses;
       if (nick == Peekko.ircclient.nick) {
         //nickSpan.setAttribute("class", "self-nick");
@@ -162,12 +161,18 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.appendChild(messageSpan);
       
       this.boxInterface.element.appendChild(wrapperSpan);
+            
+      this.boxInterface.element.appendChild(this.createBr());
       // this.boxInterface.element.style.MozUserSelect = "text";
       
     },
     
     createSpan : function() {
       return document.createElementNS(HTMLNS, "span");
+    },
+    
+    createBr : function() {
+      return document.createElementNS(HTMLNS, "br");
     },
     
     initialize : function(id) {
@@ -181,9 +186,10 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
             throw "error: cannot get " + this.id + " container";
         }
         var child = this.createSpan();
-        child.style.display = "block";
+        //child.style.display = "block";
         child.textContent = s;
         this.boxInterface.element.appendChild(child);
+        this.boxInterface.element.appendChild(this.createBr());
     },
     
     println : function(s) {

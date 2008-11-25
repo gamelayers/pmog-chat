@@ -90,7 +90,7 @@ scrollbox {
 	border-style:solid;
 	border-width:1px;
 	color:-moz-fieldtext;
-	margin:2px 4px;
+	margin:0px 4px;
 }
 
 tabpanels {
@@ -123,6 +123,6 @@ chat-panel {
   -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#chat-panel");
 }
 
-chat-listitem {
-  -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#chatListItem");
+notificationbox {
+	margin: 2px 4px 0;
 }

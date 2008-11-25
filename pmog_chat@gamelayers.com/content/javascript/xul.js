@@ -180,6 +180,7 @@ addTab: function(title) {
 
         tp.id = cTitle + "-output-panel";
         t.linkedPanel = tp.id;
+        tp.flex = "1";
 
         var sb = document.createElementNS(
         "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "chat-panel");
@@ -187,6 +188,8 @@ addTab: function(title) {
         sb.className = "chat-output";
         
         sb.id = cTitle + "-output";
+        
+        sb.flex = "1";
         
         tp.appendChild(sb);
 
