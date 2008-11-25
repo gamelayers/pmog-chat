@@ -480,7 +480,8 @@ irc.Client.prototype = {
     
     onMyNickChange : function(newNick, oldNick) {
         if (oldNick) {
-            this.out.println("*** " + oldNick + " is known as " + newNick);
+            //this.out.println("*** " + oldNick + " is known as " + newNick);
+            this.onNickChange(newNick, oldNick);
         } else {
             this.out.println("*** your nick is " + newNick);
         }
