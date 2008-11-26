@@ -16,7 +16,8 @@ xul.ChatWindow = Class.create();
 xul.ChatWindow.MAX_HISTORY = 30;
 xul.ChatWindow.prototype = Object.extend(new peekko.RoomListener(), {
     initialize: function() {
-        this.inputs = $PA();
+        //this.inputs = $PA();
+        this.inputs = new Array();
         this.nick = null;
         this.channel = null;
         this.commandHistory = new Array();
@@ -32,9 +33,6 @@ getInput: function() {
         return null;
     },
     
-     //  var prefs = Components.classes["@mozilla.org/preferences-service;1"].
-     //                getService(Components.interfaces.nsIPrefBranch);
-     //  prefs.setBoolPref("browser.formfill.enable",true);
 addHistory: function(value) {
   var fhService = Components.classes["@mozilla.org/satchel/form-history;1"].getService(Components.interfaces.nsIFormHistory2);
   fhService.addEntry("ircCommandHistory", value);
@@ -71,7 +69,8 @@ setNick: function(sNick) {
     },
 
 update: function(channel, count, topic) {
-        var status = $PA();
+        //var status = $PA();
+        var status = new Array();
         if (this.nick !== null) {
             status.push(this.nick);
         }
@@ -91,7 +90,7 @@ update: function(channel, count, topic) {
 
 
         }
-        if (topic !== null && topic.length !== 0) {
+        if (topic) {
             if (status.length > 0) {
                 status = [status.join(' ') + ";"];
             }
@@ -286,9 +285,7 @@ getFavicon: function(url) {
 },
 
 tabChange: function(tabbox) {
-  log("Tab Change Called");
   if (Peekko.ircclient && tabbox.selectedItem.label.indexOf("#") != -1) {
-    //log("Changing the channel to: " + tabbox.selectedItem.label);
     Peekko.joinChannel(tabbox.selectedItem.label);
     Peekko.ircclient.executeLocalInput("/join " + tabbox.selectedItem.label);
   } else if (Peekko.ircclient && tabbox.selectedItem.label === "Console") {

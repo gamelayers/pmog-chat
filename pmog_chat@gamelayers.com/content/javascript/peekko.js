@@ -45,7 +45,8 @@ Object.extend(peekko.ChatListener.prototype, {
 peekko.ChatEvents = Class.create();
 Object.extend(peekko.ChatEvents.prototype, {
     initialize : function() {
-        this.listeners = $PA(arguments);
+        //this.listeners = $PA(arguments);
+        this.listeners = new Array();
     },
 
     addListener : function(listener) {
@@ -53,7 +54,7 @@ Object.extend(peekko.ChatEvents.prototype, {
     },
 
     message : function(message) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onMessage.call(listener, message);
@@ -64,7 +65,7 @@ Object.extend(peekko.ChatEvents.prototype, {
     },
 
     messageToYou : function(message) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onMessageToYou.call(listener, message);
@@ -75,7 +76,7 @@ Object.extend(peekko.ChatEvents.prototype, {
     },
 
     messageAboutYou : function(message) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onMessageAboutYou.call(listener, message);
@@ -92,61 +93,61 @@ Object.extend(peekko.ChatEvents.prototype, {
 });
 
 // Retrieves default configuration from the server.
-peekko.DefaultConfig = Class.create();
-Object.extend(peekko.DefaultConfig.prototype, {
-    initialize : function() {
-    },
-
-    startRequest : function() {
-        this.completed = false;
-        this.failed = false;
-        this.request = null;
-          var url = "http://peekko.com/chat/default-config.xml";
-          var ajax = new Ajax.Request(url, {
-                method: 'get',
-                parameters : '',
-                //onLoaded: function() { alert("loaded"); },
-                onComplete: bind(this.onComplete, this),
-                onFailure: bind(this.onFailure, this),
-                onException: bind(this.onException, this)
-            });
-    },
-
-    onFailure : function() {
-        log("onFailure");
-        this.failed = true;
-    },
-
-    onException : function() {
-        log("onException");
-        this.failed = true;
-    },
-
-    onComplete : function(request) {
-        log("onComplete");
-        this.completed = true;
-        this.request = request;
-        log(request.responseText);
-    },
-
-    setup : function() {
-        this.startRequest();
-        this.wait();
-        if (this.failed) {
-            // just pull in the default values
-            log("failed to read config from the peekko.com")
-        } else {
-            log("read config from the peekko.com")
-        }
-    },
-
-    wait : function() {
-        if (! this.completed && ! this.failed) {
-            setTimeout(bind(this.wait, this), 600);
-        }
-    }
-
-});
+// peekko.DefaultConfig = Class.create();
+// Object.extend(peekko.DefaultConfig.prototype, {
+//     initialize : function() {
+//     },
+// 
+//     startRequest : function() {
+//         this.completed = false;
+//         this.failed = false;
+//         this.request = null;
+//           var url = "http://peekko.com/chat/default-config.xml";
+//           var ajax = new Ajax.Request(url, {
+//                 method: 'get',
+//                 parameters : '',
+//                 //onLoaded: function() { alert("loaded"); },
+//                 onComplete: bind(this.onComplete, this),
+//                 onFailure: bind(this.onFailure, this),
+//                 onException: bind(this.onException, this)
+//             });
+//     },
+// 
+//     onFailure : function() {
+//         log("onFailure");
+//         this.failed = true;
+//     },
+// 
+//     onException : function() {
+//         log("onException");
+//         this.failed = true;
+//     },
+// 
+//     onComplete : function(request) {
+//         log("onComplete");
+//         this.completed = true;
+//         this.request = request;
+//         log(request.responseText);
+//     },
+// 
+//     setup : function() {
+//         this.startRequest();
+//         this.wait();
+//         if (this.failed) {
+//             // just pull in the default values
+//             log("failed to read config from the peekko.com")
+//         } else {
+//             log("read config from the peekko.com")
+//         }
+//     },
+// 
+//     wait : function() {
+//         if (! this.completed && ! this.failed) {
+//             setTimeout(bind(this.wait, this), 600);
+//         }
+//     }
+// 
+// });
 
 // For documentation purposes more than anything.
 peekko.RoomListener = Class.create();
@@ -178,13 +179,16 @@ Object.extend(peekko.RoomListener.prototype, {
 peekko.RoomInfo = Class.create();
 Object.extend(peekko.RoomInfo.prototype, {
     initialize : function() {
-        this.queue = $PA();
-        this.listReply = $PA();
+        //this.queue = $PA();
+        this.queue = new Array();
+        //this.listReply = $PA();
+        this.listReply = new Array();
         this.checkQueueRunning = false;
         this.channel = null; // this should really be called channelPattern
         this.updateRoomInfoRunning = false;
         this.timeout = 2000;
-        this.listeners = $PA();
+        //this.listeners = $PA();
+        this.listeners = new Array();
         this.ircclient = null;
         this.allToken = "__all__";
         this.updates = 0;
@@ -198,7 +202,8 @@ Object.extend(peekko.RoomInfo.prototype, {
             this.ircclient.onListEnd = bind(this.onListEnd, this);
             this.ircclient.onServerLoadTooHeavy = bind(this.onServerLoadTooHeavy, this);
         }
-        this.queue = $PA();
+        //this.queue = $PA();
+        this.queue = new Array();
     },
 
     addListener : function(listener) {
@@ -210,7 +215,7 @@ Object.extend(peekko.RoomInfo.prototype, {
         --------------------------
     */
     noSuchRoom : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onNoSuchRoom.call(listener, channel);
@@ -221,7 +226,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     roomUpdate : function(channel, count, topic, pattern) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onRoomUpdate.call(listener, channel, count, topic, pattern);
@@ -232,7 +237,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     retryingUpdate : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onRetryingUpdate.call(listener, channel);
@@ -243,7 +248,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     waitingForUpdate : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onWaitingForUpdate.call(listener, channel);
@@ -254,7 +259,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     notConnected : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onNotConnected.call(listener, channel);
@@ -265,7 +270,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     endUpdate : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onEndUpdate.call(listener, channel);
@@ -276,7 +281,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     startUpdate : function(channel) {
-        this.listeners.each(
+        this.listeners.forEach(
             bind(function (listener) {
                 try {
                     listener.onStartUpdate.call(listener, channel);
@@ -294,7 +299,8 @@ Object.extend(peekko.RoomInfo.prototype, {
 
     onListStart : function() {
         if (this.updateRoomInfoRunning) {
-            this.listReply = $PA();
+            //this.listReply = $PA();
+            this.listReply = new Array();
             this.waited = 0;
             this.updates = 0;
         } else {
@@ -340,7 +346,6 @@ Object.extend(peekko.RoomInfo.prototype, {
         if (waited == null) {
             waited = 0;
         }
-        //log('checkQueue');
         this.checkQueueRunning = true;
         if (! this.updateRoomInfoRunning) {
             // start a new one
@@ -356,11 +361,9 @@ Object.extend(peekko.RoomInfo.prototype, {
                 this.updateRoomInfoRunning = true;
                 this.startUpdate(this.channel);
                 if (this.channel != this.allToken) {
-                  log("LIST ONE CHANNEL: " + this.channel);
                     // List just one channel.
                     this.ircclient.list(this.channel);
                 } else {
-                  log("LIST ALL CHANNELS");
                     // List all the channels.
                     this.ircclient.list();
                 }
@@ -384,7 +387,6 @@ Object.extend(peekko.RoomInfo.prototype, {
         // Make sure we don't get stuck here because the server does something dumb.
         waited++;
         if (waited < 20) {
-            //log("waiting");
             setTimeout(bind(function() { this.checkQueue(waited) }, this), this.timeout);
         } else {
 
@@ -398,7 +400,6 @@ Object.extend(peekko.RoomInfo.prototype, {
     },
 
     update : function(channel) {
-        //log("update: " + channel);
         try {
           if (channel && channel.length != 0 && this.ircclient != null) {
               this.queue.push(channel);
@@ -627,13 +628,11 @@ peekko.listener =
     onStateChange: function(aProgress, aRequest, aFlag, aStatus) {
         if(aFlag & Components.interfaces.nsIWebProgressListener.STATE_START) {
             // This fires when the load event is initiated
-            //log("state start");
             this.started = true;
             Peekko.onLocationChangeStart();
         }
         if(aFlag & Components.interfaces.nsIWebProgressListener.STATE_STOP) {
             // This fires when the load finishes
-            //log("state stop");
             this.started = false;
 
             if (this.locationChanged) {
@@ -688,15 +687,18 @@ peekko.StatsListener = Class.create();
 peekko.StatsListener.prototype = Object.extend(new peekko.RoomListener(), {
 
     initialize : function() {
-        this.rooms = $PA();
-        this.tempRooms = $PA();
+        //this.rooms = $PA();
+        this.rooms = new Array();
+        //this.tempRooms = $PA();
+        this.tempRooms = new Array();
         this.allToken = "__all__"; // defined in peekko.RoomInfo
     },
 
     onStartUpdate : function(channel) {
         if (channel == this.allToken) {
             // Clear the channels.
-            this.tempRooms = $PA();
+            //this.tempRooms = $PA();
+            this.tempRooms = new Array();
         }
     },
 

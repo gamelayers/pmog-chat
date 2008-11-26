@@ -115,14 +115,15 @@ function log(msg) {
     */
     execCommand : function(command)
     {
-      var args = new PArray();
+      //var args = new PArray();
+      var args = new Array();
       args.push("-c");
       args.push(command);
       args.push(">/tmp/execCommand.txt");
-      log("command: " + command);
+      //log("command: " + command);
       this.execProgram("/bin/bash", args, true);
       var output = this.readFile(this.convertPathToFile("/tmp/execCommand.txt"));
-      log("output: " + output);
+      //log("output: " + output);
       return output;
     },
 

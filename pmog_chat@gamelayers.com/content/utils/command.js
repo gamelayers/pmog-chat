@@ -97,8 +97,9 @@ var CommandUpdater = {
    */
   doCommand: function(command) {
     var controller = this._getControllerForCommand(command);
-    if (!controller)
+    if (!controller) {
       return;
+    }
     controller.doCommand(command);
   }, 
   

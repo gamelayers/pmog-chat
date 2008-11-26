@@ -28,12 +28,13 @@ channelTreeView.prototype = {
     var label;
     try {
       var chan = this.visibleData[idx][0];
-      var label = chan.replace(/_/, ".");
-
+      label = chan;
+      
       if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
         var userCount = this.childData[chan].length;
         var userLabel = (userCount == 1 ? "user": "users");
         label = label + " (" + userCount + " " + userLabel + ")";
+        label = chan.replace(/_/, ".");
       }
     } catch(e) {
       label = "";
@@ -86,32 +87,44 @@ channelTreeView.prototype = {
   },
 
   getParentIndex: function(idx) {
-    if (this.isContainer(idx)) return - 1;
-    for (var t = idx - 1; t >= 0; t--) {
-      if (this.isContainer(t)) return t;
+    var pIndex;
+    
+    if (this.isContainer(idx)) {
+      pIndex = - 1;
     }
+    
+    for (var t = idx - 1; t >= 0; t--) {
+      if (this.isContainer(t)) {
+        pIndex = t;
+      }
+    }
+    return pIndex;
   },
   
   getLevel: function(idx) {
-    if (this.isContainer(idx)) return 0;
+    if (this.isContainer(idx)) {
+      return 0;
+    }
     return 1;
   },
   
   hasNextSibling: function(idx, after) {
+    var hasNext = false;
     var thisLevel = this.getLevel(idx);
     for (var t = idx + 1; t < this.visibleData.length; t++) {
-      var nextLevel = this.getLevel(t)
-      if (nextLevel == thisLevel) {
-        return true;
-      } else if (nextLevel < thisLevel) {
-        return false;
+      var nextLevel = this.getLevel(t);
+      if (nextLevel === thisLevel) {
+        hasNext = true;
       }
     }
+    return hasNext;
   },
   
   toggleOpenState: function(idx) {
     var item = this.visibleData[idx];
-    if (!item[1]) return;
+    if (!item[1]) {
+      return;
+    }
 
     if (item[2]) {
       item[2] = false;
@@ -119,8 +132,11 @@ channelTreeView.prototype = {
       var thisLevel = this.getLevel(idx);
       var deletecount = 0;
       for (var t = idx + 1; t < this.visibleData.length; t++) {
-        if (this.getLevel(t) > thisLevel) deletecount++;
-        else break;
+        if (this.getLevel(t) > thisLevel) {
+          deletecount++;
+        } else {
+          break;
+        }
       }
       if (deletecount) {
         this.visibleData.splice(idx + 1, deletecount);
@@ -145,18 +161,20 @@ channelTreeView.prototype = {
   },
 
   getImageSrc: function(idx, column) {
+    var avPath = null;
     if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
       var chan = this.visibleData[idx][0].replace(/_/, ".");
-      return Peekko.session.window.getFavicon(chan);
+      avPath = Peekko.session.window.getFavicon(chan);
     } else {
       var playerName = this.getCellText(idx);
       if (this.userData[playerName] !== undefined) {
-        return this.userData[playerName].avatar;
+        avPath = this.userData[playerName].avatar;
       } else {
         this.userData[playerName] = {};
         Peekko.session.window.getAvatar(playerName, this.setAvatar);
       }
     }
+    return avPath;
   },
   getProgressMode: function(idx, column) {},
   
@@ -269,7 +287,6 @@ channelTreeView.prototype = {
 
   hasChannel: function(name) {
     name = this.cleanChannel(name);
-    log("Looking to match channel name: " + name);
     var matching = false;
     for (var i = 0; i < this.visibleData.length; i++) {
       if (this.isContainer(i) && this.visibleData[i][0] === name) {
@@ -302,9 +319,7 @@ channelTreeView.prototype = {
 
   removePlayer: function(channel, name) {
     channel = this.cleanChannel(channel);
-
-    log("Removing: " + name + " from: " + channel);
-
+    
     // Get the index of the channel name from the visibleData array
     var visIndex;
     for (var i = 0; i < this.visibleData.length; i++) {
@@ -317,9 +332,7 @@ channelTreeView.prototype = {
     // and adding each child of that channel to the total count to be removed.
     var thisLevel = this.getLevel(visIndex);
     for (var t = visIndex + 1; t < this.visibleData.length; t++) {
-      log("Checking index: " + t)
-      if (this.getLevel(t) > thisLevel && this.getCellText(t) == name) {
-        log("Removing index: " + t + " from visible data");
+      if (this.getLevel(t) > thisLevel && this.getCellText(t) === name) {
         this.visibleData.splice(t, 1);
         this.treeBox.rowCountChanged(t, -1);
       }

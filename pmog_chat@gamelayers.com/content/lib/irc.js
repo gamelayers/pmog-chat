@@ -56,9 +56,10 @@ irc.hostnameToIP = function(sHost) {
     return oDNS.IP;
 }
 
-irc.aSockets = new PArray(); // scoket control array
-irc.aDCCChats = new PArray(); // dcc chat object array
-irc.aDCCSends = new PArray(); // dcc send object array
+irc.aSockets = new Array(); // scoket control array
+//irc.aSockets = new PArray(); // scoket control array
+//irc.aDCCChats = new PArray(); // dcc chat object array
+//irc.aDCCSends = new PArray(); // dcc send object array
 
 irc.aCommands = [ // recognized commands
         ["ping", -1],
@@ -169,7 +170,8 @@ irc.Message = function(sMsg) {
     this.prefix = "";
     this.command = "";
     this.commandCode = 0;
-    this.parameters = new PArray();
+    //this.parameters = new PArray();
+    this.parameters = new Array();
     this.body = "";
     // Get rid of these weird characters that are used for bold or other tricks.
     // Maybe I can come back to this and actually have it use the right attributes.
@@ -202,7 +204,8 @@ irc.Message = function(sMsg) {
     if (index != -1) {
         this.parameters = this.parameters.substring(0, this.parameters.indexOf(":"));
     }
-    this.parameters = $PA(this.parameters.split(" "));
+    //this.parameters = $PA(this.parameters.split(" "));
+    this.parameters = this.parameters.split(" ");
     if (this.parameters[this.parameters.length - 1].length == 0) {
         // Pop off the null string.
         this.parameters.pop();
@@ -232,8 +235,10 @@ irc.Channel = function(name) {
 
     this.clear = function(name) {
         this.name = name;
-        this.modes = new PArray();
-        this.users = new PArray();
+        //this.modes = new PArray();
+        this.modes = new Array();
+        //this.users = new PArray();
+        this.users = new Array();
         this.limit = null;
         this.operator = null;
     }
@@ -245,18 +250,19 @@ irc.Channel = function(name) {
     }
     
     this.setMode = function(modes) {
-        this.modes = new PArray();
+        //this.modes = new PArray();
+        this.modes = new Array();
         this.changeMode(modes);
     }
     
     this.addMode = function(mode) {
-        if (! this.modes.contains(mode)) {
+        if (this.modes.indexOf(mode) !== -1) {
             this.modes.push(mode);
         }
     }
     
     this.removeMode = function(mode) {
-        if (this.modes.contains(mode)) {
+        if (this.modes.indexOf(mode) !== -1) {
             this.modes = this.modes.without(mode);
         }
     }
@@ -281,7 +287,7 @@ irc.Channel = function(name) {
     }
     
     this.hasMode = function(mode) {
-        return this.modes.contains(mode);
+        return this.modes.indexOf(mode) !== -1;
     }
     
     this.toString = function() {
@@ -304,11 +310,10 @@ irc.Channel = function(name) {
     }
     
     this.hasUser = function(user) {
-        return this.users.contains(user);
+        return this.users.indexOf(user) !== -1;
     }
     
     this.addUser = function(user) {
-        //log("addUser: " + user);
         if (! this.hasUser(user)) {
             this.users.push(user)
             if (! this.isPrivate()) {
@@ -327,7 +332,8 @@ irc.Channel = function(name) {
     }
     
     this.clearUsers = function() {
-        this.users = new PArray();
+        //this.users = new PArray();
+        this.users = new Array();
     }
 }
 
@@ -361,7 +367,8 @@ irc.Client.prototype = {
         this.err = new io.LogWriter();
         //this.err = new io.ChatWriter();
         this.channel = new irc.Channel();
-        this.channels = $PA();
+        //this.channels = $PA();
+        this.channels = new Array();
         this.timeout = 30;
         this.novice = false;
 
@@ -400,7 +407,8 @@ irc.Client.prototype = {
         necessary.
     */
     runCommand : function() {
-        var commands = $PA(arguments);
+        //var commands = $PA(arguments);
+        var commands = new Array();
         var command;
         while ((command = commands.shift()) != null) {
             var oCommand = this.executeLocalInput(command);
@@ -431,7 +439,8 @@ irc.Client.prototype = {
         if (channel) {
             this.sendCommand("LIST", [channel]);
         } else {
-            this.sendCommand("LIST", $PA());
+            //this.sendCommand("LIST", $PA());
+            this.sendCommand("LIST", new Array());
         }
     },
     
@@ -606,7 +615,7 @@ irc.Client.prototype = {
     },    
     
     onUpdate : function(status) {
-        //this.err.println("status: " + status);
+        //log("status: " + status);
     },
     
     onServerLoadTooHeavy : function(oMsg) {
@@ -615,7 +624,7 @@ irc.Client.prototype = {
     
     // Timed out connecting to server.
     onTimeout : function(timeout) {
-        this.err.println("timed out after " + timeout + " seconds");
+        log("timed out after " + timeout + " seconds");
     },
     
     onPong : function(oMsg) {
@@ -660,11 +669,11 @@ irc.Client.prototype = {
     },    
     
     printRestParams : function(oMsg) {
-        this.out.println("*** " + oMsg.parameters.rest().join(" "));
+        this.out.println("*** " + oMsg.parameters.slice(1).join(" "));
     },
     
     printRestAndBody : function(oMsg) {
-        this.out.println("*** " + oMsg.parameters.rest().join(" ") + " " + oMsg.body);
+        this.out.println("*** " + oMsg.parameters.slice(1).join(" ") + " " + oMsg.body);
     },
     
 /**
@@ -694,18 +703,18 @@ irc.Client.prototype = {
     read : function() {
         try {
             var data = irc.aSockets[this.sock].read();
-            //this.err.println("READ: " + data);
+            //log("READ: " + data);
             this.lastRead = new Date().getTime();
             return data;
         } catch (ex) {
             // Since it's non-blocking, we just return an empty string. 
-            //this.err.println("read ex: " + ex);
+            //log("read ex: " + ex);
             return "";
         }
     },
 
     send : function(s) {
-        this.err.println("SEND: " + s);
+        //log("SEND: " + s);
         irc.aSockets[this.sock].write(s);
     },
  
@@ -722,7 +731,15 @@ irc.Client.prototype = {
     },
     
     getChannel : function(name) {
-        return this.channels.find(function(oChannel) { return oChannel.name == name; });
+      var chanIndex;
+      for (var i = this.channels.length - 1; i >= 0; i--){
+        if (this.channels[i].name == name) {
+          chanIndex = i;
+          break;
+        }
+      }
+      return this.channels[chanIndex];
+        //return this.channels.find(function(oChannel) { return oChannel.name == name; });
     },
     
 /*  isConnected : function() {
@@ -744,30 +761,31 @@ irc.Client.prototype = {
         this.sendCommand("USER", [this.userName, 8, "*"], this.realName);
     },
     
-    disconnect : function(sMessage, bDCC) {
+    disconnect : function(sMessage) {
         if (this.status > 0 && this.status < 4) {
-            this.sendCommand("QUIT", $PA(), sMessage);
-            if (bDCC) {
-                for (var i=0; i<irc.irc.aDCCChats.length; i++) {
-                    irc.irc.aDCCChats[i].disconnect();
-                    irc.aSockets[irc.irc.aDCCChats[i].socket] = null;
-                    irc.aDCCChats[i] = null;
-                }
-                for (var i=0; i<irc.aDCCSends.length; i++) {
-                    irc.aDCCChats[i].disconnect();
-                    irc.aSockets[irc.aDCCChats[i].socket] = null;
-                    irc.aDCCChats[i] = null;
-                }
-            }
+          this.sendCommand("QUIT", new Array(), sMessage);
+            //this.sendCommand("QUIT", $PA(), sMessage);
+            // if (bDCC) {
+            //     for (var i=0; i<irc.irc.aDCCChats.length; i++) {
+            //         irc.irc.aDCCChats[i].disconnect();
+            //         irc.aSockets[irc.irc.aDCCChats[i].socket] = null;
+            //         irc.aDCCChats[i] = null;
+            //     }
+            //     for (var i=0; i<irc.aDCCSends.length; i++) {
+            //         irc.aDCCChats[i].disconnect();
+            //         irc.aSockets[irc.aDCCChats[i].socket] = null;
+            //         irc.aDCCChats[i] = null;
+            //     }
+            // }
         }       
         this.onDisconnect(this.nick);
     },
 
     process : function() { // called from app specific timer
-        if (irc.aDCCSends.length) 
-            for (var i=0; i<irc.aDCCSends.length; i++) 
-                if (irc.aDCCSends[i]) 
-                    irc.aDCCSends[i].process();
+        // if (irc.aDCCSends.length) 
+        //     for (var i=0; i<irc.aDCCSends.length; i++) 
+        //         if (irc.aDCCSends[i]) 
+        //             irc.aDCCSends[i].process();
         switch (this.status) {
         case 1 : // connecting
             if (this.isConnected()) {
@@ -784,7 +802,7 @@ irc.Client.prototype = {
         case 2 : // connected but not logged in
         case 3 : // connected and logged in
             if (! this.isConnected()) {
-                this.err.println("connect suddenly returned failure");
+                log("connect suddenly returned failure");
                 this.onDisconnect();
                 this.status = 4;
             }
@@ -801,9 +819,10 @@ irc.Client.prototype = {
                 // We're faking a read, so we don't call this again.
                 this.lastRead = now;
                 this.pongReceived = false;
-                this.err.println("sending out a ping; testing to see if we're still connected")
+                log("sending out a ping; testing to see if we're still connected")
                 // I don't know that that is technically right.
-                this.sendCommand("PING", $PA(), "me");
+                //this.sendCommand("PING", $PA(), "me");
+                this.sendCommand("PING", new Array(), "me");
                 
                 setTimeout(bind(this.checkForPong, this), this.timeout * 1000);
             }
@@ -812,7 +831,7 @@ irc.Client.prototype = {
             try {
                 irc.aSockets[this.sock].close();
             } catch (e) {
-                this.err.println("error closing socket: " + e);
+                log("error closing socket: " + e);
             }
             irc.aSockets[this.sock] = null;
             this.connected = false;
@@ -848,15 +867,17 @@ irc.Client.prototype = {
             var body = m[2];
             var args;
             if (body) {
-                args = $PA(body.split(/\s/));  // Don't /\s+/ otherwise we'll collapse the spaces.
+                //args = $PA(body.split(/\s/));  // Don't /\s+/ otherwise we'll collapse the spaces.
+                args = body.split(/\s/);  // Don't /\s+/ otherwise we'll collapse the spaces.
             } else {
-                args = $PA();
+                //args = $PA();
+                args = new Array();
             }
             
 
-            //this.err.println("command = " + command);
-            //this.err.println("body = " + body);
-            //this.err.println("args = " + args.join(', '));
+            //log("command = " + command);
+            //log("body = " + body);
+            //log("args = " + args.join(', '));
 
             switch (command.toLowerCase()) {
                 case "channel":
@@ -1047,7 +1068,7 @@ irc.Client.prototype = {
     
     checkForPong : function() {
         if (! this.pongReceived) {
-            this.err.println("no pong received");
+            log("no pong received");
             this.onDisconnect();
             this.status = 4;            
         }
@@ -1058,7 +1079,7 @@ irc.Client.prototype = {
         Reference: http://www.irchelp.org/irchelp/rfc/rfc2812.txt
     */
     processMsg : function(sMsg) {
-        //this.err.println("processing message: " + sMsg);
+        //log("processing message: " + sMsg);
         if (sMsg == "" || sMsg.match(/^\s*$/)) {
             return;
         }
@@ -1145,7 +1166,7 @@ irc.Client.prototype = {
             var nick = oMsg.nick;
             this.onQuit(nick, oMsg.body);
             
-            this.channels.each(function(oChannel) {
+            this.channels.forEach(function(oChannel) {
                 oChannel.removeUser(nick);
             });
             break;
@@ -1159,7 +1180,6 @@ irc.Client.prototype = {
             this.onKick(channel, oMsg.parameters[1], nick, oMsg.body);
             break;
         case -8 : // TOPIC
-            //this.err.println("PROCESSING TOPIC MESSAGE IN IRC.JS");
             this.onTopicChange(oMsg.nick, oMsg.parameters[0], oMsg.body);
             break;
         case -9 : // PRIVMSG
@@ -1175,43 +1195,43 @@ irc.Client.prototype = {
        /*             this.sendCommand("NOTICE", [ oMsg.parameters[0] ], 
                                  c1 + "*/
                     break;
-                case "DCC":
-                    var sNick = oMsg.nick;
-                    var sType = oMsg.body.split(" ")[1];
-                    //this.err.println("Nick: " + sNick + "\nUser: " + sHost + "\nType:" + sType + "\nPort: " + iPort + "\n");
-                    if (sType == "CHAT") {
-                        var sHost = oMsg.body.split(" ")[3];
-                        var iPort = oMsg.body.split(" ");
-                        iPort = iPort[iPort.length-1];
-                        iPort = iPort * 1;
-                        if (this.onDCCChat(sNick)) {
-                            var oDCC = new irc.dcc.Chat(sNick, sHost, iPort, true, this);
-                            oDCC.index = irc.aDCCChats.length;
-                            irc.aDCCChats[irc.aDCCChats.length] = oDCC;
-                            //oDCC = this.onDCCChatConnect(oDCC);
-                            this.onDCCChatConnect(oDCC);                            
-                        }
-                    } else if (sType == "SEND") {
-                        var sHost = oMsg.body.split(" ")[3];
-                        var iPort = oMsg.body.split(" ")[4];
-                        iPort = iPort * 1;
-                        var sName = oMsg.body.split(" ")[2];
-                        var iSize = oMsg.body.split(" ")[5];
-                        if (this.onDCCSend(sNick, sName, iSize)) {
-                            var oDCC = new irc.dcc.Send(sNick, sHost, iPort, true, sName, "", iSize, this);
-                            oDCC.index = irc.aDCCSends.length;
-                            irc.aDCCSends[irc.aDCCSends.length] = oDCC;
-                            this.onDCCSendConnect(oDCC);
-                            try {
-                                oDCC.connect();
-                            } catch (e) {
-                                this.err.println("DCC error: can't connect to " + oDCC.nick + "\n");
-                            }
-                        }
-                    } else {
-                        this.err.println("Unknown DCC type '" + oMsg.body + "'");
-                    }
-                    break;
+                // case "DCC":
+                //     var sNick = oMsg.nick;
+                //     var sType = oMsg.body.split(" ")[1];
+                //     //log("Nick: " + sNick + "\nUser: " + sHost + "\nType:" + sType + "\nPort: " + iPort + "\n");
+                //     if (sType == "CHAT") {
+                //         var sHost = oMsg.body.split(" ")[3];
+                //         var iPort = oMsg.body.split(" ");
+                //         iPort = iPort[iPort.length-1];
+                //         iPort = iPort * 1;
+                //         if (this.onDCCChat(sNick)) {
+                //             var oDCC = new irc.dcc.Chat(sNick, sHost, iPort, true, this);
+                //             oDCC.index = irc.aDCCChats.length;
+                //             irc.aDCCChats[irc.aDCCChats.length] = oDCC;
+                //             //oDCC = this.onDCCChatConnect(oDCC);
+                //             this.onDCCChatConnect(oDCC);                            
+                //         }
+                //     } else if (sType == "SEND") {
+                //         var sHost = oMsg.body.split(" ")[3];
+                //         var iPort = oMsg.body.split(" ")[4];
+                //         iPort = iPort * 1;
+                //         var sName = oMsg.body.split(" ")[2];
+                //         var iSize = oMsg.body.split(" ")[5];
+                //         if (this.onDCCSend(sNick, sName, iSize)) {
+                //             var oDCC = new irc.dcc.Send(sNick, sHost, iPort, true, sName, "", iSize, this);
+                //             oDCC.index = irc.aDCCSends.length;
+                //             irc.aDCCSends[irc.aDCCSends.length] = oDCC;
+                //             this.onDCCSendConnect(oDCC);
+                //             try {
+                //                 oDCC.connect();
+                //             } catch (e) {
+                //                 log("DCC error: can't connect to " + oDCC.nick + "\n");
+                //             }
+                //         }
+                //     } else {
+                //         log("Unknown DCC type '" + oMsg.body + "'");
+                //     }
+                //     break;
                 case "VERSION":
                     var c1 = String.fromCharCode(1);
                     this.sendCommand("NOTICE", [ oMsg.nick ], 
@@ -1220,7 +1240,7 @@ irc.Client.prototype = {
                 default:
 /*                    this.out.println("*** CTCP " + ctcpCommand + " reply from " + oMsg.nick + ": " +
 */                                     
-                    this.err.println("Cannot dispatch on '" + oMsg.body +"'");
+                    log("Cannot dispatch on '" + oMsg.body +"'");
                 }
             } else {
                 this.onText(oMsg.parameters[0].toLowerCase(), oMsg.prefix.split("!")[0], oMsg.body);
@@ -1312,9 +1332,13 @@ irc.Client.prototype = {
             // Strip out the #_ channels
             channels = oMsg.body; 
             if (this.novice) {
-                var aChannels = $PA(oMsg.body.split(' '));
-                aChannels = aChannels.reject(function(channel) {
-                    return irc.Channel.isPrivateChannel(channel);
+                //var aChannels = $PA(oMsg.body.split(' '));
+                var aChannels = oMsg.body.split(' ');
+                // aChannels = aChannels.reject(function(channel) {
+                //     return irc.Channel.isPrivateChannel(channel);
+                // });
+                aChannels = aChannels.filter(function(channel) {
+                    return ! irc.Channel.isPrivateChannel(channel);
                 });
                 channels = aChannels.join(' ');
             }
@@ -1375,20 +1399,21 @@ irc.Client.prototype = {
             this.onWhoReply(oMsg);
             break;
         case 353 : // NAMREPLY
-            //this.err.println("NAME Reply: " + oMsg);
-            var nicks = $PA(oMsg.body.split(/ +/));
+            //log("NAME Reply: " + oMsg);
+            //var nicks = $PA(oMsg.body.split(/ +/));
+            var nicks = oMsg.body.split(/ +/);
             var channel = oMsg.parameters[2];
-            //this.err.println("NAME Reply Channel: " + channel);
+            //log("NAME Reply Channel: " + channel);
             var oChannel = this.getChannel(channel);
             if (oChannel && oChannel.operator == null) {
                 var r = new RegExp("^.?" + this.nick + "$");
                 var myNicks = nicks.grep(r);
                 if (myNicks.length != 1) {
-                    this.err.println("error: too many or too few nicks were identified as mine: " + myNicks.length);
+                    log("error: too many or too few nicks were identified as mine: " + myNicks.length);
                 } 
                 oChannel.operator = /^@/.test(myNicks[0]);
                 oChannel.clearUsers();
-                nicks.each(function(nick) {
+                nicks.forEach(function(nick) {
                     oChannel.addUser(nick);
                 });
             }
@@ -1456,242 +1481,9 @@ irc.Client.prototype = {
             break;
         default :
             this.onUnhandledMessage(oMsg);
-            //this.err.println("Unhandled code " + oMsg.commandCode + " for message '" + sMsg + "'");
-            this.err.println("Unhandled code " + oMsg.commandCode + " command: " + oMsg);
+            //log("Unhandled code " + oMsg.commandCode + " for message '" + sMsg + "'");
+            log("Unhandled code " + oMsg.commandCode + " command: " + oMsg);
 
-            break;
-        }
-    }
-};
-    
-
-/**
-    DCC Chat Classes
-    ================
-**/
-
-
-irc.dcc = {}; // sub package 'dcc'
-
-
-// **** DCC chat object ****
-
-/*
-    XXX - I don't believe the dcc.Chat class works yet.  I'm putting it on the TODO list.
-*/
-irc.dcc.Chat = Class.create();
-irc.dcc.Chat.prototype = {
-
-    initialize : function(sNick, sHost, iPort, bConnect, oClient) {
-        this.nick = sNick;
-        this.hostName = sHost;
-        this.port = iPort;
-        this.client = oClient;
-        this.sock = -1;
-        this.status = 0;
-        this.connected = false;
-        this.index = -1;
-
-        this.read = this.client.read;
-        this.send = this.client.send;
-        this.isConnected = this.client.isConnected;
-        // Rename this to onMessage?
-        this.onText = this.client.defaultHandler;
-
-        if (bConnect) {
-            try {
-                this.connect();
-            } catch (e) {
-                this.err.println("Couldn't connect to " + this.nick + "\n");
-            }
-        } else this.accept();
-    },
-
-    connect : function()  {
-        this.sock = irc.aSockets.length;
-        irc.aSockets[this.sock] = ircclient_openSocket(this.hostName, this.port);
-        this.status = 1;
-    },
-
-    accept : function()  {
-    },
-
-    disconnect : function()  {
-        this.onDisconnect(this.nick);
-        try {
-            irc.aSockets[this.sock].close();
-        } catch (e) {
-            this.client.err.println("DCC error: close error\n");
-        }
-        irc.aSockets[this.sock] = null;
-        irc.aDCCChats[this.index] = null;
-    },
-
-    process : function()  {
-        if (!this.isConnected()) return;
-        var sRead = this.read();
-        if (sRead.length) {
-            this.onText(this.nick, sRead.substring(0, sRead.length-1));
-        }
-    },
-
-    msg : function(sMsg)  {
-        this.client.out.println(sMsg + "\r\n");
-    },
-
-    sendCommand : function()  {
-
-    },
-
-    addHandler : function(sName, fFunction)  {
-        switch (sName) {
-        case "ontext" :
-            this.onText = fFunction; // nick, message
-            break;
-        case "ondisconnect" :
-            this.onDisconnect = fFunction; // nick
-            break;
-        }
-    }
-};
-
-irc.dcc.Send = Class.create();
-// **** DCC send object ****
-irc.dcc.Send.prototype = {
-    
-    initialize : function(sNick, sHost, iPort, bReceive, sFileName, sPath, iSize, oClient) {
-        this.nick = sNick;
-        this.hostName = sHost;
-        this.port = iPort;
-        this.client = oClient;
-        this.sock = -1;
-        this.fileName = sFileName;
-        this.path = sPath;
-        this.size = iSize;
-        this.sizeReceived = 0;
-        this.sizeSend = 0;
-        this.status = 0;
-        this.connected = false;
-        this.index = -1;
-
-        this.read = this.client.read;
-        this.isConnected = this.client.isConnected;
-
-        this.onPartReceived = this.client.defaultHandler;
-        this.onDisconnect = this.client.defaultHandler;
-        this.onComplete = this.client.defaultHandler;
-    },
-
-    connect : function()  {
-        this.file = oFS.OpenTextFile(this.path + this.fileName, ForWriting, true);
-        this.sock = irc.aSockets.length;
-        irc.aSockets[this.sock] = ircclient_openSocket(this.hostName, this.port);
-/*          irc.aSockets[this.sock] = new ActiveXObject("Catalyst.SocketCtrl.1");
-        irc.aSockets[this.sock].AddressFamily = 2; // AF_INET
-        irc.aSockets[this.sock].Protocol = 0; // IPPROTO_TCP
-        irc.aSockets[this.sock].SocketType = 1; // STREAM
-        irc.aSockets[this.sock].Binary = true;  // <--- This is different than the other one.
-        irc.aSockets[this.sock].Blocking = false;
-        irc.aSockets[this.sock].BufferSize = 16384;
-        irc.aSockets[this.sock].AutoResolve = true;
-        irc.aSockets[this.sock].HostAddress = this.hostName;
-        irc.aSockets[this.sock].RemotePort = this.port;
-        irc.aSockets[this.sock].Timeout = 500;
-        try {
-            irc.aSockets[this.sock].Action = 2; // SOCKET_CONNECT
-        } catch (e) {
-            this.err.println("Couldn't connect to " + this.nick + "\n");
-        }*/
-        this.status = 1;
-    },
-
-    accept : function()  {
-
-    },
-
-    disconnect : function()  {
-        try {
-            //irc.aSockets[this.sock].Action = 7; // SOCKET_CLOSE
-            irc.aSockets[this.sock].close();
-        } catch (e) {
-
-        }
-        irc.aSockets[this.sock] = null;
-        irc.aDCCSends[this.index] = null;
-    },
-
-    send : function()  {
-        //irc.aSockets[this.sock].Blocking = true;
-        // XXX - This needs to be rewritten
-        try {
-            irc.aSockets[this.sock].SendLen = 32;
-            irc.aSockets[this.sock].SendLong = this.sizeReceived;
-        } catch (e) {
-
-        }
-        //irc.aSockets[this.sock].Blocking = false;
-    },
-
-    complete : function()  {
-        this.disconnect();
-    },
-
-    process : function()  {
-        if ((!this.isConnected() && this.status == 1)) return; //  || irc.aSockets[this.sock].IsBlocking
-        else if (this.status == 3) return;
-        try {
-            irc.aSockets[this.sock].RecvLen = irc.aSockets[this.sock].RecvNext;
-            var sRead = irc.aSockets[this.sock].RecvData;
-        } catch (e) {
-            var sRead = "";
-        }
-        if (sRead.length) {
-            this.status = 2;
-            try {
-                this.file.Write(sRead);
-                this.sizeReceived += irc.aSockets[this.sock].RecvLen;
-            } catch (e) {
-
-            }
-            this.onPartReceived(this.nick, this.fileName, this.sizeReceived);
-            this.send();
-        } else if (this.status == 2 && this.sizeReceived == this.size) {
-            this.onComplete(this.nick, this.fileName, this.sizeReceived);
-            this.complete();
-            this.status = 3;
-            try {
-                this.file.Close();
-            } catch (e) {
-
-            }
-            return;
-        } else if (!this.isConnected()) {
-            this.onDisconnect(this.nick, this.fileName, this.sizeReceived);
-            this.disconnect();
-            this.status = 3;
-            try {
-                this.file.Close();
-            } catch (e) {
-
-            }
-            return;
-        }
-    },
-
-    sendPart : function(iStart)  {
-
-    },
-
-    addHandler : function(sName, fFunction)  {
-        switch (sName) {
-        case "onpartreceived" :
-            this.onPartReceived = fFunction; // nice, file size
-            break;
-        case "ondisconnect" :
-            this.onDisconnect = fFunction; // nick, file
-            break;
-        case "oncomplete" :
-            this.onComplete = fFunction; // nick, file
             break;
         }
     }

@@ -71,62 +71,6 @@ io.LogWriter.prototype = Object.extend(new io.Writer(), {
         log(str);
     }
 });
-// 
-// io.MultiplexWriter = Class.create();
-// io.MultiplexWriter.prototype = Object.extend(new io.Writer(), {
-//     
-//     initialize : function() {
-//         this.writers = $PA(arguments);
-//     },
-//     
-//     addWriter : function(writer) {
-//         this.writers.unshift(writer);
-//     },
-//     
-//     removeWriter : function(writer) {
-//         this.writers = this.writers.reject(function(value) { return value == writer });
-//     },
-//     
-//     onException : function(ex, writer, f, args) {
-//     },
-//     
-//     // I don't know why Prototype's bind didn't work here within the extension's context.
-//     // It worked outside of it in unit tests.
-//     print : function () {
-//         var _arguments = arguments;
-//         this.writers.each(
-//             bind(function (writer) { 
-//                 try {
-//                     writer.print.apply(writer, _arguments);
-//                 } catch (ex) {
-//                     this.onException(ex, writer);
-//                 }
-//             }, this));
-//     },
-//     
-//     println : function () {
-//         var _arguments = arguments;        
-//         this.writers.each(
-//             bind(function (writer) { 
-//                 try {
-//                     writer.println.apply(writer, _arguments);
-//                 } catch (ex) {
-//                     this.onException(ex, writer);
-//                 }
-//             }, this));
-//     },
-//     
-//     flush : function() {
-//         this.writers.each(
-//             bind(function (writer) { 
-//                 try {
-//                     writer.flush();
-//                 } catch (ex) {
-//                     this.onException(ex, writer);
-//                 }
-//             }, this));
-//     }
-// });
 
 io.ChatWriter = Class.create();
 io.ChatWriter.prototype = Object.extend(new io.Writer(), {

@@ -75,11 +75,11 @@ Object.extend(peekko.Client.prototype, {
             }
         //}
         this.onDisconnect();
-/*        this.controller.setConnectState("disconnected");
+        this.controller.setConnectState("disconnected");
         if (this.ircclient) {
             this.ircclient = null;
             this.roomInfo.setIRCClient(null);
-        }*/
+        }
     },
     
     onJoin : function() {
@@ -107,7 +107,7 @@ Object.extend(peekko.Client.prototype, {
         // Need to make sure I don't print this if the the person isn't in the actual room.
         var result = false;
         var channels = this.getPublicChannels();
-        channels.each(function(oChannel) {
+        channels.forEach(function(oChannel) {
             if (oChannel.hasUser(nick)) {
                 result = true;
             }
@@ -119,7 +119,6 @@ Object.extend(peekko.Client.prototype, {
     },
 
     onTopicChange : function() {
-      log("onTopicChange CALLED IN CLIENT.JS");
         if (! this.isPrivateChannel(arguments[1])) {
             this.parent.onTopicChange.apply(this, arguments);
             this.roomInfo.update(this.channel.name);
@@ -161,22 +160,24 @@ Object.extend(peekko.Client.prototype, {
             this.parent.onJoinedTooManyChannels.call(this, oMsg);
         } else {
             // Do some channel garbage collection.
-            channels.each(bind(function(oChannel) {
+            channels.forEach(bind(function(oChannel) {
                 this.partChannel(oChannel.name);
             }, this));
         }
     },
     
     getPublicChannels : function() {
-        return this.channels.findAll(function(oChannel) {
-            return ! oChannel.isPrivate();
-        });
+      return this.channels.filter(function(element, index, array) { return ! element.isPrivate(); });
+        // return this.channels.findAll(function(oChannel) {
+        //     return ! oChannel.isPrivate();
+        // });
     },
     
     getPrivateChannels : function() {
-        return this.channels.findAll(function(oChannel) {
-            return oChannel.isPrivate();
-        });
+      return this.channels.filter(function(element, index, array) { return element.isPrivate(); });
+        // return this.channels.findAll(function(oChannel) {
+        //     return oChannel.isPrivate();
+        // });
     },
     
     isPrivateChannel : function(channel) {
