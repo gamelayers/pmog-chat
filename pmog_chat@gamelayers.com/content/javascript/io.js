@@ -112,6 +112,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
             
       this.boxInterface.element.appendChild(this.createBr());
       // this.boxInterface.element.style.MozUserSelect = "text";
+      this.scrollDown();
       
     },
     
@@ -138,6 +139,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
         child.textContent = s;
         this.boxInterface.element.appendChild(child);
         this.boxInterface.element.appendChild(this.createBr());
+        this.scrollDown();
     },
     
     println : function(s) {
