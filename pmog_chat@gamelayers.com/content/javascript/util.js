@@ -45,9 +45,9 @@ function log(msg) {
   }
   
   function openChatLink(event) {
-    getBrowserWindow().gBrowser.addTab(event.target.getAttribute('lnk'));
+    getBrowserWindow().jQuery.pmog.pmog.hud.openAndReuseOneTabPerURL(event.target.getAttribute('lnk'));
   }
-
+  
   /**
   * Takes an HTML <a> element and turns it into a clickable link that will
   * open the url of the link in a new tab and not a new window or even worse,
