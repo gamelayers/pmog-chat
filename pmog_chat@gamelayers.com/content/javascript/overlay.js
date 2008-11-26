@@ -49,8 +49,6 @@ observe: function(subject, topic, data) {
       var nick = peekko.prefs.getCharPref("extensions.pmog.chat.irc.nick");
       this.ircclient.foundANick = false;
       this.ircclient.runCommand("/nick " + nick);
-
-
     }
 
 
@@ -336,6 +334,12 @@ End of Events
 
 connect: function() {
     if (!this.ircclient) {
+
+    var pmogUsername = getBrowserWindow().jQuery.pmog.pmog.user.login;
+    if (pmogUsername) {
+      peekko.prefs.setCharPref("extensions.pmog.chat.irc.username", pmogUsername);
+      peekko.prefs.setCharPref("extensions.pmog.chat.irc.nick", pmogUsername);
+    }
 
       var nicks = new Array();
       nicks.push("extensions.pmog.chat.irc.nick");
