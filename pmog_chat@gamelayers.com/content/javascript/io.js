@@ -108,12 +108,13 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       
       wrapperSpan.appendChild(messageSpan);
       
-      this.boxInterface.element.appendChild(wrapperSpan);
+      //this.boxInterface.element.appendChild(wrapperSpan);
+      this.boxInterface.element.insertBefore(wrapperSpan, this.cursor);
             
-      this.boxInterface.element.appendChild(this.createBr());
+      //this.boxInterface.element.appendChild(this.createBr());
+      this.boxInterface.element.insertBefore(this.createBr(), this.cursor);
       // this.boxInterface.element.style.MozUserSelect = "text";
       this.scrollDown();
-      
     },
     
     createSpan : function() {
@@ -128,6 +129,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       this.id = id + "-output";
       //this.boxInterface = $(this.id).boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
       this.boxInterface = $(this.id).contentBoxObject;
+      this.cursor = this.boxInterface.element.getElementsByClassName('chat_cursor')[0];
     },
     
     print : function(s) {
@@ -136,9 +138,12 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
         }
         var child = this.createSpan();
         //child.style.display = "block";
+        child.setAttribute("class", "single-message");
         child.textContent = s;
-        this.boxInterface.element.appendChild(child);
-        this.boxInterface.element.appendChild(this.createBr());
+        //this.boxInterface.element.appendChild(child);
+        //this.boxInterface.element.appendChild(this.createBr());
+        this.boxInterface.element.insertBefore(child, this.cursor);
+        this.boxInterface.element.insertBefore(this.createBr(), this.cursor);
         this.scrollDown();
     },
     
@@ -147,7 +152,11 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
     },
     
     scrollDown : function() {
-      this.boxInterface.ensureElementIsVisible(this.boxInterface.element.lastChild);
+      // var sizeX = {};
+      // var sizeY = {};
+      // this.boxInterface.getScrolledSize(sizeX, sizeY);
+      //this.boxInterface.scrollTo(0, sizeY.value);
+      this.boxInterface.ensureElementIsVisible(this.cursor);
     },
     
     clear : function() {

@@ -17,6 +17,7 @@
           <xul:notification anonid="topicContent" type="info" xbl:inherits="image=icon, label" image="https://developer.mozilla.org/favicon.ico" />
         </xul:notificationbox> -->
         <children />
+        <xul:label class="chat_cursor" />
       </xul:scrollbox>
     </content>
     

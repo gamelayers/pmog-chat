@@ -55,6 +55,15 @@ notification toolbarbutton {
 	-moz-user-focus: normal;
 }
 
+.chat_cursor {
+	height: 5px;
+}
+
+html|*.single-message {
+	padding-left: 4px;
+	margin-bottom: 2px;
+}
+
 html|*.nick {
 	margin-right: 5px;
 }
