@@ -230,8 +230,7 @@ addTab: function(title) {
         sb.topic = title;
         sb.contextMenu = "contentAreaContextMenu";
         
-        this.ioMap.add(cTitle, new io.ChatWriter(cTitle));
-        
+        this.ioMap.add(cTitle, new io.ChatWriter(cTitle));        
         return t;
     },
     
@@ -249,8 +248,7 @@ closeTab: function(tab) {
   }
   
   this.ioMap.remove(cLabel);
-  var mPanel = $(tab.linkedPanel);
-  
+  var mPanel = $(tab.linkedPanel);  
   this.tabcontainer.tabs.removeChild(tab);
   this.tabcontainer.tabpanels.removeChild(mPanel);
   
@@ -299,9 +297,7 @@ tabChange: function(tabbox) {
 },
 
 getAvatar: function(player, callback) {
-  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-  .getService(Components.interfaces.nsIWindowMediator);
-  var newWindow = wm.getMostRecentWindow("navigator:browser");
+  var newWindow = getBrowserWindow();
   
   newWindow.jQuery.pmog.getAvatar(player, callback);
 },

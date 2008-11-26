@@ -21,8 +21,7 @@ var openChatController = {
     switch (cmd) {
       case "Tasks:OpenChat": 
       {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                           .getService(Components.interfaces.nsIWindowMediator);
+        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
         var win = wm.getMostRecentWindow("PMOG:Chat");
         
         if (win) {

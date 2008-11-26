@@ -73,6 +73,11 @@ html|*.message-text {
 	color: #000;
 }
 
+html|a {
+	color: #1a00ff;
+	cursor: pointer;
+}
+
 html|span {
 	-moz-user-select: text;
 }

@@ -142,10 +142,18 @@
     <spacer flex="1" />
     <statusbarpanel id="pmogChatConsole" crop="right" />
   </statusbar>
- 
+  
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/jquery.pack.js"/>
+  <script type="application/x-javascript">
+    <![CDATA[
+      jQuery.noConflict();
+    ]]>
+  </script>
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/jquery.utils.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/prototype.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/AssociativeArray.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/util.js" />
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/utils.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/io.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/net.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/irc.js" />

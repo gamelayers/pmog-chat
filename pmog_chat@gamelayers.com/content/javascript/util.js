@@ -21,6 +21,53 @@ function log(msg) {
 
     dump(msg + "\n");
   }
+  
+  function urlToLink(url) {
+    //return prepareLink(jQuery('<a href="' + url + '">' + url + '</a>'), true);
+    return '<a lnk="' + url + '" onclick="openChatLink(event);">' + url + '</a>';
+  }
+  
+  function getBrowserWindow() {
+    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+    .getService(Components.interfaces.nsIWindowMediator);
+    return wm.getMostRecentWindow("navigator:browser");
+  }
+  
+  function parseURLInString(string) {
+    var returnString = string;
+    var re = /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g;
+    var matches = string.match(re);
+    for (var m in matches) {
+      returnString = returnString.replace(matches[m], this.urlToLink(matches[m]));
+    }
+    
+    return returnString;
+  }
+  
+  function openChatLink(event) {
+    getBrowserWindow().getBrowser().addTab(event.target.getAttribute('lnk'));
+  }
+
+  /**
+  * Takes an HTML <a> element and turns it into a clickable link that will
+  * open the url of the link in a new tab and not a new window or even worse,
+  * in the XUL parent itself.
+  * @param Object linkElement the DOM link element to manipulate
+  * @returns The link element with the href removed and an onclick listener meant
+  *          to open the target in a new tab
+  * @type Object
+  */
+  function prepareLink(linkElement, newTab) {
+    newTab = newTab || false;
+    var url = jQuery(linkElement).attr("href");
+    
+    if (url !== undefined) {
+      link = jQuery(linkElement).attr("lnk", url)
+                                .removeAttr("href")
+                                .click( openChatLink( jQuery(linkElement).attr("lnk")));
+    }
+    return link;
+  }
 
   // This is weird, but I don't know what else to do.  My back's against the wall.
   function dirtyBind(f, object) {

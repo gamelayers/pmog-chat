@@ -95,17 +95,11 @@ updateButton: function(event) {
 
 profileButton: function() {
         log("open profile");
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var newWindow = wm.getMostRecentWindow("navigator:browser");
+        var newWindow = getBrowserWindow();
         var user = channelTreeView.getCellText(channelTreeView.treeBox.view.selection.currentIndex);
-        //var user = document.getElementById("pmogChatUsers").selectedItem.value;
 
         user = user.replace(/\@/, '');
-
         newWindow.getBrowser().addTab(newWindow.jQuery.pmog.BASE_URL + "/users/" + user);
-
-
     },
 
 channelFilterButton: function(filterType) {
@@ -179,9 +173,7 @@ prefAccepted: function(pane) {
     },
 
 gotoChannel: function(channel) {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var newWindow = wm.getMostRecentWindow("navigator:browser");
+        var newWindow = getBrowserWindow();
         newWindow._content.document.location = this.channelToURL(channel);
         this.joinChannel(channel);
 
@@ -205,9 +197,7 @@ Events
 
 onLoad: function(event) {
         log("onLoad");
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var mainWindow = wm.getMostRecentWindow("navigator:browser");
+        var mainWindow = getBrowserWindow();
         var content = mainWindow.getBrowser();
         if (content) {
             log("added a progress listener");
@@ -229,9 +219,7 @@ onLoad: function(event) {
 
 onUnload: function(event) {
         log("onUnload");
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var mainWindow = wm.getMostRecentWindow("navigator:browser");
+        var mainWindow = getBrowserWindow();
         var content = mainWindow.getBrowser();
         if (content) {
             log("removing progress listener");
@@ -361,9 +349,7 @@ toggleStripSubdomain: function() {
     },
 
 getCurrentURL: function() {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var newWindow = wm.getMostRecentWindow("navigator:browser");
+        var newWindow = getBrowserWindow();
         return newWindow._content.document.location.toString();
 
     },
@@ -379,9 +365,7 @@ joinCurrentURL: function() {
     },
 
 document: function() {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
-        var newWindow = wm.getMostRecentWindow("navigator:browser");
+        var newWindow = getBrowserWindow();
         return newWindow._content.document;
 
     },
@@ -579,68 +563,6 @@ setConnectState: function(state) {
         }
         window.updateCommands('PmogConnect');
 
-    },
-
-showUsers: function() {
-  log("showUsers called in overlay.js");
-        // var list = document.getElementById("pmogChatUsers");
-        // 
-        // var count = list.getRowCount();
-        // 
-        // if (count > 0) {
-        //     while (count--) {
-        //         var item = list.getItemAtIndex(0);
-        //         list.removeItemAt(list.getIndexOfItem(item));
-        //     }
-        // }
-        // 
-        // if (this.ircclient && this.ircclient.channel !== null) {
-        //   
-        //   var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-        //   .getService(Components.interfaces.nsIWindowMediator);
-        //   var newWindow = wm.getMostRecentWindow("navigator:browser");
-        //   
-        //   var db = new newWindow.PassiveRecord("pmog_users.sqlite");
-        //   
-        //   var users = this.ircclient.channel.users;
-        //   var items = [];
-        //   for (var i = users.length - 1; i >= 0; i--){
-        //     user = users[i].replace("@", '');
-        //     //var itm = document.createElement("listitem");
-        //     var itm = document.createElement("chat-listitem");
-        //     
-        //     var avatarSearch;
-        //     avatarSearch = db.find('players', { conditions : ['`name` = ?', user], limit : 1});
-        //     if (avatarSearch[0] !== undefined) {
-        //       itm.setAttribute("image", newWindow.jQuery.pmog.BASE_URL + avatarSearch[0].avatar);
-        //     } else {
-        //       var img = newWindow.jQuery.pmog.getPlayerAvatar(user);
-        //       var player = { attributes : { "name" : user, "avatar" : img } };
-        //       db.create('players', player);
-        //       itm.setAttribute("image", newWindow.jQuery.pmog.BASE_URL + img);
-        //     }
-        //     
-        //     itm.setAttribute("label", users[i]);
-        //     itm.setAttribute("context", "userContextPopup");
-        //     itm.className = "listitem-iconic";
-        //     
-        //     items.push(itm);
-        //   }
-        //   
-        //   for (var i = items.length - 1; i >= 0; i--){
-        //     list.appendChild(items[i]);
-        //   }
-        // }
-        if (Peekko.ircclient) {
-          var users = Peekko.ircclient.channel.users;
-          var channelName = Peekko.ircclient.channel.name.replace(/#/, '');
-          for (var i = users.length - 1; i >= 0; i--) {
-            var user = users[i].replace(/@/, "");
-            //if (!treeView.hasRow(user)) {
-              channelTreeView.addPlayer(channelName, user);
-              //}
-          }
-        }
     },
 
 setItemAvatar: function(item, avatar) {

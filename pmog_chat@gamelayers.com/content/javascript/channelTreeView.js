@@ -334,7 +334,6 @@ getRowIndex: function(name) {
         this.childData[channel].splice(index, 1);
       }
     },
-
 };
 
 function init() {

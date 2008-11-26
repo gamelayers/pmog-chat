@@ -312,12 +312,14 @@ irc.Channel = function(name) {
         //log("addUser: " + user);
         if (! this.hasUser(user)) {
             this.users.push(user)
+            channelTreeView.addPlayer(this.name, user);
         }
     }
     
     this.removeUser = function(user) {
         if (this.hasUser(user)) {
             this.users = this.users.without(user);
+            channelTreeView.removePlayer(this.name, user);
         }
     }
     
@@ -371,13 +373,18 @@ irc.Client.prototype = {
     
     print: function(channel, msg) {
       var cSentTo = this.cleanChannelName(channel);
-      Peekko.session.window.ioMap.get(cSentTo).println(msg);
+      Peekko.session.window.ioMap.get(cSentTo).print(msg);
+    },
+    
+    createMessage: function(channel, nick, message) {
+      var cSentTo = this.cleanChannelName(channel);
+      Peekko.session.window.ioMap.get(cSentTo).createMessage(channel, nick, message);
     },
     
     broadcast: function(msg) {
       var ios = Peekko.session.window.ioMap.values;
       for (var i = ios.length - 1; i >= 0; i--){
-        ios[i].println(msg);
+        ios[i].print(msg);
       }
     },
     
@@ -446,16 +453,13 @@ irc.Client.prototype = {
     },
     
     onSentMessage : function(sentTo, message) {
-      var cSentTo = sentTo.replace(/#/, '');
-      
       var tab = Peekko.session.window.getChannelTab(sentTo);
       if (tab === undefined) {
         tab = Peekko.session.window.addTab(sentTo);
       }
       Peekko.session.window.selectTab(tab);
       
-      Peekko.session.window.ioMap.get(cSentTo).createMessage(sentTo, this.nick, message);
-      Peekko.session.window.ioMap.get(cSentTo).scrollDown();
+      this.createMessage(sentTo, this.nick, message);
     },
 
     onNickChange : function(newNick, oldNick) {
@@ -491,28 +495,14 @@ irc.Client.prototype = {
     onText : function(channel, nick, message) {
         if (channel == this.nick) {
             // Private message
-            //this.out.println("*" + nick + "* " + message);
             var privChat = Peekko.session.window.getChannelTab(nick);
             if (privChat === undefined) {
               privChat = Peekko.session.window.addTab(nick);
             }
             Peekko.session.window.ioMap.get(nick).createMessage(channel, nick, message);
-            Peekko.session.window.ioMap.get(nick).scrollDown();
-            //Peekko.session.window.selectTab(nick);
         } else {
-            // // Public message to the channel
-            // if (this.channel.name == channel) {
-            //     //this.out.println("<" + nick + "> " + message);
-            //     this.out.createMessage(channel, nick, message);
-            // } else {
-            //     //this.out.println("<" + nick + ":" + channel + "> " + message);
-            //     this.out.createMessage(channel, nick, message);
-            // }
-            var cChannel = channel.replace(/#/, '');
-            Peekko.session.window.ioMap.get(cChannel).createMessage(channel, nick, message);
-            Peekko.session.window.ioMap.get(cChannel).scrollDown();
+            this.createMessage(channel, nick, message);
         }
-        //this.out.scrollDown();
     },
 
     onNotice : function(message, from) {
@@ -542,12 +532,7 @@ irc.Client.prototype = {
         channelTab = Peekko.session.window.addTab(channel);
       }
       Peekko.session.window.selectTab(channelTab);
-      //this.out.println("*** " + this.yourNick(nick) + " joined channel " + channel);
-      //Peekko.session.window.ioMap.get(cSentTo).println("*** " + this.yourNick(nick) + " joined channel " + channel);
       this.print(channel, "*** " + this.yourNick(nick) + " joined channel " + channel);
-      if (this.nick !== nick) {
-        channelTreeView.addPlayer(channel, nick);
-      }
     },
     
     onChannelChange : function(channel) {
@@ -556,9 +541,6 @@ irc.Client.prototype = {
 
     onPart : function(nick, channel) {
         this.print(channel, "*** " + this.yourNick(nick) + " left channel " + channel);
-        if (this.nick !== nick) {
-          channelTreeView.removePlayer(channel, nick);
-        }
     },
 
     onWhoReply : function(oMsg) {
@@ -602,7 +584,6 @@ irc.Client.prototype = {
     },
     
     onNameReplyEnd : function(oMsg) {
-      Peekko.showUsers();
     },
     
     onChannelModeChange : function(change, channel, source) {

@@ -132,6 +132,7 @@ io.ChatWriter = Class.create();
 io.ChatWriter.prototype = Object.extend(new io.Writer(), {
     
     createMessage : function(channel, nick, message) {
+      // message = parseURLInString(message);
       var wrapperSpan = this.createSpan();
       //wrapperSpan.style.display = "block";
       wrapperSpan.setAttribute("class", "single-message");
@@ -155,7 +156,10 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.appendChild(nickSpan);
       
       var messageSpan = this.createSpan();
-      messageSpan.textContent = message;
+      // messageSpan.textContent = message;
+      jQuery(messageSpan).append(message);
+      jQuery(messageSpan).autolink();
+      
       messageSpan.setAttribute("class", "message-text");
       
       wrapperSpan.appendChild(messageSpan);
