@@ -1,348 +1,358 @@
-var channelTreeView = {
-    userData: {},
-    childData: {},
-    visibleData: [],
-    treeBox: null,
-    selection: null,
+/**
+ * Implements nsITreeView in Mozilla. Used to build, populate and otherwise control items in the tree
+ * without having to add and remove actual treeitem nodes in the DOM.
+ * @author marc@gamelayers.com
+ */
+function channelTreeView() {
+  this.userData = {};
+  this.childData = {};
+  this.visibleData = [];
+  this.treeBox = null;
+  this.selection = null;
+}
 
-    get rowCount() {
-      return this.visibleData.length;
-    },
+channelTreeView.prototype = {
+  set rowCount(c) {
+    throw "rowCount is read only";
+  },
+  
+  get rowCount() {
+    return this.visibleData.length;
+  },
 
-    setTree: function(treeBox) {
-      this.treeBox = treeBox;
-    },
+  setTree: function(treeBox) {
+    this.treeBox = treeBox;
+  },
 
-getCellText: function(idx, column) {
-  var label;
-  try {
-        var chan = this.visibleData[idx][0];
-        var label = chan.replace(/_/, ".");
+  getCellText: function(idx, column) {
+    var label;
+    try {
+      var chan = this.visibleData[idx][0];
+      var label = chan.replace(/_/, ".");
 
-        if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
-            var userCount = this.childData[chan].length;
-            var userLabel = (userCount == 1 ? "user": "users");
-            label = label + " (" + userCount + " " + userLabel + ")";
-
-        }
-      }catch (e) {
-        label = "";
+      if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
+        var userCount = this.childData[chan].length;
+        var userLabel = (userCount == 1 ? "user": "users");
+        label = label + " (" + userCount + " " + userLabel + ")";
       }
-        return label;
+    } catch(e) {
+      label = "";
+    }
+    return label;
+  },
 
-    },
-    
-getChannelName: function(idx) {
-  var chan = this.visibleData[idx][0];
-  chan = chan.replace(/_/, ".");
+  getChannelName: function(idx) {
+    var chan = this.visibleData[idx][0];
+    chan = chan.replace(/_/, ".");
+
+    if (this.visibleData[idx][3] === "channel") {
+      chan = "#" + chan;
+    }
+    return chan;
+  },
+
+  getChannelKey: function(idx) {
+    return this.visibleData[idx][0];
+  },
+
+  isContainer: function(idx) {
+    var container;
+    try {
+      container = this.visibleData[idx][1];
+    } catch(e) {
+      container = false;
+    }
+    return container;
+  },
   
-  if (this.visibleData[idx][3] === "channel") {
-    chan = "#" + chan;
-  }
+  isContainerOpen: function(idx) {
+    return this.visibleData[idx][2];
+  },
   
-  return chan;
-},
+  isContainerEmpty: function(idx) {
+    return false;
+  },
+  
+  isSeparator: function(idx) {
+    return false;
+  },
+  
+  isSorted: function() {
+    return false;
+  },
+  
+  isEditable: function(idx, column) {
+    return false;
+  },
 
-getChannelKey: function(idx) {
-  return this.visibleData[idx][0];
-},
-
-isContainer: function(idx) {
-  var container = false;
-  try {
-    container = this.visibleData[idx][1];
-  } catch(e) {
-    
-  }
-    return container;e
-    },
-    isContainerOpen: function(idx) {
-        return this.visibleData[idx][2];
-    },
-    isContainerEmpty: function(idx) {
-        return false;
-    },
-    isSeparator: function(idx) {
-        return false;
-    },
-    isSorted: function() {
-        return false;
-    },
-    isEditable: function(idx, column) {
-        return false;
-    },
-
-getParentIndex: function(idx) {
-        if (this.isContainer(idx)) return - 1;
-        for (var t = idx - 1; t >= 0; t--) {
-            if (this.isContainer(t)) return t;
-
-        }
-
-    },
-    getLevel: function(idx) {
-        if (this.isContainer(idx)) return 0;
-        return 1;
-
-    },
-    hasNextSibling: function(idx, after) {
-        var thisLevel = this.getLevel(idx);
-        for (var t = idx + 1; t < this.visibleData.length; t++) {
-            var nextLevel = this.getLevel(t)
-            if (nextLevel == thisLevel) return true;
-            else if (nextLevel < thisLevel) return false;
-
-        }
-
-    },
-    toggleOpenState: function(idx) {
-        var item = this.visibleData[idx];
-        if (!item[1]) return;
-
-        if (item[2]) {
-            item[2] = false;
-
-            var thisLevel = this.getLevel(idx);
-            var deletecount = 0;
-            for (var t = idx + 1; t < this.visibleData.length; t++) {
-                if (this.getLevel(t) > thisLevel) deletecount++;
-                else break;
-
-            }
-            if (deletecount) {
-                this.visibleData.splice(idx + 1, deletecount);
-                this.treeBox.rowCountChanged(idx + 1, -deletecount);
-
-            }
-
-        }
-        else {
-            item[2] = true;
-
-            var label = this.visibleData[idx][0];
-            var toinsert = this.childData[label];
-            for (var i = 0; i < toinsert.length; i++) {
-                this.visibleData.splice(idx + i + 1, 0, [toinsert[i], false, false]);
-
-            }
-            this.treeBox.rowCountChanged(idx + 1, toinsert.length);
-
-        }
-
-    },
-
-setAvatar: function(player, avatarPath) {
-  if (player !== null) {
-    channelTreeView.userData[player].avatar = avatarPath;
-  }
-},
-
-getImageSrc: function(idx, column) {
-        if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
-          var chan = this.visibleData[idx][0].replace(/_/, ".");
-          return Peekko.session.window.getFavicon(chan);
-        } else {
-          var playerName = this.getCellText(idx);
-          if (this.userData[playerName] !== undefined) {
-            return this.userData[playerName].avatar;
-          } else {
-            this.userData[playerName] = {};
-            Peekko.session.window.getAvatar(playerName, this.setAvatar);
-          }
-          
-        }
-
-    },
-    getProgressMode: function(idx, column) {},
-    getCellValue: function(idx, column) {},
-    cycleHeader: function(col, elem) {},
-    selectionChanged: function() {},
-    cycleCell: function(idx, column) {},
-    performAction: function(action) {},
-    performActionOnCell: function(action, index, column) {},
-    getRowProperties: function(idx, column, prop) {},
-    getCellProperties: function(idx, column, prop) {},
-    getColumnProperties: function(column, element, prop) {},
-
-cleanChannel: function(channelName) {
-        return channelName.replace(/\./, "_").replace(/#/, '');
-    },
-
-addRow: function(containerName, value) {
-        var index;
-        for (var i = 0; i < this.visibleData.length; i++) {
-            if (this.visibleData[i][0] == containerName) {
-                index = i;
-
-            }
-
-        }
-
-        if (index !== undefined) {
-            var label = this.visibleData[index][0];
-            var toinsert = this.childData[label];
-
-            if (toinsert.indexOf(value) == -1) {
-                toinsert.push(value);
-
-                if (this.isContainerOpen(index)) {
-                    this.visibleData.splice(index + toinsert.length, 0, [value, false, index]);
-                    this.treeBox.rowCountChanged(index + toinsert.length - 1, 1);
-                }
-                
-            }
-
-        }
-
-    },
-
-addChannel: function(name, type) {
-        name = this.cleanChannel(name);
-        type = type || "channel";
-        var open = (type == "channel" ? true : false);
-        var matching = false;
-        for (var i = 0; i < this.visibleData.length; i++) {
-            if (this.isContainer(i) && this.visibleData[i][0] === name) {
-                matching = true;
-            }
-
-        }
-
-        if (!matching) {
-            this.childData[name] = [];
-            this.visibleData.push([name, true, open, type]);
-            this.treeBox.rowCountChanged(this.visibleData.length - 1, 1);
-        }
-
+  getParentIndex: function(idx) {
+    if (this.isContainer(idx)) return - 1;
+    for (var t = idx - 1; t >= 0; t--) {
+      if (this.isContainer(t)) return t;
+    }
+  },
+  
+  getLevel: function(idx) {
+    if (this.isContainer(idx)) return 0;
+    return 1;
+  },
+  
+  hasNextSibling: function(idx, after) {
+    var thisLevel = this.getLevel(idx);
+    for (var t = idx + 1; t < this.visibleData.length; t++) {
+      var nextLevel = this.getLevel(t)
+      if (nextLevel == thisLevel) {
         return true;
-
-    },
-    
-removeChannel: function(name) {
-  name = this.cleanChannel(name);
+      } else if (nextLevel < thisLevel) {
+        return false;
+      }
+    }
+  },
   
-  // Get the index of the channel name from the visibleData array
-  var visIndex;  
-  for (var i = 0; i < this.visibleData.length; i++) {
+  toggleOpenState: function(idx) {
+    var item = this.visibleData[idx];
+    if (!item[1]) return;
+
+    if (item[2]) {
+      item[2] = false;
+
+      var thisLevel = this.getLevel(idx);
+      var deletecount = 0;
+      for (var t = idx + 1; t < this.visibleData.length; t++) {
+        if (this.getLevel(t) > thisLevel) deletecount++;
+        else break;
+      }
+      if (deletecount) {
+        this.visibleData.splice(idx + 1, deletecount);
+        this.treeBox.rowCountChanged(idx + 1, -deletecount);
+      }
+    } else {
+      item[2] = true;
+
+      var label = this.visibleData[idx][0];
+      var toinsert = this.childData[label];
+      for (var i = 0; i < toinsert.length; i++) {
+        this.visibleData.splice(idx + i + 1, 0, [toinsert[i], false, false]);
+      }
+      this.treeBox.rowCountChanged(idx + 1, toinsert.length);
+    }
+  },
+
+  setAvatar: function(player, avatarPath) {
+    if (player !== null) {
+      channelTreeView.userData[player].avatar = avatarPath;
+    }
+  },
+
+  getImageSrc: function(idx, column) {
+    if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
+      var chan = this.visibleData[idx][0].replace(/_/, ".");
+      return Peekko.session.window.getFavicon(chan);
+    } else {
+      var playerName = this.getCellText(idx);
+      if (this.userData[playerName] !== undefined) {
+        return this.userData[playerName].avatar;
+      } else {
+        this.userData[playerName] = {};
+        Peekko.session.window.getAvatar(playerName, this.setAvatar);
+      }
+    }
+  },
+  getProgressMode: function(idx, column) {},
+  
+  getCellValue: function(idx, column) {},
+  
+  cycleHeader: function(col, elem) {},
+  
+  selectionChanged: function() {},
+  
+  cycleCell: function(idx, column) {},
+  
+  performAction: function(action) {},
+  
+  performActionOnCell: function(action, index, column) {},
+  
+  getRowProperties: function(idx, column, prop) {},
+  
+  getCellProperties: function(idx, column, prop) {},
+  
+  getColumnProperties: function(column, element, prop) {},
+
+  cleanChannel: function(channelName) {
+    return channelName.replace(/\./, "_").replace(/#/, '');
+  },
+
+  addRow: function(containerName, value) {
+    var index;
+    for (var i = 0; i < this.visibleData.length; i++) {
+      if (this.visibleData[i][0] == containerName) {
+        index = i;
+      }
+    }
+
+    if (index !== undefined) {
+      var label = this.visibleData[index][0];
+      var toinsert = this.childData[label];
+
+      if (toinsert.indexOf(value) == -1) {
+        toinsert.push(value);
+
+        if (this.isContainerOpen(index)) {
+          this.visibleData.splice(index + toinsert.length, 0, [value, false, index]);
+          this.treeBox.rowCountChanged(index + toinsert.length - 1, 1);
+        }
+      }
+    }
+  },
+
+  addChannel: function(name, type) {
+    name = this.cleanChannel(name);
+    type = type || "channel";
+    var open = (type == "channel" ? true: false);
+    var matching = false;
+    for (var i = 0; i < this.visibleData.length; i++) {
+      if (this.isContainer(i) && this.visibleData[i][0] === name) {
+        matching = true;
+      }
+    }
+
+    if (!matching) {
+      this.childData[name] = [];
+      this.visibleData.push([name, true, open, type]);
+      this.treeBox.rowCountChanged(this.visibleData.length - 1, 1);
+    }
+    return true;
+  },
+
+  removeChannel: function(name) {
+    name = this.cleanChannel(name);
+
+    // Get the index of the channel name from the visibleData array
+    var visIndex;
+    for (var i = 0; i < this.visibleData.length; i++) {
       if (this.isContainer(i) && this.visibleData[i][0] === name) {
         visIndex = i;
       }
-  }
+    }
 
-  // Count up all the items to be removed from the list. Starting with a count of 1 for the channel node
-  // and adding each child of that channel to the total count to be removed.
-  var thisLevel = this.getLevel(visIndex);
-  var deletecount = 1;
-  for (var t = visIndex + 1; t < this.visibleData.length; t++) {
-      if (this.getLevel(t) > thisLevel) deletecount++;
-      else break;
+    // Count up all the items to be removed from the list. Starting with a count of 1 for the channel node
+    // and adding each child of that channel to the total count to be removed.
+    var thisLevel = this.getLevel(visIndex);
+    var deletecount = 1;
+    for (var t = visIndex + 1; t < this.visibleData.length; t++) {
+      if (this.getLevel(t) > thisLevel) {
+        deletecount++;
+      } else {
+        break;
+      }
+    }
 
-  }
-  
-  // If we've got stuff to delete, remove the items and update the view.'
-  if (deletecount) {
+    // If we've got stuff to delete, remove the items and update the view.'
+    if (deletecount) {
       this.visibleData.splice(visIndex, deletecount);
       this.treeBox.rowCountChanged(visIndex, -deletecount);
+    }
 
-  }
-  
-  // Finally, remove them from the actual data collection so we don't get them again.'
-  if (this.childData[name]) {
-    delete this.childData[name];
-  }
-},
+    // Finally, remove them from the actual data collection so we don't get them again.'
+    if (this.childData[name]) {
+      delete this.childData[name];
+    }
+  },
 
-addPlayer: function(channel, player) {
-        channel = this.cleanChannel(channel);
-        if (!this.hasChannel(channel)) {
-            this.addChannel(channel);
-        }
-        this.addRow(channel, player);
+  addPlayer: function(channel, player) {
+    channel = this.cleanChannel(channel);
+    if (!this.hasChannel(channel)) {
+      this.addChannel(channel);
+    }
+    this.addRow(channel, player);
+  },
 
-    },
-
-hasChannel: function(name) {
-        name = this.cleanChannel(name);
-        log("Looking to match channel name: " + name);
-        var matching = false;
-        for (var i = 0; i < this.visibleData.length; i++) {
-            if (this.isContainer(i) && this.visibleData[i][0] === name) {
-                matching = true;
-            }
-        }
-
-        return matching;
-
-    },
-
-hasChild: function(name) {
-        var matching = false;
-        for (var i = 0; i < this.visibleData.length; i++) {
-            if (this.isContainer(i) && this.visibleData[i][0] === name && this.isContainer(i)) {
-                matching = true;
-
-            }
-
-        }
-
-        return matching;
-
-    },
-
-getRowIndex: function(name) {
-        var index;
-        for (var i = this.visibleData.length - 1; i >= 0; i--) {
-            if (this.visibleData[i][0] === name) {
-                index = i;
-                break;
-
-            }
-
-        }
-        return index;
-
-    },
-    
-    removePlayer: function(channel, name) {
-      channel = this.cleanChannel(channel);
-      
-      log("Removing: " + name + " from: " + channel);
-
-      // Get the index of the channel name from the visibleData array
-      var visIndex;  
-      for (var i = 0; i < this.visibleData.length; i++) {
-          if (this.isContainer(i) && this.visibleData[i][0] === channel) {
-            visIndex = i;
-          }
+  hasChannel: function(name) {
+    name = this.cleanChannel(name);
+    log("Looking to match channel name: " + name);
+    var matching = false;
+    for (var i = 0; i < this.visibleData.length; i++) {
+      if (this.isContainer(i) && this.visibleData[i][0] === name) {
+        matching = true;
       }
+    }
+    return matching;
+  },
 
-      // Count up all the items to be removed from the list. Starting with a count of 1 for the channel node
-      // and adding each child of that channel to the total count to be removed.
-      var thisLevel = this.getLevel(visIndex);
-      for (var t = visIndex + 1; t < this.visibleData.length; t++) {
-        log("Checking index: " + t)
-          if (this.getLevel(t) > thisLevel && this.getCellText(t) == name) {
-            log("Removing index: " + t + " from visible data");
-            this.visibleData.splice(t, 1);
-            this.treeBox.rowCountChanged(t, -1);
-          }
+  hasChild: function(name) {
+    var matching = false;
+    for (var i = 0; i < this.visibleData.length; i++) {
+      if (this.isContainer(i) && this.visibleData[i][0] === name && this.isContainer(i)) {
+        matching = true;
       }
+    }
+    return matching;
+  },
 
-      // Finally, remove them from the actual data collection so we don't get them again.'
-      if (this.childData[channel]) {
-        var index = this.childData[channel].indexOf(name);
-        this.childData[channel].splice(index, 1);
+  getRowIndex: function(name) {
+    var index;
+    for (var i = this.visibleData.length - 1; i >= 0; i--) {
+      if (this.visibleData[i][0] === name) {
+        index = i;
+        break;
       }
-    },
+    }
+    return index;
+  },
+
+  removePlayer: function(channel, name) {
+    channel = this.cleanChannel(channel);
+
+    log("Removing: " + name + " from: " + channel);
+
+    // Get the index of the channel name from the visibleData array
+    var visIndex;
+    for (var i = 0; i < this.visibleData.length; i++) {
+      if (this.isContainer(i) && this.visibleData[i][0] === channel) {
+        visIndex = i;
+      }
+    }
+
+    // Count up all the items to be removed from the list. Starting with a count of 1 for the channel node
+    // and adding each child of that channel to the total count to be removed.
+    var thisLevel = this.getLevel(visIndex);
+    for (var t = visIndex + 1; t < this.visibleData.length; t++) {
+      log("Checking index: " + t)
+      if (this.getLevel(t) > thisLevel && this.getCellText(t) == name) {
+        log("Removing index: " + t + " from visible data");
+        this.visibleData.splice(t, 1);
+        this.treeBox.rowCountChanged(t, -1);
+      }
+    }
+
+    // Finally, remove them from the actual data collection so we don't get them again.'
+    if (this.childData[channel]) {
+      var index = this.childData[channel].indexOf(name);
+      this.childData[channel].splice(index, 1);
+    }
+  },
 };
 
+/**
+ * Initializes the tree view of channels and users. 
+ * It's essential that this runs, otherwise the tree won't work
+ */
+
 function init() {
-    var channelTree = document.getElementById("elementList");
-    channelTree.view = channelTreeView;
-    
-    channelTree.addEventListener("dblclick", treeDoubleClick, false);
-    channelTree.addEventListener("click", selectTreeChannel, false);
+  channelTreeView = new channelTreeView();
+  var channelTree = document.getElementById("elementList");
+  channelTree.view = channelTreeView;
+
+  channelTree.addEventListener("dblclick", treeDoubleClick, false);
+  channelTree.addEventListener("click", selectTreeChannel, false);
 }
+
+/**
+ * Opens a private chat with the user that was double clicked in the tree.
+ * Only executes if the item double clicked is not a channel container but an
+ * actual player name.
+ * @param {Object} event The double click event fired by the tree.
+ */
 
 function treeDoubleClick(event) {
   var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
@@ -356,20 +366,33 @@ function treeDoubleClick(event) {
   }
 }
 
+/**
+ * Selects the chat tab associated with the selected element if the selected element is a channel container in the tree
+ * @param {Object} event The select event fired by the tree.
+ */
 function selectTreeChannel(event) {
   var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
   var selectedText = channelTreeView.getChannelName(selectedIndex);
-  
+
   if (channelTreeView.isContainer(selectedIndex)) {
     var chatTab = Peekko.session.window.getChannelTab(selectedText);
     Peekko.session.window.tabcontainer.selectedTab = chatTab;
   }
 }
 
+/**
+ * Checks the selected item in the tree and ensures it is a player item and not a channel container.
+ * If it isn't a valid node then it prevents the context menu popup from showing.
+ * @param {Object} event The onpopupshowing event fired by the tree.
+ */
 function validateSelection(event) {
   if (channelTreeView.rowCount <= 0 || channelTreeView.isContainer(channelTreeView.treeBox.view.selection.currentIndex)) {
     event.preventDefault();
   }
 }
 
+/**
+  This gets called automatically when the chat window is opened. It listens for the load event from
+  the window and when that happens, it calls the init function above.
+ */
 window.addEventListener("load", init, false);
