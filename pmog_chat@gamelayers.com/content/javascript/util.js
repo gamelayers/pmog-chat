@@ -45,7 +45,7 @@ function log(msg) {
   }
   
   function openChatLink(event) {
-    getBrowserWindow().getBrowser().addTab(event.target.getAttribute('lnk'));
+    getBrowserWindow().gBrowser.addTab(event.target.getAttribute('lnk'));
   }
 
   /**

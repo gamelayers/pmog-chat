@@ -236,7 +236,6 @@ irc.Channel = function(name) {
         this.users = new PArray();
         this.limit = null;
         this.operator = null;
-        //this.key = null;
     }
     
     this.clear(name);
@@ -312,14 +311,18 @@ irc.Channel = function(name) {
         //log("addUser: " + user);
         if (! this.hasUser(user)) {
             this.users.push(user)
-            channelTreeView.addPlayer(this.name, user);
+            if (! this.isPrivate()) {
+              channelTreeView.addPlayer(this.name, user);
+            }
         }
     }
     
     this.removeUser = function(user) {
         if (this.hasUser(user)) {
             this.users = this.users.without(user);
-            channelTreeView.removePlayer(this.name, user);
+            if (! this.isPrivate()) {
+              channelTreeView.removePlayer(this.name, user);
+            }
         }
     }
     

@@ -58,9 +58,9 @@ Object.extend(peekko.Client.prototype, {
     onNameReplyEnd : function(oMsg) {
         this.parent.onNameReplyEnd.call(this, oMsg);
         var channel = oMsg.parameters[1];
-        if (channel && this.isPrivateChannel(channel)) {
-            this._privatizeChannel(channel);
-        }
+        //if (channel && this.isPrivateChannel(channel)) {
+        //    this._privatizeChannel(channel);
+        //}
     },
     
     onTimeout : function(timeout) {
