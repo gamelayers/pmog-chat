@@ -510,6 +510,7 @@ irc.Client.prototype = {
             var privChat = Peekko.session.window.getChannelTab(nick);
             if (privChat === undefined) {
               privChat = Peekko.session.window.addTab(nick);
+              Peekko.toolbar.lazyPlaySound("chrome://pmog_chat/skin/sounds/notice.wav");
             }
             Peekko.session.window.ioMap.get(nick).createMessage(channel, nick, message);
         } else {

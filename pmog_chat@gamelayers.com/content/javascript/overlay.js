@@ -158,8 +158,8 @@ joinButton: function(event) {
 
       }
       if (was == current) {
-        this.writer.println("*** already in channel " + current);
-
+        //Channel hasn't changed
+        //this.writer.println("*** already in channel " + current);
       } else {
         // if (was != null && !this.isPrivateChannel(was)) {
         //                     this.ircclient.partChannel(was);

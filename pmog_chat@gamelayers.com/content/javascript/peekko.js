@@ -30,7 +30,7 @@ Object.extend(peekko.ChatListener.prototype, {
      Called when a message is sent to you from a person.
    */
    onMessageToYou : function(message) {
-
+     
    },
 
    /**
