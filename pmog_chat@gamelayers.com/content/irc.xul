@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://pmog_chat/skin/irc.css" type="text/css"?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/tree.css" type="text/css"?>
 
 <?xml-stylesheet href="chrome://browser/content/" type="text/css" ?>
 <?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?>
@@ -112,7 +113,7 @@
           <treecols>
             <treecol id="element" label="Navigation" primary="true" flex="1"/>
           </treecols>
-          <treechildren />
+          <treechildren alternatingbackground="true" />
         </tree>
         
         <splitter collapse="none" />

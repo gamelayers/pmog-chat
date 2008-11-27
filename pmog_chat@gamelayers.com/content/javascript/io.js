@@ -82,7 +82,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.setAttribute("class", "single-message");
       
       var nickSpan = this.createSpan();
-      nickSpan.textContent = nick + ":";
+      nickSpan.textContent = getTimestamp() + " " + nick + ":";
 
       var nickClasses;
       if (nick == Peekko.ircclient.nick) {

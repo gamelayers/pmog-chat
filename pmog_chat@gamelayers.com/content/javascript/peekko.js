@@ -23,7 +23,7 @@ Object.extend(peekko.ChatListener.prototype, {
      Called when a message is received from a person.
    */
    onMessage : function(message) {
-
+     log("onMessage for ChatListener");
    },
 
    /**
@@ -37,7 +37,7 @@ Object.extend(peekko.ChatListener.prototype, {
      Called when a message is sent from a person with your name in it.
    */
    onMessageAboutYou : function(message) {
-
+     log("Message about you: " + message);
    }
 
 });
@@ -179,15 +179,12 @@ Object.extend(peekko.RoomListener.prototype, {
 peekko.RoomInfo = Class.create();
 Object.extend(peekko.RoomInfo.prototype, {
     initialize : function() {
-        //this.queue = $PA();
         this.queue = new Array();
-        //this.listReply = $PA();
         this.listReply = new Array();
         this.checkQueueRunning = false;
         this.channel = null; // this should really be called channelPattern
         this.updateRoomInfoRunning = false;
         this.timeout = 2000;
-        //this.listeners = $PA();
         this.listeners = new Array();
         this.ircclient = null;
         this.allToken = "__all__";
@@ -299,7 +296,6 @@ Object.extend(peekko.RoomInfo.prototype, {
 
     onListStart : function() {
         if (this.updateRoomInfoRunning) {
-            //this.listReply = $PA();
             this.listReply = new Array();
             this.waited = 0;
             this.updates = 0;

@@ -68,6 +68,18 @@ function log(msg) {
     }
     return link;
   }
+  
+  function getTimestamp() {
+    Stamp = new Date();
+    var Hours;
+    var Mins;
+    Hours = Stamp.getHours();
+    Mins = Stamp.getMinutes();
+    if (Mins < 10) {
+      Mins = "0" + Mins;
+    }	
+    return "<" + Hours + ":" + Mins + ">";
+  }
 
   // This is weird, but I don't know what else to do.  My back's against the wall.
   function dirtyBind(f, object) {

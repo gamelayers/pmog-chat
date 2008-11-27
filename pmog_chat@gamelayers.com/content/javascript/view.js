@@ -111,6 +111,7 @@ view.Toolbar.prototype = Object.extend(Object.extend(new peekko.RoomListener(), 
     },
 
     onMessageToYou : function(message) {
+      log("Message about you: " + message);
     },
 
     onNoSuchRoom : function(channel) {
