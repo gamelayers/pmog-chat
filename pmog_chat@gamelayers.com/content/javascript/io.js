@@ -82,7 +82,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.setAttribute("class", "single-message");
       
       var nickSpan = this.createSpan();
-      nickSpan.textContent = getTimestamp() + " " + nick + ":";
+      nickSpan.textContent = "[" + getTimestamp() + "] " + nick + ": ";
 
       var nickClasses;
       if (nick == Peekko.ircclient.nick) {
@@ -100,7 +100,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       wrapperSpan.appendChild(nickSpan);
       
       var messageSpan = this.createSpan();
-      // messageSpan.textContent = message;
+
       jQuery(messageSpan).append(message);
       jQuery(messageSpan).autolink();
       
@@ -108,12 +108,9 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       
       wrapperSpan.appendChild(messageSpan);
       
-      //this.boxInterface.element.appendChild(wrapperSpan);
       this.boxInterface.element.insertBefore(wrapperSpan, this.cursor);
-            
-      //this.boxInterface.element.appendChild(this.createBr());
+      
       this.boxInterface.element.insertBefore(this.createBr(), this.cursor);
-      // this.boxInterface.element.style.MozUserSelect = "text";
       this.scrollDown();
     },
     

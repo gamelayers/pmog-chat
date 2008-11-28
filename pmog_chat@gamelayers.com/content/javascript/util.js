@@ -77,8 +77,11 @@ function log(msg) {
     Mins = Stamp.getMinutes();
     if (Mins < 10) {
       Mins = "0" + Mins;
-    }	
-    return "<" + Hours + ":" + Mins + ">";
+    }
+    if (Hours < 10) {
+      Hours = "0" + Hours;
+    }
+    return Hours + ":" + Mins;
   }
 
   // This is weird, but I don't know what else to do.  My back's against the wall.

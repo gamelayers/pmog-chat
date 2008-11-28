@@ -62,24 +62,32 @@ notification toolbarbutton {
 html|*.single-message {
 	padding-left: 4px;
 	margin-bottom: 2px;
+	display: inline-block;
 }
 
 html|*.nick {
-	margin-right: 5px;
+	margin-right: 4px;
+	display: inline-block;
 }
 
 html|*.user-nick {
 	color: #f81b09;
 	font-weight: bold;
+	display: inline-block;
 }
 
 html|*.self-nick {
 	color: blue;
 	font-weight: bold;
+	display: inline-block;
 }
 
 html|*.message-text {
 	color: #000;
+}
+
+html|br {
+	display: inline-block;
 }
 
 html|a {
