@@ -200,6 +200,7 @@ addTab: function(title) {
         }
         
         t.setAttribute("value", type);
+        t.setAttribute("id", title);
 
         this.tabcontainer.tabs.appendChild(t);
         
@@ -229,7 +230,9 @@ addTab: function(title) {
         sb.topic = title;
         sb.contextMenu = "contentAreaContextMenu";
         
-        this.ioMap.add(cTitle, new io.ChatWriter(cTitle));        
+        var chatWriter = new io.ChatWriter(cTitle, t.id);
+        this.ioMap.add(cTitle, chatWriter);
+        
         return t;
     },
     
@@ -260,7 +263,8 @@ getChannelTab: function(channelName) {
   var tabs = document.getElementsByTagName('tab');
   var tab;
   for (var i = tabs.length - 1; i >= 0; i--){
-    if (tabs[i].label == channelName) {
+    var tl = tabs[i].label.split(" - ")[0];
+    if (tl === channelName) {
       tab = tabs[i];
     }
   }
@@ -284,11 +288,18 @@ getFavicon: function(url) {
   return iconUrl;
 },
 
-tabChange: function(tabbox) {
-  if (Peekko.ircclient && tabbox.selectedItem.label.indexOf("#") != -1) {
-    Peekko.joinChannel(tabbox.selectedItem.label);
-    Peekko.ircclient.executeLocalInput("/join " + tabbox.selectedItem.label);
-  } else if (Peekko.ircclient && tabbox.selectedItem.label === "Console") {
+tabChange: function() {
+  var tab = this.tabcontainer.tabs.selectedItem;
+  var ioName = tab.label.replace(/#/, '');
+  
+  if (this.ioMap.get(ioName) !== undefined) {
+    this.ioMap.get(ioName).clearBackgroundCount();
+  }
+  
+  if (Peekko.ircclient && this.tabcontainer.tabs.selectedItem.value === "channel") {
+    Peekko.joinChannel(this.tabcontainer.tabs.selectedItem.label);
+    Peekko.ircclient.executeLocalInput("/join " + this.tabcontainer.tabs.selectedItem.label);
+  } else if (Peekko.ircclient) {
     Peekko.ircclient.channel = null;
   }
 },

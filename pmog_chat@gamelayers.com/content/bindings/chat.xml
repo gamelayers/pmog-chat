@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<!DOCTYPE bindings PUBLIC "-//MOZILLA//DTD XBL V1.0//EN" "http://www.mozilla.org/xbl">
+
+<!DOCTYPE bindings [
+<!ENTITY % tabBrowserDTD SYSTEM "chrome://browser/locale/tabbrowser.dtd" >
+%tabBrowserDTD;
+<!ENTITY % globalDTD SYSTEM "chrome://global/locale/global.dtd">
+%globalDTD;
+]>
 
 <bindings
     xmlns="http://www.mozilla.org/xbl"
@@ -13,10 +19,9 @@
         <xul:notification anonid="topicContent" type="info" xbl:inherits="image=icon, label" image="https://developer.mozilla.org/favicon.ico" />
       </xul:notificationbox>
       <xul:scrollbox anonid="contentScroll" class="chat-output" flex="1">
-        <!-- <xul:notificationbox anonid="chatTopic" flex="1" display="block">
-          <xul:notification anonid="topicContent" type="info" xbl:inherits="image=icon, label" image="https://developer.mozilla.org/favicon.ico" />
-        </xul:notificationbox> -->
-        <children />
+        <html:table class="auto-layout stretched" anonid="output-table">
+
+        </html:table>
         <xul:label class="chat_cursor" />
       </xul:scrollbox>
     </content>
@@ -61,5 +66,24 @@
     <handlers>
     </handlers>
   </binding>
+  
+  <binding id="tabbrowser-tab" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-tab">
+    <content chromedir="&locale.dir;" closetabtext="&closeTab.label;">
+      <xul:hbox class="tab-image-left" xbl:inherits="selected"/>
+      <xul:hbox class="tab-image-middle" flex="1" align="center" xbl:inherits="selected">
+        <xul:stack class="tab-icon">
+          <xul:image xbl:inherits="validate,src=image" class="tab-icon-image"/>
+          <xul:image class="tab-extra-status"/>
+        </xul:stack>
+        <xul:label xbl:inherits="value=count" />
+        <xul:stack class="tab-text-stack" flex="1">
+            <!-- <xul:label flex="1" xbl:inherits="value=label,crop,accesskey" crop="right" class="tab-text-shadow"/> -->
+            <xul:label flex="1" xbl:inherits="value=label,crop,accesskey" crop="right" class="tab-text"/>
+        </xul:stack>
+      </xul:hbox>
+      <xul:toolbarbutton anonid="close-button" tabindex="-1" class="tab-close-button"/>
+      <xul:hbox class="tab-image-right" xbl:inherits="selected"/>
+    </content>
+    </binding>
 
 </bindings>

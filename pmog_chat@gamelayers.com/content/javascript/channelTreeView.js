@@ -9,6 +9,17 @@ function channelTreeView() {
   this.visibleData = [];
   this.treeBox = null;
   this.selection = null;
+  
+  this.atomCache = new Object();
+  var atomSvc = getService("@mozilla.org/atom-service;1", "nsIAtomService");
+  var atoms = ["founder-true", "founder-false", "admin-true", "admin-false",
+               "op-true", "op-false", "halfop-true", "halfop-false",
+               "voice-true", "voice-false", "away-true", "away-false",
+               "unselected"];
+               
+   for (var i = 0; i < atoms.length; i++) {
+     this.atomCache[atoms[i]] = atomSvc.getAtom(atoms[i]);
+   }
 }
 
 channelTreeView.prototype = {
@@ -192,7 +203,29 @@ channelTreeView.prototype = {
   
   getRowProperties: function(idx, column, prop) {},
   
-  getCellProperties: function(idx, column, prop) {},
+  getCellProperties: function(idx, column, properties) {
+    if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+      return;
+    }
+
+    // See bug 432482 - work around Gecko deficiency.
+    if (!this.selection.isSelected(idx)) {
+        properties.AppendElement(this.atomCache["unselected"]);
+    }
+
+    var rowName = this.visibleData[idx][0];
+    
+    if (!this.isContainer(idx)) {
+      var userObj = this.userData[rowName];
+
+      //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
+      //properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
+      //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
+      //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
+      //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
+      properties.AppendElement(this.atomCache["away-" + userObj.idle]);
+    }
+  },
   
   getColumnProperties: function(column, element, prop) {},
 
@@ -282,6 +315,8 @@ channelTreeView.prototype = {
     if (!this.hasChannel(channel)) {
       this.addChannel(channel);
     }
+    this.userData[player] = {};
+    this.userData[player].idle = "false";
     this.addRow(channel, player);
   },
 

@@ -4,6 +4,27 @@ outside of a plugin extension.  An error concerning "UnnamedClass.classes" will 
 if that happens.
 */
 
+var jsenv = new Object();
+// Netscape/Mozilla security manager, for gaining priviledges with consent.
+jsenv.HAS_SECURITYMANAGER = ((typeof netscape == "object") &&
+                             (typeof netscape.security == "object"));
+// XPCOM, one of two socket implementation providers.
+jsenv.HAS_XPCOM = ((typeof Components == "object") &&
+                   (typeof Components.classes == "object") &&
+                   (typeof Components.interfaces == "object"));
+// Rhino (JS-in-Java), the other socket implementation provider.
+// XXX Bug 435772 - we avoid any Java tests if we have XPCOM so as to avoid
+// the Java plugin instanciating itself to answer our query.
+jsenv.HAS_RHINO = !jsenv.HAS_XPCOM && (typeof defineClass == "function");
+// NSPR Event Queue, i.e. we're living in a browser/GUI-like place.
+jsenv.HAS_NSPR_EVENTQ = (typeof document == "object");
+// Specific XPCOM interfaces that we really care about.
+var ci = jsenv.HAS_XPCOM ? Components.interfaces : {};
+jsenv.HAS_STREAM_PROVIDER = ("nsIStreamProvider" in ci);
+jsenv.HAS_SERVER_SOCKETS = ("nsIServerSocket" in ci);
+jsenv.HAS_THREAD_MANAGER = ("nsIThreadManager" in ci);
+delete ci;
+
 function log(msg) {
   if (Components) {
     try {
@@ -82,6 +103,41 @@ function log(msg) {
       Hours = "0" + Hours;
     }
     return Hours + ":" + Mins;
+  }
+
+
+  function getService(contractID, iface)
+  {
+      if (!jsenv.HAS_XPCOM)
+          return null;
+
+      var rv;
+      var cls = Components.classes[contractID];
+
+      if (!cls)
+          return null;
+
+      switch (typeof iface)
+      {
+          case "undefined":
+              rv = cls.getService();
+              break;
+
+          case "string":
+              rv = cls.getService(Components.interfaces[iface]);
+              break;
+
+          case "object":
+              rv = cls.getService(iface);
+              break;
+
+          default:
+              rv = null;
+              break;
+      }
+
+      return rv;
+
   }
 
   // This is weird, but I don't know what else to do.  My back's against the wall.

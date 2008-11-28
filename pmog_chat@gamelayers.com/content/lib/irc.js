@@ -170,7 +170,6 @@ irc.Message = function(sMsg) {
     this.prefix = "";
     this.command = "";
     this.commandCode = 0;
-    //this.parameters = new PArray();
     this.parameters = new Array();
     this.body = "";
     // Get rid of these weird characters that are used for bold or other tricks.
@@ -235,9 +234,7 @@ irc.Channel = function(name) {
 
     this.clear = function(name) {
         this.name = name;
-        //this.modes = new PArray();
         this.modes = new Array();
-        //this.users = new PArray();
         this.users = new Array();
         this.limit = null;
         this.operator = null;
@@ -250,7 +247,6 @@ irc.Channel = function(name) {
     }
     
     this.setMode = function(modes) {
-        //this.modes = new PArray();
         this.modes = new Array();
         this.changeMode(modes);
     }
@@ -319,6 +315,7 @@ irc.Channel = function(name) {
             if (! this.isPrivate()) {
               channelTreeView.addPlayer(this.name, user);
             }
+            Peekko.ircclient.sendCommand("WHOIS", [user]);
         }
     }
     
@@ -332,8 +329,13 @@ irc.Channel = function(name) {
     }
     
     this.clearUsers = function() {
-        //this.users = new PArray();
         this.users = new Array();
+    }
+    
+    this.whoIsIdle = function() {
+      for (var i = 0; i < this.users.length; i++) {
+        Peekko.ircclient.sendCommand("WHOIS", [this.users[i]]);
+      }
     }
 }
 
@@ -363,7 +365,7 @@ irc.Client.prototype = {
         this.connected = false;
         this.connectStartTime = 0;
         //this.out = new io.LogWriter();
-        this.out = new io.ChatWriter("console");
+        this.out = new io.ChatWriter("console", "panel-console");
         this.err = new io.LogWriter();
         //this.err = new io.ChatWriter();
         this.channel = new irc.Channel();
@@ -388,6 +390,8 @@ irc.Client.prototype = {
     
     createMessage: function(channel, nick, message) {
       var cSentTo = this.cleanChannelName(channel);
+      channelTreeView.userData[nick].idle = "false";
+      channelTreeView.treeBox.invalidate();
       Peekko.session.window.ioMap.get(cSentTo).createMessage(channel, nick, message);
     },
     
@@ -868,10 +872,8 @@ irc.Client.prototype = {
             var body = m[2];
             var args;
             if (body) {
-                //args = $PA(body.split(/\s/));  // Don't /\s+/ otherwise we'll collapse the spaces.
                 args = body.split(/\s/);  // Don't /\s+/ otherwise we'll collapse the spaces.
             } else {
-                //args = $PA();
                 args = new Array();
             }
             
@@ -931,6 +933,9 @@ irc.Client.prototype = {
                 case "w":
                     result = new irc.Command("WHO", this.argsOrChannel(args));
                     break;
+                case "whois":
+                  result = new irc.Command("WHOIS", this.argsOrChannel(args));
+                  break;
                 case "leave":
                 case "l":
                 case "part":
@@ -1075,6 +1080,11 @@ irc.Client.prototype = {
         }
     },
 
+    checkIdle: function() {
+      for (var i = this.channels.length - 1; i >= 0; i--){
+        this.channels[i].whoIsIdle();
+      }
+    },
 
     /**
         Reference: http://www.irchelp.org/irchelp/rfc/rfc2812.txt
@@ -1087,7 +1097,9 @@ irc.Client.prototype = {
         var oMsg = new irc.Message(sMsg);
         switch (oMsg.commandCode) {
         case -1 : // PING
+            this.out.println("PING " + oMsg.body);
             this.sendCommand("PONG", [oMsg.body]);
+            this.checkIdle();
             break;
         case -2 : // NICK
             if (oMsg.nick == this.nick) {
@@ -1316,6 +1328,9 @@ irc.Client.prototype = {
 */
         case 301 : // away
             this.print(oMsg.body, "*** " + oMsg.parameters[1] + " is away: " + oMsg.body);
+            if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
+              channelTreeView.userData[oMsg.parameters[1]].idle = "true";
+            }
             break;
         case 311 : // whois #1
             var params = oMsg.parameters;
@@ -1326,6 +1341,11 @@ irc.Client.prototype = {
             break;
         case 317 : // idle
             this.out.println("*** " + oMsg.parameters[1] + " has been idle " + oMsg.parameters[2] + " seconds");
+            if ((parseInt(oMsg.parameters[2]) / 60) > 5) {
+              if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
+                channelTreeView.userData[oMsg.parameters[1]].idle = "true";
+              }
+            }
             break;
         case 318 : // ENDOFWHOIS
             break;
@@ -1431,6 +1451,9 @@ irc.Client.prototype = {
             break;
         case 376 : // MOTD end
             break;
+        case 378: // Isn't listed in the RFC, appears to be a connecting message. Isn't in the error spectrum either.
+          this.out.println(oMsg.parameters[0] + " " + oMsg.body);
+          break;
         case 403 : // channel doesn't exist
             // Just use a generic error message
             //this.onErrorMessage("channel does not exist: " + oMsg.parameters);

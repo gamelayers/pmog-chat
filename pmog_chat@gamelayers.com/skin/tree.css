@@ -408,3 +408,11 @@ treechildren::-moz-tree-cell-text(selected, editing) {
   -moz-margin-start: -3px;
   padding: 1px;
 }
+
+treechildren:-moz-tree-cell-text(away-true) {
+    color: GrayText;
+    font-style: italic;
+}
+
+treechildren:-moz-tree-cell-text(away-false) {
+}
