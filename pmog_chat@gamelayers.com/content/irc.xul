@@ -149,21 +149,40 @@
   </script>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/jquery.utils.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/prototype.js" />
-  <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/AssociativeArray.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/util.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/utils.js"/>
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/command.js"/>
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/controllers.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/io.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/net.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/lib/irc.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/peekko.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/version.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/client.js" />
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/channelTreeView.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/xul.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/view.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/overlay.js" />
-  <script type="application/x-javascript" src="chrome://pmog_chat/content/utils/command.js"/>
-  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/controllers.js"/>
-  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/channelTreeView.js"/>
+  
+  <!-- <script src="util.js"/>
+  <script src="io.js"/>
+  <script src="net.js"/>
+  <script src="lib/irc.js"/>
+  <script src="embed/ChatWindow/ChatWindow.pt.js"/>
+  <script src="embed/AnnotationWindow/AnnotationWindow.pt.js"/>
+  <script src="Injector.js"/>
+  <script src="ChatWindowInjector.js"/>
+  <script src="AnnotationWindowInjector.js"/>
+  <script src="ChatWriter.js"/>
+  <script src="AnnotationWriter.js"/>
+  <script src="ChatWindow.js"/>
+  <script src="AnnotationWindow.js"/>
+  <script src="peekko.js"/>
+  <script src="version.js"/>
+  <script src="client.js"/>
+  <script src="xul.js"/>
+  <script src="view.js"/>
+  <script src="overlay.js"/> -->
  
   <script type="application/x-javascript">
     <![CDATA[

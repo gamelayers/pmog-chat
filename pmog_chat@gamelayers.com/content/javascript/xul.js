@@ -16,14 +16,13 @@ xul.ChatWindow = Class.create();
 xul.ChatWindow.MAX_HISTORY = 30;
 xul.ChatWindow.prototype = Object.extend(new peekko.RoomListener(), {
     initialize: function() {
-        //this.inputs = $PA();
         this.inputs = new Array();
         this.nick = null;
         this.channel = null;
         this.commandHistory = new Array();
         this.lastHistoryReferenced = -1;
         this.tabcontainer = document.getElementsByTagName('tabbox')[0];
-        this.ioMap = new AssociativeArray();
+        this.ioMap = {};
     },
 
 getInput: function() {
@@ -178,7 +177,7 @@ addTab: function(title) {
       cTitle = title;
       //favicon = this.getAvatar(title);
       //this.getAvatar(title, this.setTabIcon);
-      if (channelTreeView.userData[title] !== undefined) {
+      if (channelTreeView.userData && channelTreeView.userData[title] !== undefined) {
         favicon = channelTreeView.userData[title].avatar;
       } else {
         channelTreeView.userData[title] = {};
@@ -186,8 +185,7 @@ addTab: function(title) {
       }
     }
         
-        var t = document.createElementNS(
-        "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tab");
+        var t = document.createElementNS(XULNS, "tab");
 
         t.className = "tabbrowser-tab";
 
@@ -206,15 +204,13 @@ addTab: function(title) {
         
         channelTreeView.addChannel(cTitle, type);
         
-        var tp = document.createElementNS(
-        "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "tabpanel");
+        var tp = document.createElementNS(XULNS, "tabpanel");
 
         tp.id = cTitle + "-output-panel";
         t.linkedPanel = tp.id;
         tp.flex = "1";
 
-        var sb = document.createElementNS(
-        "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "chat-panel");
+        var sb = document.createElementNS(XULNS, "chat-panel");
 
         sb.className = "chat-output";
         
@@ -231,7 +227,7 @@ addTab: function(title) {
         sb.contextMenu = "contentAreaContextMenu";
         
         var chatWriter = new io.ChatWriter(cTitle, t.id);
-        this.ioMap.add(cTitle, chatWriter);
+        this.ioMap[cTitle] = chatWriter;
         
         return t;
     },
@@ -249,7 +245,7 @@ closeTab: function(tab) {
     Peekko.ircclient.partChannel(channel);
   }
   
-  this.ioMap.remove(cLabel);
+  delete this.ioMap[cLabel];
   var mPanel = $(tab.linkedPanel);  
   this.tabcontainer.tabs.removeChild(tab);
   this.tabcontainer.tabpanels.removeChild(mPanel);
@@ -292,8 +288,8 @@ tabChange: function() {
   var tab = this.tabcontainer.tabs.selectedItem;
   var ioName = tab.label.replace(/#/, '');
   
-  if (this.ioMap.get(ioName) !== undefined) {
-    this.ioMap.get(ioName).clearBackgroundCount();
+  if (this.ioMap[ioName] !== undefined) {
+    this.ioMap[ioName].clearBackgroundCount();
   }
   
   if (Peekko.ircclient && this.tabcontainer.tabs.selectedItem.value === "channel") {
@@ -308,8 +304,7 @@ getAvatar: function(player, callback) {
   var newWindow = getBrowserWindow();
   
   newWindow.jQuery.pmog.getAvatar(player, callback);
-},
-
+}
 });
 
 xul.chatWindow = new xul.ChatWindow();

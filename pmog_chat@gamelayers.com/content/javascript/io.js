@@ -232,7 +232,6 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
 
         if (c1 === undefined) {
           c2.setAttribute("colspan", "2");
-          c2.setAttribute("align", "center");
         }
 
         jQuery(row).append(c2);
@@ -249,7 +248,6 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       
       
       if (this.tabId !== undefined) {
-        this.jqId = "#" + this.tabId;
         this.tabLabel = $(tabId).label;
       }
       
@@ -273,8 +271,6 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
     
     incrementBackgroundCount: function() {
       this.backgroundMessages++;
-       // log("BG: " + this.backgroundMessages);
-       //  jQuery($(this.tabId)).toggleClass("activity");
        
       jQuery($(this.tabId)).addClass("activity");
       $(this.tabId).setAttribute("count", "(" + this.backgroundMessages + ")");

@@ -42,10 +42,14 @@ channelTreeView.prototype = {
       label = chan;
       
       if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
+        label = chan.replace(/_/, ".");
         var userCount = this.childData[chan].length;
         var userLabel = (userCount == 1 ? "user": "users");
         label = label + " (" + userCount + " " + userLabel + ")";
-        label = chan.replace(/_/, ".");
+      }
+      
+      if(!this.isContainer(idx) && this.userData[label].awayMsg) {
+        label = label + " - " + this.userData[label].awayMsg;
       }
     } catch(e) {
       label = "";
@@ -177,7 +181,7 @@ channelTreeView.prototype = {
       var chan = this.visibleData[idx][0].replace(/_/, ".");
       avPath = Peekko.session.window.getFavicon(chan);
     } else {
-      var playerName = this.getCellText(idx);
+      var playerName = this.getCellText(idx).split(" - ")[0];
       if (this.userData[playerName] !== undefined) {
         avPath = this.userData[playerName].avatar;
       } else {
@@ -403,14 +407,16 @@ function init() {
  */
 
 function treeDoubleClick(event) {
-  var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
-  var selectedText = channelTreeView.getCellText(selectedIndex);
-  if (!channelTreeView.isContainer(selectedIndex)) {
-    var chatTab = Peekko.session.window.getChannelTab(selectedText);
-    if (chatTab === undefined) {
-      chatTab = Peekko.session.window.addTab(channelTreeView.getCellText(selectedIndex));
+  if (event.button === 0) {
+    var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
+    var selectedText = channelTreeView.getCellText(selectedIndex);
+    if (!channelTreeView.isContainer(selectedIndex)) {
+      var chatTab = Peekko.session.window.getChannelTab(selectedText);
+      if (chatTab === undefined) {
+        chatTab = Peekko.session.window.addTab(channelTreeView.getCellText(selectedIndex));
+      }
+      Peekko.session.window.selectTab(chatTab);
     }
-    Peekko.session.window.selectTab(chatTab);
   }
 }
 
@@ -419,6 +425,14 @@ function treeDoubleClick(event) {
  * @param {Object} event The select event fired by the tree.
  */
 function selectTreeChannel(event) {
+  if (channelTreeView.visibleData.length <= 0) {
+    return;
+  }
+  
+  if (event.target.tagName !== "treechildren") {
+    channelTreeView.selection.select(-1);
+    return;
+  }
   var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
   var selectedText = channelTreeView.getChannelName(selectedIndex);
 

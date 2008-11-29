@@ -14,13 +14,12 @@ peekko.Controller.prototype = Object.extend(new peekko.Config(), {
   initialize: function() {
     this.ircclient = null;
 
-    //this.tabs = new PArray();
     // could also be called this.sessions
     this.toolbar = new view.Toolbar();
     this.writer = new io.ChatWriter("console");
     this.chatEvents = new peekko.ChatEvents(this.toolbar);
     this.session = new peekko.Session();
-
+    this.session.window.ioMap["console"] = this.writer;
     this.roomInfo = new peekko.RoomInfo();
     this.roomInfo.addListener(this.toolbar);
     this.roomInfo.addListener(this.session.window);

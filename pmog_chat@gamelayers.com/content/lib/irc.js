@@ -364,12 +364,9 @@ irc.Client.prototype = {
         this.status = 0;
         this.connected = false;
         this.connectStartTime = 0;
-        //this.out = new io.LogWriter();
-        this.out = new io.ChatWriter("console", "panel-console");
+        this.out;// = new io.ChatWriter("console", "panel-console");
         this.err = new io.LogWriter();
-        //this.err = new io.ChatWriter();
         this.channel = new irc.Channel();
-        //this.channels = $PA();
         this.channels = new Array();
         this.timeout = 30;
         this.novice = false;
@@ -385,7 +382,7 @@ irc.Client.prototype = {
     
     print: function(channel, msg) {
       var cSentTo = this.cleanChannelName(channel);
-      Peekko.session.window.ioMap.get(cSentTo).print(msg);
+      Peekko.session.window.ioMap[cSentTo].print(msg);
     },
     
     createMessage: function(channel, nick, message) {
@@ -396,10 +393,13 @@ irc.Client.prototype = {
     },
     
     broadcast: function(msg) {
-      var ios = Peekko.session.window.ioMap.values;
-      for (var i = ios.length - 1; i >= 0; i--){
-        ios[i].print(msg);
+      for (var i in Peekko.session.window.ioMap) {
+        Peekko.session.window.ioMap[i].println("Broadcast: " + msg);
       }
+      // var ios = Peekko.session.window.ioMap.values();
+      // for (var i = ios.length - 1; i >= 0; i--){
+      //   ios[i].println("* Broadcast * " + msg);
+      // }
     },
     
     cleanChannelName: function(channel) {
@@ -480,6 +480,8 @@ irc.Client.prototype = {
 
     onNickChange : function(newNick, oldNick) {
         this.broadcast("*** " + oldNick + " is known as " + newNick);
+        channelTreeView.userData[newNick] = channelTreeView.userData[oldNick];
+        delete channelTreeView.userData[oldNick];
         for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
           if (channelTreeView.isContainer(i)) {
             var cKey = channelTreeView.visibleData[i][0];
@@ -516,7 +518,7 @@ irc.Client.prototype = {
               privChat = Peekko.session.window.addTab(nick);
               Peekko.toolbar.lazyPlaySound("chrome://pmog_chat/skin/sounds/notice.wav");
             }
-            Peekko.session.window.ioMap.get(nick).createMessage(channel, nick, message);
+            Peekko.session.window.ioMap[nick].createMessage(channel, nick, message);
         } else {
             this.createMessage(channel, nick, message);
         }
@@ -1275,12 +1277,11 @@ irc.Client.prototype = {
         case -13 : // INVITE
             var fromNick = oMsg.nick;
             var toNick = oMsg.parameters[0];
-            this.out.println("*** " + fromNick + " invites " + this.yourNick(toNick) + " to channel " + oMsg.body);
+            this.out.println("-13 " + fromNick + " invites " + this.yourNick(toNick) + " to channel " + oMsg.body);
             break;
         case 000 : // other messages with no command code
             break;
         case 001 : //server welcome message
-            this.out.println("Welcome " + oMsg.parameters[0] );
             this.connected = true;
             this.nick = oMsg.parameters[0];
             this.foundANick = true;
@@ -1300,7 +1301,7 @@ irc.Client.prototype = {
             }
             break;
         case 221:
-            this.out.println("*** Your user mode is " + oMsg.parameters[1]);
+            this.out.println("221 Your user mode is " + oMsg.parameters[1]);
             break;
         // I want all these handled by the unhandledMessage(), I think.
 /*
@@ -1316,7 +1317,7 @@ irc.Client.prototype = {
         case 255 : // LUSERME
 */
         case 254 :
-            this.out.println("*** " + oMsg.parameters[1] + " channels have been formed");
+            this.out.println("254 " + oMsg.parameters[1] + " channels have been formed");
             break;
         case 263 : // Server load is too heavy.
             this.onServerLoadTooHeavy(oMsg);
@@ -1327,20 +1328,21 @@ irc.Client.prototype = {
             break;
 */
         case 301 : // away
-            this.print(oMsg.body, "*** " + oMsg.parameters[1] + " is away: " + oMsg.body);
+            this.out.println("301 " + oMsg.parameters[1] + " is away: " + oMsg.body);
             if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
               channelTreeView.userData[oMsg.parameters[1]].idle = "true";
+              channelTreeView.userData[oMsg.parameters[1]].awayMsg = oMsg.body;
             }
             break;
         case 311 : // whois #1
             var params = oMsg.parameters;
-            this.out.println("*** " + params[1] + " is " + params[2] + "@" + params[3] + "(" + oMsg.body + ")");
+            this.out.println("311 " + params[1] + " is " + params[2] + "@" + params[3] + "(" + oMsg.body + ")");
             break;
         case 315 : // ENDOFWHO
             this.onWhoReplyEnd();
             break;
         case 317 : // idle
-            this.out.println("*** " + oMsg.parameters[1] + " has been idle " + oMsg.parameters[2] + " seconds");
+            this.out.println("317 " + oMsg.parameters[1] + " has been idle " + oMsg.parameters[2] + " seconds");
             if ((parseInt(oMsg.parameters[2]) / 60) > 5) {
               if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
                 channelTreeView.userData[oMsg.parameters[1]].idle = "true";
@@ -1363,13 +1365,13 @@ irc.Client.prototype = {
                 });
                 channels = aChannels.join(' ');
             }
-            this.out.println("*** on channels: " + channels);
+            this.out.println("319 on channels: " + channels);
             break;
         case 312 : // whois #3
-            this.out.println("*** on irc via server " + oMsg.parameters[2] + " (" + oMsg.body + ")");
+            this.out.println("312 on irc via server " + oMsg.parameters[2] + " (" + oMsg.body + ")");
             break;
         case 320 : // whois #4
-            this.out.println("*** " + oMsg.parameters[1] + " " + oMsg.body);
+            this.out.println("320 " + oMsg.parameters[1] + " " + oMsg.body);
             break;
         case 321 : // LIST start
             this.onListStart();
@@ -1394,7 +1396,7 @@ irc.Client.prototype = {
             if (oChannel) {
                 oChannel.setMode(mode)
             }
-            this.out.println("*** Mode for channel " + channel + " is \"" + mode + "\"");
+            this.out.println("324 Mode for channel " + channel + " is \"" + mode + "\"");
             break;
         case 329:
             this.printRestParams(oMsg);
@@ -1403,7 +1405,7 @@ irc.Client.prototype = {
             if (this.novice && irc.Channel.isPrivateChannel(oMsg.parameters[1])) {
                 // 
             } else {
-                this.out.println("*** Topic for " + oMsg.parameters[1] + ": " + oMsg.body);
+                this.out.println("332 Topic for " + oMsg.parameters[1] + ": " + oMsg.body);
                 if (Peekko.session.window.getChannelTab(oMsg.parameters[1]) !== undefined) {
                   var tpanel = document.getElementById(Peekko.session.window.getChannelTab(oMsg.parameters[1]).linkedPanel);
                   tpanel.childNodes[0].topic = oMsg.body;
@@ -1414,7 +1416,7 @@ irc.Client.prototype = {
             //this.printRestParams(oMsg);
             break;
         case 341 : // invite
-            this.out.println("*** Inviting " + oMsg.parameters[1] + " to channel " + oMsg.parameters[2]);
+            this.out.println("341 Inviting " + oMsg.parameters[1] + " to channel " + oMsg.parameters[2]);
             break;
         case 352 : // WHOREPLY
             this.onWhoReply(oMsg);
@@ -1452,7 +1454,7 @@ irc.Client.prototype = {
         case 376 : // MOTD end
             break;
         case 378: // Isn't listed in the RFC, appears to be a connecting message. Isn't in the error spectrum either.
-          this.out.println(oMsg.parameters[0] + " " + oMsg.body);
+          this.out.println("378 " + oMsg.parameters[0] + " " + oMsg.body);
           break;
         case 403 : // channel doesn't exist
             // Just use a generic error message
@@ -1477,11 +1479,11 @@ irc.Client.prototype = {
                 } else {
                     if (this.horribleNicks == null) {
                         this.horribleNicks = new irc.HorribleNickGenerator();
-                        this.out.println("*** None of the nicks you have selected are available; " +
+                        this.out.println("433 None of the nicks you have selected are available; " +
                                          "will use the horrible nickname generator");
                     }
                     var nick = this.horribleNicks.nextNick();
-                    this.out.println("*** Generated this horrible nickname for you: " + nick);
+                    this.out.println("433 Generated this horrible nickname for you: " + nick);
                     this.sendCommand("NICK", [nick]);
                     // reset the nickHandler to see if the nicknames they've selected will work now.
                     this.nickHandler.reset();
