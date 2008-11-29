@@ -389,7 +389,7 @@ irc.Client.prototype = {
       var cSentTo = this.cleanChannelName(channel);
       channelTreeView.userData[nick].idle = "false";
       channelTreeView.treeBox.invalidate();
-      Peekko.session.window.ioMap.get(cSentTo).createMessage(channel, nick, message);
+      Peekko.session.window.ioMap[cSentTo].createMessage(channel, nick, message);
     },
     
     broadcast: function(msg) {
@@ -1099,7 +1099,7 @@ irc.Client.prototype = {
         var oMsg = new irc.Message(sMsg);
         switch (oMsg.commandCode) {
         case -1 : // PING
-            this.out.println("PING " + oMsg.body);
+            this.out.println("-1  PING " + oMsg.body);
             this.sendCommand("PONG", [oMsg.body]);
             this.checkIdle();
             break;
