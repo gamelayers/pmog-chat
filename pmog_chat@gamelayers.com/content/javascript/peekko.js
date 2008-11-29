@@ -92,63 +92,6 @@ Object.extend(peekko.ChatEvents.prototype, {
 
 });
 
-// Retrieves default configuration from the server.
-// peekko.DefaultConfig = Class.create();
-// Object.extend(peekko.DefaultConfig.prototype, {
-//     initialize : function() {
-//     },
-// 
-//     startRequest : function() {
-//         this.completed = false;
-//         this.failed = false;
-//         this.request = null;
-//           var url = "http://peekko.com/chat/default-config.xml";
-//           var ajax = new Ajax.Request(url, {
-//                 method: 'get',
-//                 parameters : '',
-//                 //onLoaded: function() { alert("loaded"); },
-//                 onComplete: bind(this.onComplete, this),
-//                 onFailure: bind(this.onFailure, this),
-//                 onException: bind(this.onException, this)
-//             });
-//     },
-// 
-//     onFailure : function() {
-//         log("onFailure");
-//         this.failed = true;
-//     },
-// 
-//     onException : function() {
-//         log("onException");
-//         this.failed = true;
-//     },
-// 
-//     onComplete : function(request) {
-//         log("onComplete");
-//         this.completed = true;
-//         this.request = request;
-//         log(request.responseText);
-//     },
-// 
-//     setup : function() {
-//         this.startRequest();
-//         this.wait();
-//         if (this.failed) {
-//             // just pull in the default values
-//             log("failed to read config from the peekko.com")
-//         } else {
-//             log("read config from the peekko.com")
-//         }
-//     },
-// 
-//     wait : function() {
-//         if (! this.completed && ! this.failed) {
-//             setTimeout(bind(this.wait, this), 600);
-//         }
-//     }
-// 
-// });
-
 // For documentation purposes more than anything.
 peekko.RoomListener = Class.create();
 Object.extend(peekko.RoomListener.prototype, {

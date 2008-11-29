@@ -41,6 +41,13 @@
         <checkbox preference="pref_auto" id="auto" width="250px"/>
       </hbox>
     </groupbox>
+    <groupbox id="autocompleteInfo">
+      <caption label="Autocomplete Info" />
+      <hbox align="center">
+        <label value="Reset History" control="resetHistory" width="100px" />
+        <button id="resetHistory" label="Reset Command History" oncommand="removeHistory();" width="250px"/>
+      </hbox>
+    </groupbox>
     <hbox pack="end">
       <button label="Reset" oncommand="resetPrefs();" />
       <button label="Close" oncommand="self.close();" />
