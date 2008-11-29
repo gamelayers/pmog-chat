@@ -649,7 +649,7 @@ irc.Client.prototype = {
     },
     
     onQuit : function(nick, body) {
-        this.out.println("*** Signoff: " + nick + " (" + body + ")");
+        this.broadcast("*** Signoff: " + nick + " (" + body + ")");
     },
     
     onKick : function(channel, who, by, comment) {
