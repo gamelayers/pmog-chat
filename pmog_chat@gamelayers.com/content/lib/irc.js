@@ -411,7 +411,6 @@ irc.Client.prototype = {
         necessary.
     */
     runCommand : function() {
-        //var commands = $PA(arguments);
         var commands = new Array();
         var command;
         while ((command = commands.shift()) != null) {
@@ -665,7 +664,18 @@ irc.Client.prototype = {
         Called when you initially register nick that is accepted by the server.
     */
     onRegistered : function() {
-        //noop
+
+      this.initCommands = new Array();
+      this.initCommands.push("/join #pmog.com");
+      while ((command = this.initCommands.shift()) != null) {
+          var oCommand = this.executeLocalInput(command);
+          if (oCommand) {
+              // If there's a remote command...
+              this.sendCommandObject(oCommand);
+          }
+      }
+        this.initCommands = null;
+
     },
     
     defaultHandler : function() {

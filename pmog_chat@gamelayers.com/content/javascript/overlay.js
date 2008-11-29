@@ -138,7 +138,7 @@ joinButton: function(event) {
     if (this.ircclient == null) {
       var privateChannel = this.getPrivateChannel(channel);
       if (!this.initCommands) {
-        this.initCommands = $A();
+        this.initCommands = new Array();
 
 
       }
@@ -299,27 +299,7 @@ onTabChange: function(url) {
     log("onTabChange: " + url);
     var channel = this.URLtoIRCChannel(url);
     this.toolbar.channel = channel;
-
-    // if (!peekko.config.browseInvisibly()) {
-    //   var privateChannel = this.getPrivateChannel(channel);
-    //   if (this.ircclient && this.ircclient.getChannel(privateChannel) == null
-    //   && this.connectState == "connected") {
-    //     this.ircclient.joinChannel(privateChannel);
-    // 
-    // 
-    //   } else {
-    //     if (!this.initCommands) {
-    //       this.initCommands = $A();
-    // 
-    // 
-    //     }
-    //     this.initCommands.push("/join " + privateChannel);
-    // 
-    // 
-    //   }
-    // 
-    // 
-    // }
+    
     this.updateRoomInfo(channel);
 
 
@@ -339,7 +319,7 @@ connect: function() {
       peekko.prefs.setCharPref("extensions.pmog.chat.irc.username", pmogUsername);
       peekko.prefs.setCharPref("extensions.pmog.chat.irc.nick", pmogUsername);
     }
-
+    
       var nicks = new Array();
       nicks.push("extensions.pmog.chat.irc.nick");
       nicks.push("extensions.pmog.chat.irc.nick.alt.1");
@@ -347,20 +327,8 @@ connect: function() {
       nicks.push("extensions.pmog.chat.irc.nick.alt.3");
       var realname = peekko.prefs.getCharPref("extensions.pmog.chat.irc.realname");
       var username = peekko.prefs.getCharPref("extensions.pmog.chat.irc.username");
-      //this.ircclient = new irc.Client(nicks, username, realname);
+
       this.ircclient = new peekko.Client(new peekko.NickPrefHandler(nicks), username, realname, this);
-      if (this.initCommands) {
-        var commands = this.initCommands;
-        this.ircclient.onRegistered = function() {
-          this.runCommand.apply(this, commands);
-
-
-        }
-        this.initCommands = null;
-
-
-      }
-
       this.ircclient.out = this.writer;
 
       /*

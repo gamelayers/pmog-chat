@@ -407,7 +407,7 @@ function init() {
  */
 
 function treeDoubleClick(event) {
-  if (event.button === 0) {
+  if (event.button === 0 && event.target.tagName === "treechildren") {
     var selectedIndex = channelTreeView.treeBox.view.selection.currentIndex;
     var selectedText = channelTreeView.getCellText(selectedIndex);
     if (!channelTreeView.isContainer(selectedIndex)) {
