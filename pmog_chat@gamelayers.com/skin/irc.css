@@ -2,27 +2,27 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 #connectButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/connect.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/connect-24.png');
 }
 
 #disconnectButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/disconnect.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/disconnect-24.png');
 }
 
 #updateButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/refresh.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/refresh-24.png');
 }
 
 #joinButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/join.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/join-24.png');
 }
 
 #helpButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/help.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/help-24.png');
 }
 
 #preferencesButton {
-	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/preferences.png');
+	list-style-image: url('chrome://pmog_chat/skin/images/toolbar/preferences-24.png');
 }
 
 #elementList {
