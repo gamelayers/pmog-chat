@@ -73,13 +73,8 @@ view.Toolbar.prototype = Object.extend(Object.extend(new peekko.RoomListener(), 
     },
 
     setOutput : function(sMessage, sTooltip) {
-        var element = this.element('status-text');
-        element.label = sMessage;
-        if (sTooltip) {
-            element.setAttribute("tooltiptext", sTooltip);
-        } else {
-            element.removeAttribute("tooltiptext");
-        }
+        var toolbarLabel = $('joinChannelLabel');
+        toolbarLabel.value = sMessage;
     },
 
     /**

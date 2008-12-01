@@ -315,7 +315,7 @@ irc.Channel = function(name) {
             if (! this.isPrivate()) {
               channelTreeView.addPlayer(this.name, user);
             }
-            Peekko.ircclient.sendCommand("WHOIS", [user]);
+            Peekko.ircclient.sendCommand("WHOIS", [user.replace(/@/, '')]);
         }
     }
     
@@ -334,7 +334,7 @@ irc.Channel = function(name) {
     
     this.whoIsIdle = function() {
       for (var i = 0; i < this.users.length; i++) {
-        Peekko.ircclient.sendCommand("WHOIS", [this.users[i]]);
+        Peekko.ircclient.sendCommand("WHOIS", [this.users[i].replace(/@/, '')]);
       }
     }
 }
@@ -540,7 +540,7 @@ irc.Client.prototype = {
     },
     
     onErrorMessage : function(msg) {
-        this.broadcast("*** " + msg);        
+        this.broadcast("XXX Error! XXX: " + msg);        
     },
 
     onJoin : function(nick, channel) {
@@ -571,7 +571,7 @@ irc.Client.prototype = {
     },
         
     onMOTD : function(body) {
-        this.out.println("*** " + body);
+        this.out.println("*** MOTD: " + body);
     },
     
     onDCCChat : function(sNick) {
@@ -657,7 +657,7 @@ irc.Client.prototype = {
     },
     
     onJoinedTooManyChannels : function(oMsg) {
-        this.printBody(oMsg);
+        this.printBody("Joined too many channels: " + oMsg);
     },
     
     /**
@@ -934,7 +934,6 @@ irc.Client.prototype = {
                     var oChannel = this.getChannel(channel);
                     if (oChannel) {
                         this.channel = oChannel;
-                        //this.out.println("*** You are now talking to channel " + this.channel.name);
                         this.onChannelChange(this.channel.name);
                         result = null;
                     } else {
@@ -1262,9 +1261,7 @@ irc.Client.prototype = {
                     this.sendCommand("NOTICE", [ oMsg.nick ], 
                                      c1 + "VERSION Peekko Chat " + peekko.Version + " - Shane Celis" + c1);
                     break;
-                default:
-/*                    this.out.println("*** CTCP " + ctcpCommand + " reply from " + oMsg.nick + ": " +
-*/                                     
+                default:                                     
                     log("Cannot dispatch on '" + oMsg.body +"'");
                 }
             } else {
@@ -1466,10 +1463,11 @@ irc.Client.prototype = {
         case 378: // Isn't listed in the RFC, appears to be a connecting message. Isn't in the error spectrum either.
           this.out.println("378 " + oMsg.parameters[0] + " " + oMsg.body);
           break;
+        case 401: // No such Nick/Channel
+          this.out.println("401 " + oMsg.parameters[0] + ", " + oMsg.parameters[1] + " " + oMsg.body);
+          break;
         case 403 : // channel doesn't exist
-            // Just use a generic error message
-            //this.onErrorMessage("channel does not exist: " + oMsg.parameters);
-            this.printBody(oMsg);
+            this.out.println("403 " + oMsg.parameters[0] + " " + oMsg.body);
             break;
         case 405 : // ERR_TOOMANYCHANNELS You have joined too many channels
             // XXX - Need to do some sort of channel garbage collection.
@@ -1480,6 +1478,7 @@ irc.Client.prototype = {
             this.onErrorMessage(oMsg.parameters[0] + " " + oMsg.body);
             break;
         case 422 : // error trying to part a channel you're not in
+            this.out.println("422 Can't part a channel you haven't joined " + oMsg.parameters[0] + " " + oMsg.body);
             break;
         case 433 : // nickname in use
             if (! this.foundANick) {

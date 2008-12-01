@@ -68,7 +68,6 @@ setNick: function(sNick) {
     },
 
 update: function(channel, count, topic) {
-        //var status = $PA();
         var status = new Array();
         if (this.nick !== null) {
             status.push(this.nick);

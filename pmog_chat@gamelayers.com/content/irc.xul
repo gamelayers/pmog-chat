@@ -94,6 +94,9 @@
       <toolbarbutton orient="vertical" id="disconnectButton" label="&connectionDisconnect.label;" tooltiptext="&connectionDisconnect.tooltip;" command="Tasks:Disconnect" />
       <toolbarbutton orient="vertical" id="updateButton" label="&refresh.label;" tooltiptext="&refresh.tooltip;" command="Tasks:Refresh" />
       <toolbarbutton orient="vertical" id="joinButton" label="&join.label;" tooltiptext="&join.tooltip;" command="Tasks:JoinChannel" />
+      <toolbaritem orient="vertical" pack="center">
+        <label id="joinChannelLabel" value="#pmog.com" />
+      </toolbaritem>
       <toolbarspring flex="1" />
       <toolbarbutton orient="vertical" id="preferencesButton" label="&toolsOptions.label;" tooltiptext="&toolsOptions.tooltip;" command="Tasks:ChatOptions" key="Key:Options" />
       <toolbarbutton orient="vertical" id="helpButton" label="&help.label;" tooltiptext="&help.tooltip;" command="Tasks:JoinHelp" key="Key:Help" />
@@ -164,25 +167,6 @@
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/view.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/overlay.js" />
   
-  <!-- <script src="util.js"/>
-  <script src="io.js"/>
-  <script src="net.js"/>
-  <script src="lib/irc.js"/>
-  <script src="embed/ChatWindow/ChatWindow.pt.js"/>
-  <script src="embed/AnnotationWindow/AnnotationWindow.pt.js"/>
-  <script src="Injector.js"/>
-  <script src="ChatWindowInjector.js"/>
-  <script src="AnnotationWindowInjector.js"/>
-  <script src="ChatWriter.js"/>
-  <script src="AnnotationWriter.js"/>
-  <script src="ChatWindow.js"/>
-  <script src="AnnotationWindow.js"/>
-  <script src="peekko.js"/>
-  <script src="version.js"/>
-  <script src="client.js"/>
-  <script src="xul.js"/>
-  <script src="view.js"/>
-  <script src="overlay.js"/> -->
  
   <script type="application/x-javascript">
     <![CDATA[
