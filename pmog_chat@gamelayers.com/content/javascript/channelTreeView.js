@@ -42,7 +42,7 @@ channelTreeView.prototype = {
       label = chan;
       
       if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
-        label = chan.replace(/_/, ".");
+        label = chan.replace(/_/g, ".");
         var userCount = this.childData[chan].length;
         var userLabel = (userCount == 1 ? "user": "users");
         label = label + " (" + userCount + " " + userLabel + ")";
@@ -59,7 +59,7 @@ channelTreeView.prototype = {
 
   getChannelName: function(idx) {
     var chan = this.visibleData[idx][0];
-    chan = chan.replace(/_/, ".");
+    chan = chan.replace(/_/g, ".");
 
     if (this.visibleData[idx][3] === "channel") {
       chan = "#" + chan;
@@ -178,7 +178,7 @@ channelTreeView.prototype = {
   getImageSrc: function(idx, column) {
     var avPath = null;
     if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
-      var chan = this.visibleData[idx][0].replace(/_/, ".");
+      var chan = this.visibleData[idx][0].replace(/_/g, ".");
       avPath = Peekko.session.window.getFavicon(chan);
     } else {
       var playerName = this.getCellText(idx).split(" - ")[0];
@@ -234,7 +234,7 @@ channelTreeView.prototype = {
   getColumnProperties: function(column, element, prop) {},
 
   cleanChannel: function(channelName) {
-    return channelName.replace(/\./, "_").replace(/#/, '');
+    return channelName.replace(/\./g, "_").replace(/#/, '');
   },
 
   addRow: function(containerName, value) {
