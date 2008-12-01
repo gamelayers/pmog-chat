@@ -96,19 +96,7 @@ update: function(channel, count, topic) {
         }
         this.setStatus(status.join(' '));
     },
-
-isScrollAtBottom: function(threshold) {
-        //var chatOutput = $("chat-output");
-        var chatOutput = document.getElementById(this.tabcontainer.selectedTab.linkedPanel);
-        // the variable scrollTop appears to be write-only.  I cannot read where the scrollbar
-        // is at; therefore, I cannot be nice and not readjust the scrollbar if it messes up.
-        log("scrolltop " + chatOutput.inputField.scrollTop);
-        log("scrollheight " + chatOutput.inputField.scrollHeight);
-        log("delta " + (chatOutput.inputField.scrollTop - chatOutput.inputField.scrollHeight));
-        //return (chatOutput.inputField.scrollTop - chatOutput.inputField.scrollHeight) < threshold;
-        return true;
-    },
-
+    
 disableInput: function(val) {
         var isDisabled = val || false;
         var chatInput = $('chat-input');

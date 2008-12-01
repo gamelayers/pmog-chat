@@ -326,7 +326,7 @@ treechildren::-moz-tree-twisty(Name, separator) {
 }
 
 treechildren::-moz-tree-indentation {
-  width: 16px;
+  width: 8px;
 }
 
 /* ::::: gridline style ::::: */
@@ -372,7 +372,7 @@ treechildren[alternatingbackground="true"]::-moz-tree-row(odd) {
 }
 
 treechildren[alternatingbackground="true"]::-moz-tree-row(odd, selected) {
-  background-color: -moz-mac-secondaryhighlight;
+  background-color: rgba(0,152,255,0.28);
 }
 
 treechildren[alternatingbackground="true"]::-moz-tree-cell-text(odd, selected) {
@@ -414,5 +414,28 @@ treechildren:-moz-tree-cell-text(away-true) {
     font-style: italic;
 }
 
+treechildren:-moz-tree-cell(op-true) {
+  background-color: rgba(255,0,0,0.34);
+}
+
+treechildren:-moz-tree-cell-text(op-true) {
+	color: #fff;
+	font-weight: bold;
+}
+
+treechildren:-moz-tree-cell-text(player-false) {
+	font-weight: bold;
+	font-size: 9pt;
+}
+
 treechildren:-moz-tree-cell-text(away-false) {
+}
+
+treechildren:-moz-tree-image(player-true) {
+	margin-right: 5px;
+	border: 1px solid black;
+}
+
+treechildren:-moz-tree-row(hover, player-true) {
+	border: 1px solid #b4d5ff;
 }

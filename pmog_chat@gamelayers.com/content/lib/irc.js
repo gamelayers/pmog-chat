@@ -306,7 +306,7 @@ irc.Channel = function(name) {
     }
     
     this.hasUser = function(user) {
-        return this.users.indexOf(user) !== -1;
+        return new RegExp(user).test(this.users);
     }
     
     this.addUser = function(user) {
@@ -396,10 +396,6 @@ irc.Client.prototype = {
       for (var i in Peekko.session.window.ioMap) {
         Peekko.session.window.ioMap[i].println("Broadcast: " + msg);
       }
-      // var ios = Peekko.session.window.ioMap.values();
-      // for (var i = ios.length - 1; i >= 0; i--){
-      //   ios[i].println("* Broadcast * " + msg);
-      // }
     },
     
     cleanChannelName: function(channel) {
@@ -1157,6 +1153,7 @@ irc.Client.prototype = {
             //var channel = oMsg.body;
             var channel = oMsg.parameters[0];
             var nick = oMsg.nick;
+            this.out.println("Parting: "  + nick);
             if (nick == this.nick) {
                 this.channels = this.channels.reject(function(oChannel) { 
                                     return oChannel.name == channel }
@@ -1429,11 +1426,8 @@ irc.Client.prototype = {
             this.onWhoReply(oMsg);
             break;
         case 353 : // NAMREPLY
-            //log("NAME Reply: " + oMsg);
-            //var nicks = $PA(oMsg.body.split(/ +/));
             var nicks = oMsg.body.split(/ +/);
             var channel = oMsg.parameters[2];
-            //log("NAME Reply Channel: " + channel);
             var oChannel = this.getChannel(channel);
             if (oChannel && oChannel.operator == null) {
                 var r = new RegExp("^.?" + this.nick + "$");

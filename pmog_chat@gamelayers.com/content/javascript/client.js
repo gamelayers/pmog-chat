@@ -58,14 +58,10 @@ Object.extend(peekko.Client.prototype, {
     onNameReplyEnd : function(oMsg) {
         this.parent.onNameReplyEnd.call(this, oMsg);
         var channel = oMsg.parameters[1];
-        //if (channel && this.isPrivateChannel(channel)) {
-        //    this._privatizeChannel(channel);
-        //}
     },
     
     onTimeout : function(timeout) {
         this.out.println("error: timedout trying to connect to server");
-        //if (this.controller.session.window.isHidden()) {
             autoConnect = peekko.config.getAutoConnect();
             // XXX - Need to differentiate between user initiated and auto initiated connections.
             // I'm just throwing this in to not annoy everyone to tears.

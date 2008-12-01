@@ -111,7 +111,7 @@
       <hbox flex="1">
         <tree id="elementList" seltype="single" hidecolumnpicker="true" contextmenu="userContextPopup">
           <treecols>
-            <treecol id="element" label="Navigation" primary="true" flex="1"/>
+            <treecol id="element" label="Navigation" sort="?Navigation" primary="true" flex="1"/>
           </treecols>
           <treechildren alternatingbackground="true" />
         </tree>

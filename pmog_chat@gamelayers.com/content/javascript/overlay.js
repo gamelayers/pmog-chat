@@ -103,7 +103,7 @@ profileButton: function() {
     var newWindow = getBrowserWindow();
     var user = channelTreeView.getCellText(channelTreeView.treeBox.view.selection.currentIndex);
 
-    user = user.replace(/\@/, '');
+    //user = user.replace(/\@/, '');
     newWindow.getBrowser().addTab(newWindow.jQuery.pmog.BASE_URL + "/users/" + user);
 
   },

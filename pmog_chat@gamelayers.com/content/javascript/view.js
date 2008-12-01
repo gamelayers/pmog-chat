@@ -38,7 +38,6 @@ view.Toolbar.prototype = Object.extend(Object.extend(new peekko.RoomListener(), 
     },
 
     update : function(channel, count, topic, maxCount) {
-        //var msg = $PA();
         var msg = new Array();
         var joiningWord = "in";
         if (count != null && ! isNaN(count)) {

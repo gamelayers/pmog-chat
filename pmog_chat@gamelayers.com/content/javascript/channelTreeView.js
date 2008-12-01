@@ -15,7 +15,7 @@ function channelTreeView() {
   var atoms = ["founder-true", "founder-false", "admin-true", "admin-false",
                "op-true", "op-false", "halfop-true", "halfop-false",
                "voice-true", "voice-false", "away-true", "away-false",
-               "unselected"];
+               "unselected", "player-true", "player-false"];
                
    for (var i = 0; i < atoms.length; i++) {
      this.atomCache[atoms[i]] = atomSvc.getAtom(atoms[i]);
@@ -51,6 +51,8 @@ channelTreeView.prototype = {
       if(!this.isContainer(idx) && this.userData[label].awayMsg) {
         label = label + " - " + this.userData[label].awayMsg;
       }
+      
+      label = label.replace(/@/, '');
     } catch(e) {
       label = "";
     }
@@ -181,11 +183,18 @@ channelTreeView.prototype = {
       var chan = this.visibleData[idx][0].replace(/_/g, ".");
       avPath = Peekko.session.window.getFavicon(chan);
     } else {
-      var playerName = this.getCellText(idx).split(" - ")[0];
-      if (this.userData[playerName] !== undefined) {
+      var playerName = this.getCellText(idx);
+      if (playerName.indexOf(" - ") != -1) {
+        playerName = playerName.split(" - ")[0];
+      }
+      
+      if (!this.userData[playerName]) {
+        this.userData[playerName] = {};
+      }
+      
+      if (this.userData[playerName].avatar) {
         avPath = this.userData[playerName].avatar;
       } else {
-        this.userData[playerName] = {};
         Peekko.session.window.getAvatar(playerName, this.setAvatar);
       }
     }
@@ -205,7 +214,18 @@ channelTreeView.prototype = {
   
   performActionOnCell: function(action, index, column) {},
   
-  getRowProperties: function(idx, column, prop) {},
+  getRowProperties: function(idx, column, properties) {
+    if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+      return;
+    }
+
+    // See bug 432482 - work around Gecko deficiency.
+    if (!this.selection.isSelected(idx)) {
+        properties.AppendElement(this.atomCache["unselected"]);
+    }
+    
+    properties.AppendElement(this.atomCache["player-true"]);
+  },
   
   getCellProperties: function(idx, column, properties) {
     if ((idx < 0) || (idx >= this.childData.length) || !properties) {
@@ -223,11 +243,14 @@ channelTreeView.prototype = {
       var userObj = this.userData[rowName];
 
       //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
-      //properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
+      properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
       //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
       //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
       //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
       properties.AppendElement(this.atomCache["away-" + userObj.idle]);
+      properties.AppendElement(this.atomCache["player-true"]);
+    } else {
+      properties.AppendElement(this.atomCache["player-false"]);
     }
   },
   
@@ -251,10 +274,12 @@ channelTreeView.prototype = {
 
       if (toinsert.indexOf(value) == -1) {
         toinsert.push(value);
+        //toinsert.sort();
 
         if (this.isContainerOpen(index)) {
-          this.visibleData.splice(index + toinsert.length, 0, [value, false, index]);
+          this.visibleData.splice(index + toinsert.length, 0, [value, false]);
           this.treeBox.rowCountChanged(index + toinsert.length - 1, 1);
+          this.treeBox.invalidate();
         }
       }
     }
@@ -321,6 +346,7 @@ channelTreeView.prototype = {
     }
     this.userData[player] = {};
     this.userData[player].idle = "false";
+    this.userData[player].isOp = /^@/.test(player);
     this.addRow(channel, player);
   },
 
