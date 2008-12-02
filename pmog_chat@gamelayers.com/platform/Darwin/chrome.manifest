@@ -1,2 +1,1 @@
-override chrome://pmog_chat/skin/tabs.css chrome://skin/mac/tabs.css
-#overlay chrome://pmog_chat/content/irc.xul chrome://browser/content/macBrowserOverlay.xul
+override chrome://pmog_chat/skin/tabs.css chrome://pmog_chat/skin/mac/tabs.css
