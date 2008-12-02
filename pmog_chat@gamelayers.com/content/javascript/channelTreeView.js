@@ -52,7 +52,7 @@ channelTreeView.prototype = {
         label = label + " - " + this.userData[label].awayMsg;
       }
       
-      label = label.replace(/@/, '');
+      label = label.replace(/^(@|&)/, '');
     } catch(e) {
       label = "";
     }
@@ -174,6 +174,7 @@ channelTreeView.prototype = {
   setAvatar: function(player, avatarPath) {
     if (player !== null) {
       channelTreeView.userData[player].avatar = avatarPath;
+      channelTreeView.treeBox.invalidate();
     }
   },
 
@@ -346,7 +347,7 @@ channelTreeView.prototype = {
     }
     this.userData[player] = {};
     this.userData[player].idle = "false";
-    this.userData[player].isOp = /^@/.test(player);
+    this.userData[player].isOp = /^(@|&)/.test(player);
     this.addRow(channel, player);
   },
 

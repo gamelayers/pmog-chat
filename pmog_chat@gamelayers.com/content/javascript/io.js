@@ -82,6 +82,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
      * @param {String} message The content of the message sent
      */
     createMessage : function(channel, nick, message) {
+      message = htmlEscape(message);
       // First we create one span element that will wrap all the
       // contents of the message, like a container.
       //var wrapperSpan = this.createDiv();
@@ -290,6 +291,7 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
         if (! this.boxInterface.element) {
             throw "error: cannot get " + this.id + " container";
         }
+        s = htmlEscape(s);
         //var child = this.createDiv();
 
         //child.setAttribute("class", "system-message");

@@ -260,14 +260,9 @@ getFavicon: function(url) {
   var urlService = peekko.url.createInstance();
   urlService = urlService.QueryInterface(Components.interfaces.nsIURL);
   urlService.spec = "http://" + url;
-  
-  var iconUrl;
-  try {
-    iconUrl = faviconService.getFaviconForPage(urlService).spec
-  } catch(e) {
-    iconUrl = faviconService.defaultFavicon.spec;
-  }
-  
+    
+  var iconUrl = faviconService.getFaviconImageForPage(urlService).scheme;
+    
   return iconUrl;
 },
 

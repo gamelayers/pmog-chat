@@ -1,6 +1,7 @@
 #!/bin/bash
 # Build config for build.sh
-APP_NAME="pmog_chat"
+APP_NAME=pmog_chat
+XPI_FILE="${APP_NAME}.xpi"
 CHROME_PROVIDERS="content locale skin"
 CLEAN_UP=1
 ROOT_FILES=

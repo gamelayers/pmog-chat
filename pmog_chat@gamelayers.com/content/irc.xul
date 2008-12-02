@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://browser/content/" type="text/css" ?>
-<!-- <?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?> -->
-<?xml-stylesheet href="chrome://global/skin/"?>
-<?xml-stylesheet href="chrome://pmog_chat/skin/irc.css" type="text/css"?>
-<?xml-stylesheet href="chrome://pmog_chat/skin/tree.css" type="text/css"?>
-
 <?xul-overlay href="chrome://browser/content/macBrowserOverlay.xul"?>
-
 <?xul-overlay href="chrome://pmog_chat/content/chatMenuOverlay.xul"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
+<!--
+<?xml-stylesheet href="chrome://global/content/" type="text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?>
+<?xml-stylesheet href="chrome://browser/content/" type="text/css" ?> -->
+<?xml-stylesheet href="chrome://pmog_chat/skin/irc.css" type="text/css" ?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/tree.css" type="text/css" ?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/tabs.css" type="text/css"?>
 
 <!DOCTYPE window [
 <!ENTITY % pmogChatDTD SYSTEM "chrome://pmog_chat/locale/pmogchat.dtd">

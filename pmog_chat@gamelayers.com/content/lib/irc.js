@@ -315,7 +315,7 @@ irc.Channel = function(name) {
             if (! this.isPrivate()) {
               channelTreeView.addPlayer(this.name, user);
             }
-            Peekko.ircclient.sendCommand("WHOIS", [user.replace(/@/, '')]);
+            Peekko.ircclient.sendCommand("WHOIS", [user.replace(/^(@|&)/, '')]);
         }
     }
     
@@ -334,7 +334,7 @@ irc.Channel = function(name) {
     
     this.whoIsIdle = function() {
       for (var i = 0; i < this.users.length; i++) {
-        Peekko.ircclient.sendCommand("WHOIS", [this.users[i].replace(/@/, '')]);
+        Peekko.ircclient.sendCommand("WHOIS", [this.users[i].replace(/^(@|&)/, '')]);
       }
     }
 }
@@ -678,7 +678,7 @@ irc.Client.prototype = {
     },
     
     printBody : function(oMsg) {
-        this.out.println("*** " + oMsg.body);
+        this.out.println(oMsg.commandCode + " (unhandled) " + oMsg.body);
     },    
     
     printRestParams : function(oMsg) {
@@ -1338,9 +1338,23 @@ irc.Client.prototype = {
               channelTreeView.userData[oMsg.parameters[1]].awayMsg = oMsg.body;
             }
             break;
+        case 307 : // nick is a registered nick
+            this.out.println("307 " + oMsg.parameters[0] + " " + oMsg.body);
+            break;
+        case 310 : // whoishelp
+            this.out.println("310 " + oMsg.parameters[0] + " " + oMsg.body);
         case 311 : // whois #1
             var params = oMsg.parameters;
             this.out.println("311 " + params[1] + " is " + params[2] + "@" + params[3] + "(" + oMsg.body + ")");
+            break;
+        case 312 : // whois #3
+            this.out.println("312 " + oMsg.parameters[0] + " is on irc via server " + oMsg.parameters[2] + " (" + oMsg.body + ")");
+            break;
+        case 313 : // nick is a channel operator
+            this.out.println("313 " + oMsg.parameters[1] + " " + oMsg.body);
+            if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
+              channelTreeView.userData[oMsg.parameters[1]].isOp = "true";
+            }
             break;
         case 315 : // ENDOFWHO
             this.onWhoReplyEnd();
@@ -1369,10 +1383,7 @@ irc.Client.prototype = {
                 });
                 channels = aChannels.join(' ');
             }
-            this.out.println("319 on channels: " + channels);
-            break;
-        case 312 : // whois #3
-            this.out.println("312 on irc via server " + oMsg.parameters[2] + " (" + oMsg.body + ")");
+            this.out.println("319 " + oMsg.parameters[0] + " is in channels: " + channels);
             break;
         case 320 : // whois #4
             this.out.println("320 " + oMsg.parameters[1] + " " + oMsg.body);
@@ -1457,6 +1468,12 @@ irc.Client.prototype = {
         case 378: // Isn't listed in the RFC, appears to be a connecting message. Isn't in the error spectrum either.
           this.out.println("378 " + oMsg.parameters[0] + " " + oMsg.body);
           break;
+        case 379: // whoismodes
+          this.out.println("379 " + oMsg.parameters[0] + " " + oMsg.body);
+          break;
+        case 381: // You're an operator
+          this.out.println("381 " + oMsg.body);
+          break;
         case 401: // No such Nick/Channel
           this.out.println("401 " + oMsg.parameters[0] + ", " + oMsg.parameters[1] + " " + oMsg.body);
           break;
@@ -1472,7 +1489,7 @@ irc.Client.prototype = {
             this.onErrorMessage(oMsg.parameters[0] + " " + oMsg.body);
             break;
         case 422 : // error trying to part a channel you're not in
-            this.out.println("422 Can't part a channel you haven't joined " + oMsg.parameters[0] + " " + oMsg.body);
+            this.out.println("422 " + oMsg.parameters[0] + " " + oMsg.body);
             break;
         case 433 : // nickname in use
             if (! this.foundANick) {
