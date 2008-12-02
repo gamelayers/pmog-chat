@@ -155,3 +155,7 @@ chat-panel {
 notificationbox {
 	margin: 2px 4px 0;
 }
+
+.tabbrowser-tab {
+  -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#tabbrowser-tab") !important;
+}

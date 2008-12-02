@@ -1,3 +1,6 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
 tabpanels {
 	margin: 0;
 	padding: 0;
@@ -62,7 +65,6 @@ tab toolbarbutton label {
 }
 
 .tabbrowser-tab {
-  -moz-binding: url("chrome://pmog_chat/content/bindings/chat.xml#tabbrowser-tab") !important;
   -moz-appearance: none;
   color: #222;
   -moz-box-pack: center;
@@ -155,8 +157,8 @@ tab toolbarbutton label {
 }
 
 .tabs-left {
-  display: -moz-box;
-  width: 3px;
+  display: none !important;
+  /*width: 3px;*/
 }
 
 .tabbrowser-tabs[overflow="true"] .tabs-left {

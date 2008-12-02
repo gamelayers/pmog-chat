@@ -261,9 +261,9 @@ getFavicon: function(url) {
   urlService = urlService.QueryInterface(Components.interfaces.nsIURL);
   urlService.spec = "http://" + url;
     
-  var iconUrl = faviconService.getFaviconImageForPage(urlService).scheme;
+  var iconUrl = faviconService.getFaviconImageForPage(urlService).path;
     
-  return iconUrl;
+  return iconUrl.replace('favicon:', '');
 },
 
 tabChange: function() {

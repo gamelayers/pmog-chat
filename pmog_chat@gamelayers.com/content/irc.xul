@@ -3,13 +3,12 @@
 <?xul-overlay href="chrome://pmog_chat/content/chatMenuOverlay.xul"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
-<!--
 <?xml-stylesheet href="chrome://global/content/" type="text/css" ?>
-<?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?>
+<!-- <?xml-stylesheet href="chrome://browser/skin/" type="text/css" ?>
 <?xml-stylesheet href="chrome://browser/content/" type="text/css" ?> -->
 <?xml-stylesheet href="chrome://pmog_chat/skin/irc.css" type="text/css" ?>
-<?xml-stylesheet href="chrome://pmog_chat/skin/tree.css" type="text/css" ?>
 <?xml-stylesheet href="chrome://pmog_chat/skin/tabs.css" type="text/css"?>
+<?xml-stylesheet href="chrome://pmog_chat/skin/tree.css" type="text/css" ?>
 
 <!DOCTYPE window [
 <!ENTITY % pmogChatDTD SYSTEM "chrome://pmog_chat/locale/pmogchat.dtd">
@@ -107,20 +106,40 @@
   
   <vbox flex="1">
     <tabbox flex="1">
-      <tabs class="tabbrowser-tabs" onselect="Peekko.session.window.tabChange(this);" closebutton="true">
+      <!-- <tabs class="tabbrowser-tabs" onselect="Peekko.session.window.tabChange(this);" closebutton="true">
         <tab id="consoleTab" label="&consoleTab.label;" class="tabbrowser-tab" linkedpanel="panel-console" image="chrome://pmog_chat/skin/images/toolbar/console.png" />
-      </tabs>
+      </tabs> -->  
+        <hbox class="tabbrowser-strip" collapsed="false" tooltip="_child" context="_child" anonid="strip">
+          <menupopup anonid="tabContextMenu" onpopupshowing="this.parentNode.parentNode.parentNode.updatePopupMenu(this);">
+            <menuitem id="context_reloadTab" label="Refresh Chat Info" oncommand="log('still need to implement chat refresh');"/>
+            <menuitem id="context_closeTab" label="Close Chat" oncommand="log('still need to implement chat refresh');"/>
+          </menupopup>
+
+          <tabs class="tabbrowser-tabs" flex="1"
+                    anonid="tabcontainer"
+                    setfocus="false"
+                    onclick=""
+                    onselect="Peekko.session.window.tabChange(this);"
+                    ondblclick="">
+                    
+            <tab selected="true" validate="never"
+                     onerror="this.removeAttribute('image');"
+                     maxwidth="110" width="0" minwidth="100" flex="100"
+                     class="tabbrowser-tab" label="&consoleTab.label;" crop="end" 
+                     linkedpanel="panel-console" image="chrome://pmog_chat/skin/images/toolbar/console.png" />
+          </tabs>
+        </hbox>
       <hbox flex="1">
         <tree id="elementList" seltype="single" hidecolumnpicker="true" contextmenu="userContextPopup">
           <treecols>
-            <treecol id="element" label="Navigation" sort="?Navigation" primary="true" flex="1"/>
+            <treecol id="element" label="Navigation" primary="true" flex="1" />
           </treecols>
           <treechildren alternatingbackground="true" />
         </tree>
         
-        <splitter collapse="none" />
+        <splitter />
         
-        <tabpanels flex="1" style="-moz-appearance: none; border: 0;">
+        <tabpanels class="tabpane" flex="1" style="-moz-appearance: none; border: 0;">
           <tabpanel id="panel-console" flex="1">
             <chat-panel id="console-output" flex="1" icon="chrome://pmog_chat/skin/images/toolbar/console.png" label="Console" contextmenu="contentAreaContextMenu" />
           </tabpanel>

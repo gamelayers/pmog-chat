@@ -1,7 +1,10 @@
- /*Tabstrip 
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+/* Tabstrip */
 .tabbrowser-tabs {
   -moz-appearance: -moz-win-browsertabbar-toolbox;
-  background: -moz-dialog url("chrome://browser/skin/tabbrowser/tabbrowser-tabs-bkgnd.png") repeat-x;
+  background: -moz-dialog url("chrome://pmog_chat/skin/tabbrowser/tabbrowser-tabs-bkgnd.png") repeat-x;
 }
 
 .tabs-container:not([overflow="true"]) {
@@ -18,7 +21,7 @@ tabpanels {
 
 tab {
 	max-width: 200px;
-	min-width: 150px;
+	min-width: 110px;
 	-moz-box-flex: 100;
 }
 
@@ -38,10 +41,10 @@ tab toolbarbutton label {
 	display: none;
 }
 
- Tabs 
+/* Tabs */
 .tabbrowser-tab {
   -moz-appearance: none;
-  background: url("chrome://browser/skin/tabbrowser/tab-bkgnd.png") repeat-x;
+  background: url("chrome://pmog_chat/skin/tabbrowser/tab-bkgnd.png") repeat-x;
   margin: 3px 0px 4px;
   padding: 0px 1px 1px 0px;
   border: 2px solid;
@@ -50,7 +53,7 @@ tab toolbarbutton label {
   -moz-border-radius-topleft: 2px;
   -moz-border-radius-topright: 2px;
   -moz-border-top-colors: ThreeDShadow rgba(255,255,255,.3);
-  -moz-border-right-colors: rgba(0,0,0,.1);
+  -moz-border-right-colors: rgba(0,0,0,0.1);
   -moz-border-left-colors: ThreeDShadow rgba(255,255,255,.3);
 }
 
@@ -67,13 +70,13 @@ tab toolbarbutton label {
 .tabbrowser-tab:not([selected="true"]):hover {
   margin: 2px 0px 4px;
   padding: 2px 1px 1px;
-  background-image: url("chrome://browser/skin/tabbrowser/tab-hover-bkgnd.png");
+  background-image: url("chrome://pmog_chat/skin/tabbrowser/tab-hover-bkgnd.png");
 }
 
 .tabbrowser-tab[selected="true"] {
   margin: 2px 0px 3px;
   padding: 1px;
-  background-image: url("chrome://browser/skin/tabbrowser/tab-active-bkgnd.png");
+  background-image: url("chrome://pmog_chat/skin/tabbrowser/tab-active-bkgnd.png");
   background-color: -moz-dialog;
   font-weight: bold;
 }
@@ -95,7 +98,7 @@ tab toolbarbutton label {
 .tabs-bottom {
   height: 4px;
   margin: 0px;
-  background: -moz-dialog url("chrome://browser/skin/tabbrowser/tabstrip-bottom.png") repeat;
+  background: -moz-dialog url("chrome://pmog_chat/skin/tabbrowser/tabstrip-bottom.png") repeat;
   border-top: 1px solid threedshadow;
   border-bottom: 1px solid threedshadow;
 }
@@ -104,7 +107,7 @@ tabpanels {
   -moz-appearance: none;
 }
 
- tabbrowser-tab focus ring 
+/* tabbrowser-tab focus ring */
 .tab-text {
   border: 1px dotted transparent;
 }
@@ -113,12 +116,12 @@ tabpanels {
   border: 1px dotted -moz-DialogText;
 }
 
- Tab DnD indicator 
+/* Tab DnD indicator */
 .tab-drop-indicator-bar {
   height: 11px;
   margin-top: -11px;
   position: relative;
-   set -moz-margin-start to -1/2 indicator width: 
+  /* set -moz-margin-start to -1/2 indicator width: */
   -moz-margin-start: -5px;
 }
 
@@ -127,10 +130,10 @@ tabpanels {
   width: 11px;
   margin-bottom: -5px;
   position: relative;
-  background: url('chrome://browser/skin/tabbrowser/tabDragIndicator.png') 50% 50% no-repeat;
+  background: url('chrome://pmog_chat/skin/tabbrowser/tabDragIndicator.png') 50% 50% no-repeat;
 }
 
- Tab close button 
+/* Tab close button */
 .tab-close-button > .toolbarbutton-icon {
   -moz-margin-end: 0px !important;
   margin-top: 1px;
@@ -157,8 +160,8 @@ tabpanels {
 
 .tabbrowser-tab[selected="true"] > .tab-close-button {
   -moz-image-region: rect(0px, 14px, 14px, 0px);
-   Make this button focusable so clicking on it will not focus the tab while
-     it's getting closed 
+  /* Make this button focusable so clicking on it will not focus the tab while
+     it's getting closed */
   -moz-user-focus: normal;
 }
 
@@ -166,7 +169,7 @@ tabpanels {
   outline: none !important;
 }
 
- Tab scrollbox arrow and all-tabs buttons 
+/* Tab scrollbox arrow and all-tabs buttons */
 .tabbrowser-arrowscrollbox > .scrollbutton-up,
 .tabbrowser-arrowscrollbox > .scrollbutton-down,
 .tabs-alltabs-button {
@@ -180,7 +183,7 @@ tabpanels {
   -moz-border-top-colors: ThreeDShadow rgba(255,255,255,.3);
   -moz-border-right-colors: ThreeDShadow;
   -moz-border-left-colors: ThreeDShadow rgba(255,255,255,.3);
-  background: url("chrome://browser/skin/tabbrowser/tab-bkgnd.png") repeat-x;
+  background: url("chrome://pmog_chat/skin/tabbrowser/tab-bkgnd.png") repeat-x;
   -moz-image-region: rect(0, 11px, 14px, 0);
 }
 
@@ -192,7 +195,7 @@ tabpanels {
   -moz-border-top-colors: ThreeDShadow;
   -moz-border-right-colors: ThreeDShadow;
   -moz-border-left-colors: ThreeDShadow transparent;
-  background-image: url("chrome://browser/skin/tabbrowser/tab-hover-bkgnd.png");
+  background-image: url("chrome://pmog_chat/skin/tabbrowser/tab-hover-bkgnd.png");
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-up:not([disabled="true"]):hover,
@@ -212,7 +215,7 @@ tabpanels {
 
 .tabbrowser-arrowscrollbox > .scrollbutton-up {
   border-left-style: none;
-  list-style-image: url("chrome://browser/skin/tabbrowser/tab-arrow-start.png");
+  list-style-image: url("chrome://pmog_chat/skin/tabbrowser/tab-arrow-start.png");
   -moz-border-radius-topright: 2px;
 }
 
@@ -221,7 +224,7 @@ tabpanels {
   border-right-style: none;
   -moz-border-radius-topleft: 2px;
   -moz-border-radius-topright: 0px;
-  list-style-image: url("chrome://browser/skin/tabbrowser/tab-arrow-end.png");
+  list-style-image: url("chrome://pmog_chat/skin/tabbrowser/tab-arrow-end.png");
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-up > .toolbarbutton-icon {    
@@ -235,7 +238,7 @@ tabpanels {
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-down {
-  list-style-image: url("chrome://browser/skin/tabbrowser/tab-arrow-end.png");
+  list-style-image: url("chrome://pmog_chat/skin/tabbrowser/tab-arrow-end.png");
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-down[chromedir="rtl"],
@@ -247,7 +250,7 @@ tabpanels {
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-down[chromedir="rtl"] {
-  list-style-image: url("chrome://browser/skin/tabbrowser/tab-arrow-start.png");
+  list-style-image: url("chrome://pmog_chat/skin/tabbrowser/tab-arrow-start.png");
 }
 
 .tabbrowser-arrowscrollbox > .scrollbutton-down > .toolbarbutton-icon {
@@ -269,16 +272,16 @@ tabpanels {
   margin-top: 2px;
   margin-bottom: 4px;
   width: 18px !important;
-  background-image: url("chrome://browser/skin/tabbrowser/alltabs-box-overflow-end-bkgnd-animate.png");
+  background-image: url("chrome://pmog_chat/skin/tabbrowser/alltabs-box-overflow-end-bkgnd-animate.png");
   background-repeat: no-repeat;
   opacity: 0.0;
 }
 
 stack[chromedir="rtl"] > hbox > .tabs-alltabs-box-animate {
-  background-image: url("chrome://browser/skin/tabbrowser/alltabs-box-overflow-start-bkgnd-animate.png");
+  background-image: url("chrome://pmog_chat/skin/tabbrowser/alltabs-box-overflow-start-bkgnd-animate.png");
 }
 
- All tabs menupopup 
+/* All tabs menupopup */
 .alltabs-item > .menu-iconic-left > .menu-iconic-icon {
   list-style-image: url("chrome://global/skin/icons/folder-item.png");
   -moz-image-region: rect(0px, 16px, 16px, 0px);
@@ -292,7 +295,7 @@ stack[chromedir="rtl"] > hbox > .tabs-alltabs-box-animate {
   list-style-image: url("chrome://global/skin/icons/loading_16.png");
 }
 
- Tabstrip close button 
+/* Tabstrip close button */
 .tabs-closebutton {
   -moz-appearance: none;
   list-style-image: url("chrome://global/skin/icons/close.png");
@@ -319,174 +322,8 @@ stack[chromedir="rtl"] > hbox > .tabs-alltabs-box-animate {
 .tabs-container > .tabs-closebutton {
   margin: 3px 0px 3px;
   padding: 4px 2px 2px;
-  background: -moz-dialog url("chrome://browser/skin/tabbrowser/tab-active-bkgnd.png") repeat-x;
+  background: -moz-dialog url("chrome://pmog_chat/skin/tabbrowser/tab-active-bkgnd.png") repeat-x;
   border-left: 1px solid threedshadow;
   border-top: 1px solid threedshadow;
   -moz-border-radius-topleft: 2px;
 }
-
-.tabs-container > .tabs-closebutton[chromedir="rtl"] {
-  border-left: none;
-  border-right: 1px solid threedshadow;
-  -moz-border-radius-topleft: 0px;
-  -moz-border-radius-topright: 2px;
-}
-
-#pmogChatWindow:not([active="true"]) .tabbrowser-strip,
-#pmogChatWindow:not([active="true"]) toolbar {
-  background-color: #cfcfcf;
-}
-
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab {
-  color: #575757;
-}
-
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"] > .tab-image-middle,
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"] > .tab-closebutton,
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"] > .tab-close-button {
-  background-image: url("chrome://browser/skin/tabbrowser/tab-middle-inactive.png");
-}
-
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"] > .tab-image-left,
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"][chromedir="rtl"] > .tab-image-right {
-  background: url("chrome://browser/skin/tabbrowser/tab-left-inactive.png") no-repeat;
-}
-
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"] > .tab-image-right,
-#pmogChatWindow:not([active="true"]) .tabbrowser-tab[selected="true"][chromedir="rtl"] > .tab-image-left {
-  background: url("chrome://browser/skin/tabbrowser/tab-right-inactive.png") no-repeat;
-}*/
-
-/* ===== tabbox.css =================================================
-  == Styles used by XUL tab-related elements.
-  ======================================================================= */
-
-@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-
-/* ::::: tabs ::::: */
-
-.tabs-left,
-.tabs-right {
-  border-bottom: 2px solid;
-  -moz-border-bottom-colors: ThreeDHighlight ThreeDLightShadow;
-}
-
-/* ::::: tabpanels ::::: */
-
-tabpanels {
-  -moz-appearance: tabpanels; 
-  border-right: 2px solid;
-  border-bottom: 2px solid;
-  border-left: 2px solid;
-  -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
-  -moz-border-bottom-colors: ThreeDDarkShadow ThreeDShadow;
-  -moz-border-left-colors: ThreeDHighlight ThreeDLightShadow;
-  padding: 8px;
-  background-color: -moz-Dialog;
-  color: -moz-DialogText;
-}
-
-/* ::::: tab ::::: */
-
-tab 
-{
-  -moz-appearance: tab;
-  margin-top: 2px;
-  border-top: 2px solid;
-  border-right: 2px solid;
-  border-left: 2px solid;
-  border-bottom: 1px solid ThreeDHighlight;
-  -moz-border-top-colors: ThreeDHighlight ThreeDLightShadow;
-  -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
-  -moz-border-left-colors: ThreeDHighlight ThreeDLightShadow;
-  -moz-border-radius-topleft: 2px;
-  -moz-border-radius-topright: 2px;
-  padding: 1px 4px 2px 4px;
-  background-color: -moz-Dialog;
-  color: -moz-DialogText;
-}
-
-tab[chromedir="rtl"] {
-  -moz-border-radius-bottomleft: 1px;
-  -moz-border-radius-bottomright: 0px;
-}
-
-.tab-text {
-  margin: 0 !important;
-}
-
-tab[selected="true"] {
-  -moz-user-focus: normal;
-  margin-top: 0;
-  border-bottom-color: transparent;
-  padding: 1px 6px 4px 6px;
-}
-
-tab:focus > .tab-middle {
-  /* Don't specify the outline-color, we should always use initial value. */
-  outline: 1px dotted;
-}
-
-tab[beforeselected="true"],
-tab[afterselected="true"][chromedir="rtl"] {
-  -moz-appearance: tab-left-edge;
-  border-right: none;
-  -moz-border-radius-topright: 0;
-}
-
-tab[afterselected="true"],
-tab[beforeselected="true"][chromedir="rtl"] {
-  -moz-appearance: tab-right-edge;
-  border-left: none;
-  -moz-border-radius-topleft: 0;
-}
-
-tab[first-tab="true"][selected="true"] {
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
-/* ::::: tab-bottom ::::::::::
-   :: Tabs that are attached to the bottom of a panel, but not necessarily
-   :: a tabpanels.
-   ::::: */
-
-.tab-bottom {
-  margin-top: 0;
-  margin-bottom: 2px;
-  border-top: 1px solid;
-  border-bottom: 2px solid;
-  -moz-border-top-colors: ThreeDShadow;
-  -moz-border-bottom-colors: ThreeDShadow ThreeDLightShadow;
-  -moz-border-radius-topleft: 0;
-  -moz-border-radius-topright: 0;
-  -moz-border-radius-bottomright: 2px;
-  -moz-border-radius-bottomleft: 2px;
-  padding: 2px 4px 1px 4px;
-}
-
-.tab-bottom[selected="true"] {
-  margin-bottom: 0;
-  -moz-border-top-colors: -moz-Dialog;
-  padding: 4px 6px 1px 6px;
-}
-
-.tab-bottom[beforeselected="true"],
-.tab-bottom[afterselected="true"][chromedir="rtl"] {
-  -moz-border-radius-bottomright: 0;
-}
-
-.tab-bottom[afterselected="true"],
-.tab-bottom[beforeselected="true"][chromedir="rtl"] {
-  -moz-border-radius-bottomleft: 0;
-}
-
-/* ::::: tabs-bottom ::::: */
-
-.tabs-bottom > .tabs-left,
-.tabs-bottom > .tabs-right {
-  border-top: 1px solid ThreeDShadow;
-  border-bottom: none;
-}
-
-
