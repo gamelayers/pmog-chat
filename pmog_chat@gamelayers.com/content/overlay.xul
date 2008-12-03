@@ -33,6 +33,7 @@
                   insertbefore="pmog_avatar"
                   observes="Tasks:OpenChat"
                   image="chrome://pmog_chat/skin/images/chat-24-gold.png" 
-                  label="Chat" />
+                  label="Chat" 
+                  tooltiptext="Chat on this website" />
   </toolbar>
 </overlay>
