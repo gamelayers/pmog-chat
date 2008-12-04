@@ -527,8 +527,8 @@ irc.Client.prototype = {
         }
     },
 
-    onActionMessage : function(nick, message) {
-        this.out.println("* " + nick + message);
+    onActionMessage : function(channel, nick, message) {
+      this.print(channel, "* " + nick + message);
     },
     
     onUnhandledMessage : function(oMsg) {
@@ -1101,6 +1101,7 @@ irc.Client.prototype = {
         if (sMsg == "" || sMsg.match(/^\s*$/)) {
             return;
         }
+                
         var oMsg = new irc.Message(sMsg);
         switch (oMsg.commandCode) {
         case -1 : // PING
@@ -1210,7 +1211,7 @@ irc.Client.prototype = {
                 switch (ctcpCommand) {
                 case "ACTION":
                     var message = oMsg.body.substring(oMsg.body.indexOf(" "));
-                    this.onActionMessage(oMsg.nick, message);
+                    this.onActionMessage(oMsg.parameters[0], oMsg.nick, message);
                     break;
                 case "PING":
        /*             this.sendCommand("NOTICE", [ oMsg.parameters[0] ], 

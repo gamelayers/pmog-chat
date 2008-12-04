@@ -242,14 +242,15 @@ channelTreeView.prototype = {
     
     if (!this.isContainer(idx)) {
       var userObj = this.userData[rowName];
-
-      //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
-      properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
-      //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
-      //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
-      //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
-      properties.AppendElement(this.atomCache["away-" + userObj.idle]);
-      properties.AppendElement(this.atomCache["player-true"]);
+      if (userObj) {
+        //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
+        properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
+        //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
+        //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
+        //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
+        properties.AppendElement(this.atomCache["away-" + userObj.idle]);
+        properties.AppendElement(this.atomCache["player-true"]);
+      }
     } else {
       properties.AppendElement(this.atomCache["player-false"]);
     }
