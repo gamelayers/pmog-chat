@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE overlay PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
 <overlay id="pmogchatOverlay"
@@ -19,7 +19,7 @@
               observes="Tasks:OpenChat"
               class="menu-iconic-wide" />
   </menupopup>
-    
+
   <menupopup id="pmog_actions">
     <menuitem id="pmog_chat_menu"
               class="menu-iconic globe_icon pmog_menu_item"
@@ -27,13 +27,13 @@
               observes="Tasks:OpenChat"
               insertbefore="pmog_action_menu_separator" />
   </menupopup>
-  
+
   <toolbar id="pmog_toolbar">
-    <toolbarbutton id="pmog_chat_button" 
+    <toolbarbutton id="pmog_chat_button"
                   insertbefore="pmog_avatar"
                   observes="Tasks:OpenChat"
-                  image="chrome://pmog_chat/skin/images/chat-24-gold.png" 
-                  label="Chat" 
+                  image="chrome://pmog_chat/skin/images/chat-24-gold.png"
+                  label="Chat"
                   tooltiptext="Chat on this website" />
   </toolbar>
 </overlay>

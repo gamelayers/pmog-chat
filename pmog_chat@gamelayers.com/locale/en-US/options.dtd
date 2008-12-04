@@ -1,0 +1,15 @@
+<!ENTITY prefwindow.pmog.chat.title "PMOG Chat Preferences">
+<!ENTITY prefpane.main "Main">
+<!ENTITY caption.user.info "User Info">
+<!ENTITY label.nickname "Nickname">
+<!ENTITY label.real.name "Real Name">
+<!ENTITY label.user.name "User Name">
+<!ENTITY caption.connection.info "Connection Info">
+<!ENTITY label.host "Host">
+<!ENTITY label.port "Port">
+<!ENTITY label.auto.connect "Auto Connect">
+<!ENTITY caption.autocomplete.info "Autocomplete Info">
+<!ENTITY label.reset.history "Reset History">
+<!ENTITY button.reset.command.history "Reset Command History">
+<!ENTITY button.reset "Reset">
+<!ENTITY button.close "Close">

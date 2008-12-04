@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://pmog_chat/skin/options.css" type="text/css"?>
-<prefwindow id="pmogChatPrefs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="PMOG Chat Preferences">
+
+<!DOCTYPE prefwindow [
+<!ENTITY % pmogChatDTD SYSTEM "chrome://pmog_chat/locale/options.dtd">
+%pmogChatDTD;
+]>
+
+<prefwindow id="pmogChatPrefs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.pmog.chat.title;">
   <script type="application/x-javascript" src="chrome://pmog_chat/content/options.js" />
-  <prefpane id="paneMain" label="Main">
+  <prefpane id="paneMain" label="&prefpane.main;">
     <preferences>
       <preference id="pref_nick" name="extensions.pmog.chat.irc.nick" type="string"/>
       <preference id="pref_realname" name="extensions.pmog.chat.irc.realname" type="string"/>
@@ -12,45 +18,45 @@
       <preference id="pref_auto" name="extensions.pmog.chat.auto.connect" type="bool" />
     </preferences>
     <groupbox id="userinfo">
-      <caption label="User Info"/>
+      <caption label="&caption.user.info;"/>
       <hbox align="center">
-        <label value="Nickname" control="nickname" width="100px" />
+        <label value="&label.nickname;" control="nickname" width="100px" />
         <textbox preference="pref_nick" id="nickname" width="250px"/>
       </hbox>
       <hbox align="center">
-        <label value="Real Name" control="realname" width="100px" />
+        <label value="&label.real.name;" control="realname" width="100px" />
         <textbox preference="pref_realname" id="realname" width="250px"/>
       </hbox>
       <hbox align="center">
-        <label value="User Name" control="username" width="100px" />
+        <label value="&label.user.name;" control="username" width="100px" />
         <textbox preference="pref_username" id="username" width="250px"/>
       </hbox>
     </groupbox>
     <groupbox id="Connection Info">
-      <caption label="Connection Info" />
+      <caption label="&caption.connection.info;" />
       <hbox align="center">
-        <label value="Host" control="hostname" width="100px" />
+        <label value="&label.host;" control="hostname" width="100px" />
         <textbox preference="pref_hostname" id="hostname" width="250px"/>
       </hbox>
       <hbox align="center">
-        <label value="Port" control="port" width="100px" />
+        <label value="&label.port;" control="port" width="100px" />
         <textbox preference="pref_port" id="port" width="250px"/>
       </hbox>
       <hbox align="center">
-        <label value="Auto Connect" control="auto" width="100px" />
+        <label value="&label.auto.connect;" control="auto" width="100px" />
         <checkbox preference="pref_auto" id="auto" width="250px"/>
       </hbox>
     </groupbox>
     <groupbox id="autocompleteInfo">
-      <caption label="Autocomplete Info" />
+      <caption label="&caption.autocomplete.info;" />
       <hbox align="center">
-        <label value="Reset History" control="resetHistory" width="100px" />
-        <button id="resetHistory" label="Reset Command History" oncommand="removeHistory();" width="250px"/>
+        <label value="&label.reset.history;" control="resetHistory" width="100px" />
+        <button id="resetHistory" label="&button.reset.command.history;" oncommand="removeHistory();" width="250px"/>
       </hbox>
     </groupbox>
     <hbox pack="end">
-      <button label="Reset" oncommand="resetPrefs();" />
-      <button label="Close" oncommand="self.close();" />
+      <button label="&button.reset;" oncommand="resetPrefs();" />
+      <button label="&button.close;" oncommand="self.close();" />
     </hbox>
   </prefpane>
 </prefwindow>

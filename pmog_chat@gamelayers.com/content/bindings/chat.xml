@@ -25,34 +25,34 @@
         <xul:label class="chat_cursor" />
       </xul:scrollbox>
     </content>
-    
+
     <resources>
       <stylesheet src="chrome://pmog_chat/skin/irc.css" />
     </resources>
-    
+
     <implementation>
       <field name="_contentBox">
         document.getAnonymousElementByAttribute(this, 'anonid', 'contentScroll');
       </field>
-      
+
       <field name="_topicContent">
         document.getAnonymousElementByAttribute(this, 'anonid', 'topicContent');
       </field>
-      
+
       <field name="contentBoxObject">
         this._contentBox.boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
       </field>
-      
+
       <field name="notificationBox">
         document.getAnonymousElementByAttribute(this, 'anonid', 'chatTopic');
       </field>
-      
+
       <property name="topicIcon" onget="return this._topicContent.image"
                                  onset="this._topicContent.image = val;" />
-                                 
+
       <property name="topic" onget="return this._topicContent.label;"
                              onset="this._setTopic(val);" />
-      
+
       <method name="_setTopic">
         <parameter name="topic" />
         <body>
@@ -62,11 +62,11 @@
         </body>
       </method>
     </implementation>
-    
+
     <handlers>
     </handlers>
   </binding>
-  
+
   <binding id="tabbrowser-tab" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-tab">
     <content chromedir="&locale.dir;" closetabtext="&closeTab.label;">
       <xul:hbox class="tab-image-left" xbl:inherits="selected"/>
