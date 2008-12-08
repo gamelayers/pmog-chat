@@ -226,6 +226,19 @@ selectTab: function(tab) {
     this.tabcontainer.selectedTab = tab;
 },
 
+getSelectedTab: function() {
+    return this.tabcontainer.tabs.selectedItem;
+},
+
+getSelectedChannelIO: function() {
+  var tab = this.getSelectedTab();
+  
+  var channel = tab.getAttribute("label");
+  var cLabel = channel.replace(/#/, '');
+  
+  return this.ioMap[cLabel];
+},
+
 closeTab: function(tab) {
   var type = tab.value;
   var channel = tab.getAttribute("label");

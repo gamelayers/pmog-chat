@@ -39,6 +39,7 @@ var chatController = {
       case "Tasks:OpenProfile":
       case "Tasks:JoinChannel":
       case "Tasks:JoinHelp":
+      case "Tasks:ClearChat":
         isSupported = true;
         break;
       default:
@@ -67,6 +68,10 @@ var chatController = {
            isEnabled = true;
         }
         break;
+      case "Tasks:ClearChat":
+        if (Peekko.ircclient.isConnected()) {
+          isEnabled = true;
+        }
       default:
         isEnabled = true;
         break;
@@ -105,6 +110,10 @@ var chatController = {
       {
         Peekko.joinChannel('#pmog-help');
         break;
+      }
+      case "Tasks:ClearChat":
+      {
+        xul.chatWindow.getSelectedChannelIO().clear();
       }
     }
   }

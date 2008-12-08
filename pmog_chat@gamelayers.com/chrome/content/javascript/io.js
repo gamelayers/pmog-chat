@@ -334,6 +334,6 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
      * Clears all the output of the channel
      */
     clear : function() {
-        this.boxInterface.element.removeAll();
+      jQuery(this.table.childNodes).remove();
     }
 });
