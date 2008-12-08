@@ -32,7 +32,7 @@ Object.extend(peekko.Client.prototype, {
     },
 
     onDisconnect : function() {
-        log("onDisconnect");
+        //log("onDisconnect");
         this.controller.setConnectState("disconnected");
         // Have the super class do whatever it does.
         this.parent.onDisconnect.apply(this);
@@ -181,7 +181,7 @@ Object.extend(peekko.Client.prototype, {
     },
     
     _privatizeChannel : function(channel) {
-        log("_privatizeChannel: " + channel);
+        //log("_privatizeChannel: " + channel);
         var oChannel = this.getChannel(channel);
         if (oChannel && ! oChannel.hasMode('s') && oChannel.isOperator()) {
             // Make the room private.

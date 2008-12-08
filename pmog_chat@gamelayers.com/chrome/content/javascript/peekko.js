@@ -23,7 +23,7 @@ Object.extend(peekko.ChatListener.prototype, {
      Called when a message is received from a person.
    */
    onMessage : function(message) {
-     log("onMessage for ChatListener");
+     //log("onMessage for ChatListener");
    },
 
    /**
@@ -37,7 +37,7 @@ Object.extend(peekko.ChatListener.prototype, {
      Called when a message is sent from a person with your name in it.
    */
    onMessageAboutYou : function(message) {
-     log("Message about you: " + message);
+     //log("Message about you: " + message);
    }
 
 });
@@ -87,7 +87,7 @@ Object.extend(peekko.ChatEvents.prototype, {
     },
 
     onException : function(ex, listener) {
-        log("chat events got an exception: " + ex);
+        //log("chat events got an exception: " + ex);
     }
 
 });
@@ -234,7 +234,7 @@ Object.extend(peekko.RoomInfo.prototype, {
     /** End of Listener Notifying Methods */
 
     onException : function(ex, listener) {
-        log("got an exception from the listener(" + listener + "): " + ex);
+        //log("got an exception from the listener(" + listener + "): " + ex);
     },
 
     onListStart : function() {
@@ -291,7 +291,7 @@ Object.extend(peekko.RoomInfo.prototype, {
             if (this.queue.length == 0) {
                 this.checkQueueRunning = false;
                 this.updateRoomInfoRunning = false;
-                log("exit 1");
+                ////log("exit 1");
                 return;
             }
             // Talking to Peekko here is wonky; fix it.
@@ -314,7 +314,7 @@ Object.extend(peekko.RoomInfo.prototype, {
                 }
                 // Clear the queue.  No sense keeps its state around.
                 this.queue = null;
-                log("exit 3");
+                //log("exit 3");
                 return;
             } else {
                 // There's no irc client running yet; just chill.
@@ -334,7 +334,7 @@ Object.extend(peekko.RoomInfo.prototype, {
             // XXX - not currently working that way.  ugh.
             this.updateRoomInfoRunning = false;
             this.checkQueueRunning = false;
-            log("exit 2");
+            //log("exit 2");
         }
     },
 
@@ -348,7 +348,7 @@ Object.extend(peekko.RoomInfo.prototype, {
               this.checkQueue();
           }
         } catch (e) {
-          log("Exception in update: " + e);
+          //log("Exception in update: " + e);
         }
     },
 
@@ -411,7 +411,7 @@ Object.extend(peekko.Config.prototype, {
         if (peekko.prefs) {
             return peekko.prefs.getBoolPref("extensions.pmog.chat.browse.invisibly");
         } else {
-            log("error: unable to use preferences to get browse invisibly");
+            //log("error: unable to use preferences to get browse invisibly");
             return true;
         }
     },
@@ -424,13 +424,13 @@ Object.extend(peekko.Config.prototype, {
         if (peekko.prefs) {
             return peekko.prefs.getCharPref("extensions.pmog.chat.filter.type");
         } else {
-            log("error: unable to use preferences to get filter type");
+            //log("error: unable to use preferences to get filter type");
             return "domain";
         }
     },
 
     setStripSubdomain : function(bYes) {
-        log('setStripSubdomain: ' + bYes);
+        //log('setStripSubdomain: ' + bYes);
         if (peekko.prefs) {
             peekko.prefs.setBoolPref("extensions.pmog.chat.filter.strip.subdomain", bYes);
         }
@@ -440,7 +440,7 @@ Object.extend(peekko.Config.prototype, {
         if (peekko.prefs) {
             return peekko.prefs.getBoolPref("extensions.pmog.chat.filter.strip.subdomain");
         } else {
-            log("error: unable to use preferences to get strip subdomain");
+            //log("error: unable to use preferences to get strip subdomain");
             return true;
         }
     },
@@ -466,11 +466,11 @@ Object.extend(peekko.Config.prototype, {
                 case "number":
                     return peekko.prefs.getIntPref(pref);
                 default:
-                    log("error: unknown default value type " + typeof(defaultValue));
+                    //log("error: unknown default value type " + typeof(defaultValue));
                     return defaultValue;
             }
         } else {
-            log("error: unable to use preferences to get '" + pref + "'");
+            //log("error: unable to use preferences to get '" + pref + "'");
             return defaultValue;
         }
     },
@@ -485,10 +485,10 @@ Object.extend(peekko.Config.prototype, {
                 case "number":
                     peekko.prefs.setIntPref(pref, value);
                 default:
-                    log("error: unknown value type " + typeof(value));
+                    //log("error: unknown value type " + typeof(value));
             }
         } else {
-            log("error: unable to use preferences to get '" + pref + "'");
+            //log("error: unable to use preferences to get '" + pref + "'");
         }
     },
 

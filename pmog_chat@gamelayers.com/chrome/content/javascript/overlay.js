@@ -51,21 +51,21 @@ peekko.Controller.prototype = Object.extend(new peekko.Config(), {
     */
 
 publicButton: function(event) {
-    log("public");
+    //log("public");
     this.setPublic(true);
 
 
   },
 
 privateButton: function(event) {
-    log("private");
+    //log("private");
     this.setPublic(false);
 
 
   },
 
 connectButton: function(event) {
-    log("connect");
+    //log("connect");
     this.setConnectState("connecting");
     this.connect();
 
@@ -73,7 +73,7 @@ connectButton: function(event) {
   },
 
 disconnectButton: function(event) {
-    log("disconnect");
+    //log("disconnect");
     this.setConnectState("disconnecting");
     if (this.ircclient) {
       this.ircclient.disconnect();
@@ -83,7 +83,7 @@ disconnectButton: function(event) {
   },
 
 updateButton: function(event) {
-    log("update");
+    //log("update");
     this.connect();
     var channel = this.getCurrentChannel();
     this.updateRoomInfo(channel);
@@ -92,7 +92,7 @@ updateButton: function(event) {
   },
 
 profileButton: function() {
-    log("open profile");
+    //log("open profile");
     var newWindow = getBrowserWindow();
     var user = channelTreeView.getCellText(channelTreeView.treeBox.view.selection.currentIndex);
 
@@ -102,7 +102,7 @@ profileButton: function() {
   },
 
 channelFilterButton: function(filterType) {
-    log("channel filter");
+    //log("channel filter");
     if (filterType == "strip-subdomain") {
       this.toggleStripSubdomain();
 
@@ -118,7 +118,7 @@ channelFilterButton: function(filterType) {
   },
 
 joinButton: function(event) {
-    log("join");
+    //log("join");
     this.joinChannel(this.getCurrentChannel());
 
 
@@ -175,7 +175,7 @@ joinButton: function(event) {
   },
 
 prefAccepted: function(pane) {
-    log("prefAccepted");
+    //log("prefAccepted");
     pane.acceptDialog();
 
 
@@ -207,11 +207,11 @@ Events
     */
 
 onLoad: function(event) {
-    log("onLoad");
+    //log("onLoad");
     var mainWindow = getBrowserWindow();
     var content = mainWindow.getBrowser();
     if (content) {
-      log("added a progress listener");
+      //log("added a progress listener");
       content.addProgressListener(peekko.listener, 
       Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
 
@@ -232,11 +232,11 @@ onLoad: function(event) {
   },
 
 onUnload: function(event) {
-    log("onUnload");
+    //log("onUnload");
     var mainWindow = getBrowserWindow();
     var content = mainWindow.getBrowser();
     if (content) {
-      log("removing progress listener");
+      //log("removing progress listener");
       content.removeProgressListener(peekko.listener);
 
 
@@ -246,7 +246,7 @@ onUnload: function(event) {
   },
 
 onLocationChangeStart: function() {
-    log("onLocationChangeStart: " + this.getCurrentURL());
+    //log("onLocationChangeStart: " + this.getCurrentURL());
     this.lastLocationStartChannel = this.getPrivateChannel(this.getCurrentChannel());
 
 
@@ -254,7 +254,7 @@ onLocationChangeStart: function() {
   },
 
 onLocationChange: function(url) {
-    log("onLocationChange: " + url);
+    //log("onLocationChange: " + url);
     // Update our current session with our new url.
     this.session.url = url;
 
@@ -283,13 +283,13 @@ onLocationChange: function(url) {
   },
 
 onLocationChangeEnd: function() {
-    log("onLocationChangeEnd: " + this.getCurrentURL());
+    //log("onLocationChangeEnd: " + this.getCurrentURL());
 
 
   },
 
 onTabChange: function(url) {
-    log("onTabChange: " + url);
+    //log("onTabChange: " + url);
     var channel = this.URLtoIRCChannel(url);
     this.toolbar.channel = channel;
     
@@ -499,7 +499,7 @@ URLtoIRCChannel: function(url, filterType, stripSubdomain) {
       channel = channel.replace(/\/.*$/, "");
       break;
       default:
-      log("error: got an unexpected filterType: " + filterType);
+      //log("error: got an unexpected filterType: " + filterType);
       break;
 
 
@@ -596,7 +596,7 @@ setConnectState: function(state) {
   },
 
 setItemAvatar: function(item, avatar) {
-    log("Setting avatar to: " + avatar);
+    //log("Setting avatar to: " + avatar);
     item.setAttribute("image", avatar);
   },
 
@@ -605,7 +605,7 @@ ircTimer: function() {
       try {
         this.ircclient.process();
       } catch(e) {
-        log('Exception in the IRC Client process: ' + e);
+        //log('Exception in the IRC Client process: ' + e);
       }
 
       try {
@@ -622,7 +622,7 @@ ircTimer: function() {
           }
         }
       } catch(ex) {
-        log("Error: critical error in ircclient: " + ex + " Attempting to recover.");
+        //log("Error: critical error in ircclient: " + ex + " Attempting to recover.");
         // Catch it and try to keep going.  :)
         //throw ex;
       }
