@@ -108,7 +108,8 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
       
       var newRow = this.createRow({one: "[" + getTimestamp() + "] " + nick + ":", two: message});
       newRow.childNodes[0].setAttribute("class", nickClasses);
-      jQuery(this.table).append(newRow);
+      //jQuery(this.table).append(newRow);
+      this.append(newRow);
 
       // Apply the classes to the nick span
       //nickSpan.setAttribute("class", nickClasses);
@@ -301,8 +302,17 @@ io.ChatWriter.prototype = Object.extend(new io.Writer(), {
         // lineBr.setAttribute("class", "no-height");
         // this.boxInterface.element.insertBefore(lineBr, this.cursor);
         var newRow = this.createRow({two: s});
-        jQuery(this.table).append(newRow);
+        //jQuery(this.table).append(newRow);
+        this.append(newRow);
         this.scrollDown();
+    },
+    
+    append: function(row) {
+      if (this.table.childNodes.length >= 500) {
+        jQuery(this.table.firstChild).remove();
+      }
+      
+      jQuery(this.table).append(row);
     },
 
     /**

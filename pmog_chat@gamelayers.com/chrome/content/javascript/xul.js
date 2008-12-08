@@ -8,8 +8,11 @@
     @author Shane Celis <shane@peekko.com>
     Licensed under the GNU General Public License
 */
-const HTMLNS = "http://www.w3.org/1999/xhtml";
-const XULNS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+const HTMLNS  = "http://www.w3.org/1999/xhtml";
+const XULNS   = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+const SVGNS   = "http://www.w3.org/2000/svg";
+const XLINKNS = "http://www.w3.org/1999/xlink";
+
 
 var xul = {};
 xul.ChatWindow = Class.create();
