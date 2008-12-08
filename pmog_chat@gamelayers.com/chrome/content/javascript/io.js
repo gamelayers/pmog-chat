@@ -72,6 +72,18 @@ io.LogWriter.prototype = Object.extend(new io.Writer(), {
     }
 });
 
+// Eh, why not.
+io.FakeLogWriter = Class.create();
+io.FakeLogWriter.prototype = Object.extend(new io.Writer(), {
+    print : function(str) {
+        
+    },
+    
+    println: function(str) {
+      
+    }
+});
+
 io.ChatWriter = Class.create();
 io.ChatWriter.prototype = Object.extend(new io.Writer(), {
 

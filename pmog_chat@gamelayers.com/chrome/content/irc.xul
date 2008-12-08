@@ -128,11 +128,11 @@
                     onselect="Peekko.session.window.tabChange(this);"
                     ondblclick="">
                     
-            <tab selected="true" validate="never"
+            <!-- <tab selected="true" validate="never"
                      onerror="this.removeAttribute('image');"
                      maxwidth="110" width="0" minwidth="100" flex="100"
                      class="tabbrowser-tab" label="&consoleTab.label;" crop="end" 
-                     linkedpanel="panel-console" image="chrome://pmog_chat/skin/images/toolbar/console.png" />
+                     linkedpanel="panel-console" image="chrome://pmog_chat/skin/images/toolbar/console.png" /> -->
           </tabs>
         </hbox>
       <hbox flex="1">
@@ -146,9 +146,9 @@
         <splitter />
         
         <tabpanels class="tabpane" flex="1" style="-moz-appearance: none; border: 0;">
-          <tabpanel id="panel-console" flex="1">
+          <!-- <tabpanel id="panel-console" flex="1">
             <chat-panel id="console-output" flex="1" icon="chrome://pmog_chat/skin/images/toolbar/console.png" label="Console" contextmenu="contentAreaContextMenu" />
-          </tabpanel>
+          </tabpanel> -->
         </tabpanels>
       </hbox>
     </tabbox>

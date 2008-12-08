@@ -16,10 +16,11 @@ peekko.Controller.prototype = Object.extend(new peekko.Config(), {
 
     // could also be called this.sessions
     this.toolbar = new view.Toolbar();
-    this.writer = new io.ChatWriter("console");
+    //this.writer = new io.ChatWriter("console");
+    this.writer = new io.FakeLogWriter();
     this.chatEvents = new peekko.ChatEvents(this.toolbar);
     this.session = new peekko.Session();
-    this.session.window.ioMap["console"] = this.writer;
+    //this.session.window.ioMap["console"] = this.writer;
     this.roomInfo = new peekko.RoomInfo();
     this.roomInfo.addListener(this.toolbar);
     this.roomInfo.addListener(this.session.window);

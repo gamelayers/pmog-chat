@@ -61,7 +61,7 @@ Object.extend(peekko.Client.prototype, {
     },
     
     onTimeout : function(timeout) {
-        this.out.println("error: timedout trying to connect to server");
+        this.out.print("error: timedout trying to connect to server");
             autoConnect = peekko.config.getAutoConnect();
             // XXX - Need to differentiate between user initiated and auto initiated connections.
             // I'm just throwing this in to not annoy everyone to tears.
