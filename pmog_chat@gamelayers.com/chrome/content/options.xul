@@ -10,12 +10,12 @@
   <script type="application/x-javascript" src="chrome://pmog_chat/content/options.js" />
   <prefpane id="paneMain" label="&prefpane.main;">
     <preferences>
-      <preference id="pref_nick" name="extensions.pmog.chat.irc.nick" type="string"/>
-      <preference id="pref_realname" name="extensions.pmog.chat.irc.realname" type="string"/>
-      <preference id="pref_username" name="extensions.pmog.chat.irc.username" type="string" />
-      <preference id="pref_hostname" name="extensions.pmog.chat.irc.host" type="string" />
-      <preference id="pref_port" name="extensions.pmog.chat.irc.port" type="int" />
-      <preference id="pref_auto" name="extensions.pmog.chat.auto.connect" type="bool" />
+      <preference id="pref_nick" name="extensions.pmog.chat.irc.nick" type="string" instantApply="false" />
+      <preference id="pref_realname" name="extensions.pmog.chat.irc.realname" type="string" instantApply="false" />
+      <preference id="pref_username" name="extensions.pmog.chat.irc.username" type="string" instantApply="false" />
+      <preference id="pref_hostname" name="extensions.pmog.chat.irc.host" type="string" instantApply="false" />
+      <preference id="pref_port" name="extensions.pmog.chat.irc.port" type="int" instantApply="false" />
+      <preference id="pref_auto" name="extensions.pmog.chat.auto.connect" type="bool" instantApply="false" />
     </preferences>
     <groupbox id="userinfo">
       <caption label="&caption.user.info;"/>
@@ -56,7 +56,7 @@
     </groupbox>
     <hbox pack="end">
       <button label="&button.reset;" oncommand="resetPrefs();" />
-      <button label="&button.close;" oncommand="self.close();" />
+      <button label="&button.close;" oncommand="this.close();" />
     </hbox>
   </prefpane>
 </prefwindow>

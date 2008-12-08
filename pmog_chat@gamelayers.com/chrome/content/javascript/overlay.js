@@ -27,31 +27,23 @@ peekko.Controller.prototype = Object.extend(new peekko.Config(), {
     this.statsListener = new peekko.StatsListener();
     this.roomInfo.addListener(this.statsListener);
 
-    //this.listReply = $PA();
     this.listReply = new Array();
     //this.config = new peekko.DefaultConfig();
     this.connectState = "disconnected";
 
-    if (peekko.prefs) {
-      peekko.prefs.addObserver("extensions.pmog.chat.pref.accepted", this, false
-      /* weak ref */
-      );
-
-
-    }
-
-
+    // if (peekko.prefs) {
+    //   peekko.prefs.addObserver("extensions.pmog.chat.irc.nick", this, false);
+    // }
   },
 
-observe: function(subject, topic, data) {
-    if (this.ircclient) {
-      var nick = peekko.prefs.getCharPref("extensions.pmog.chat.irc.nick");
-      this.ircclient.foundANick = false;
-      this.ircclient.runCommand("/nick " + nick);
-    }
-
-
-  },
+  // observe: function(subject, topic, data) {
+  //   if (this.ircclient) {
+  //     var nick = peekko.prefs.getCharPref("extensions.pmog.chat.irc.nick");
+  //     this.ircclient.foundANick = false;
+  //     this.ircclient.runCommand("/nick " + nick);
+  //   }
+  // },
+  
   /**
   Buttons
   =======
@@ -348,8 +340,24 @@ connect: function() {
       var timeout = peekko.prefs.getIntPref("extensions.pmog.chat.irc.timeout");
       this.ircclient.timeout = timeout;
       this.ircclient.connect(host, port);
+      
+      var irc = this.ircclient;
+      var myPrefsListener = new PrefListener("extensions.pmog.chat.irc.",
+      function(branch, name)
+      {
+        switch (name) 
+        {
+          case "nick":
+          {
+            var nick = peekko.prefs.getCharPref("extensions.pmog.chat.irc.nick");
+            irc.foundANick = false;
+            xul.chatWindow.inputs.push("/nick " + nick)
+            break;
+          }
+        }
+      });
 
-
+      myPrefsListener.register();
     }
 
 

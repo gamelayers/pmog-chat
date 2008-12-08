@@ -12,4 +12,4 @@
 <!ENTITY label.reset.history "Reset History">
 <!ENTITY button.reset.command.history "Reset Command History">
 <!ENTITY button.reset "Reset">
-<!ENTITY button.close "Close">
+<!ENTITY button.close "Ok">
