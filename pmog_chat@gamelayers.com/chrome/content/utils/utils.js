@@ -39,10 +39,11 @@
 
 // Namespaces we happen to need:
 const XHTML_NS = "http://www.w3.org/1999/xhtml";
+const SPECIAL_USERS = ["NickServ", "ChanServ"];
 
 var utils = new Object();
 
-var DEBUG = true;
+var DEBUG = false;
 var dd, warn, TEST, ASSERT;
 
 if (DEBUG) {

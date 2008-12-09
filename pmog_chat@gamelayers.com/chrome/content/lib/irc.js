@@ -510,11 +510,7 @@ irc.Client.prototype = {
     onText : function(channel, nick, message) {
         if (channel == this.nick) {
             // Private message
-            var privChat = Peekko.session.window.getChannelTab(nick);
-            if (privChat === undefined) {
-              privChat = Peekko.session.window.addTab(nick);
-              Peekko.toolbar.lazyPlaySound("chrome://pmog_chat/skin/sounds/notice.wav");
-            }
+            Peekko.session.window.getOrCreateChannelTab(nick);
             Peekko.session.window.ioMap[nick].createMessage(channel, nick, message);
         } else {
             this.createMessage(channel, nick, message);
@@ -523,12 +519,8 @@ irc.Client.prototype = {
 
     onNotice : function(message, from) {
         if (from) {
-          if (/NickServ|ChanServ/.test(from)) {
-            var privChat = Peekko.session.window.getChannelTab(from);
-            if (privChat === undefined) {
-              privChat = Peekko.session.window.addTab(from);
-              Peekko.toolbar.lazyPlaySound("chrome://pmog_chat/skin/sounds/notice.wav");
-            }
+          if (SPECIAL_USERS.indexOf(from) != -1) {
+            Peekko.session.window.getOrCreateChannelTab(from);
             Peekko.session.window.ioMap[from].createMessage(from, from, message);
           }
             //this.out.print("-" + from + "- " + message);
@@ -1269,9 +1261,6 @@ irc.Client.prototype = {
                     this.sendCommand("NOTICE", [ oMsg.nick ], 
                                      c1 + "VERSION PMOG Chat " + peekko.Version + " - GameLayers Inc." + c1);
                     break;
-                case "-NickServ-":
-                  log("From NICKSERV: " + oMsg.body);
-                  break;
                 default:                                     
                     log("Cannot dispatch on '" + oMsg.body +"'");
                 }

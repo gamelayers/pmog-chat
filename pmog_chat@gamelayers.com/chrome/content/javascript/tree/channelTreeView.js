@@ -42,7 +42,7 @@ channelTreeView.prototype = {
       var chan = this.visibleData[idx][0];
       label = chan;
       
-      if (/NickServ|ChanServ/.test(label)) {
+      if (SPECIAL_USERS.indexOf(label) != -1) {
         return label;
       }
       
@@ -82,7 +82,7 @@ channelTreeView.prototype = {
     var container;
     var text = this.visibleData[idx][0];
     
-    if (/NickServ|ChanServ/.test(text)) {
+    if (SPECIAL_USERS.indexOf(text) != -1) {
       return false;
     }
     
@@ -132,7 +132,7 @@ channelTreeView.prototype = {
   getLevel: function(idx) {
     var text = this.visibleData[idx][0];
     
-    if (/NickServ|ChanServ/.test(text)) {
+    if (SPECIAL_USERS.indexOf(text) != -1) {
       return 0;
     }
     
@@ -199,7 +199,7 @@ channelTreeView.prototype = {
     var avPath = null;
     var text = this.visibleData[idx][0];
     
-    if (/NickServ|ChanServ/.test(text)) {
+    if (SPECIAL_USERS.indexOf(text) != -1) {
       return;
     }
     
@@ -262,7 +262,7 @@ channelTreeView.prototype = {
     }
 
     var rowName = this.visibleData[idx][0];
-    var neither = /NickServ|ChanServ/.test(rowName);
+    var neither = SPECIAL_USERS.indexOf(rowName) != -1;
     if (!this.isContainer(idx) && !neither) {
       var userObj = this.userData[rowName];
       if (userObj) {
@@ -374,7 +374,11 @@ channelTreeView.prototype = {
     //this.userData[player] = {};
     //this.userData[player].idle = "false";
     //this.userData[player].isOp = /^(@|&)/.test(player);
-    this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
+    var playerObj;
+    if (!this.userData[player]) {
+      this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
+    }
+    //this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
     this.userData[player].addChannel(channel);
     this.addRow(channel, player);
   },
