@@ -189,11 +189,12 @@
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/peekko.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/version.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/client.js" />
-  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/channelTreeView.js"/>
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/xul.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/view.js" />
   <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/overlay.js" />
-  
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/tree/user.js" />
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/tree/treeChannel.js" />
+  <script type="application/x-javascript" src="chrome://pmog_chat/content/javascript/tree/channelTreeView.js" />
  
   <script type="application/x-javascript">
     <![CDATA[

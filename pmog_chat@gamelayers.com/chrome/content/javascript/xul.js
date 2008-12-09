@@ -167,7 +167,10 @@ addTab: function(title) {
       cTitle = title;
       //favicon = this.getAvatar(title);
       //this.getAvatar(title, this.setTabIcon);
-      if (channelTreeView.userData && channelTreeView.userData[title] !== undefined) {
+      var ignore = /NickServ|ChanServ/.test(cTitle);
+      if (ignore) {
+        log("Ignoring icon for NickServ/ChanServ");
+      } else if (channelTreeView.userData && channelTreeView.userData[title] !== undefined) {
         favicon = channelTreeView.userData[title].avatar;
       } else {
         channelTreeView.userData[title] = {};

@@ -5,6 +5,7 @@
  */
 function channelTreeView() {
   this.userData = {};
+  this.channelData = {};
   this.childData = {};
   this.visibleData = [];
   this.treeBox = null;
@@ -41,6 +42,10 @@ channelTreeView.prototype = {
       var chan = this.visibleData[idx][0];
       label = chan;
       
+      if (/NickServ|ChanServ/.test(label)) {
+        return label;
+      }
+      
       if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
         label = chan.replace(/_/g, ".");
         var userCount = this.childData[chan].length;
@@ -48,8 +53,8 @@ channelTreeView.prototype = {
         label = label + " (" + userCount + " " + userLabel + ")";
       }
       
-      if(!this.isContainer(idx) && this.userData[label].awayMsg) {
-        label = label + " - " + this.userData[label].awayMsg;
+      if(!this.isContainer(idx) && this.userData[label].isAway()) {
+        label = label + " - " + this.userData[label].getAwayMessage();
       }
       
       label = label.replace(/^(@|&)/, '');
@@ -75,6 +80,12 @@ channelTreeView.prototype = {
 
   isContainer: function(idx) {
     var container;
+    var text = this.visibleData[idx][0];
+    
+    if (/NickServ|ChanServ/.test(text)) {
+      return false;
+    }
+    
     try {
       container = this.visibleData[idx][1];
     } catch(e) {
@@ -119,6 +130,12 @@ channelTreeView.prototype = {
   },
   
   getLevel: function(idx) {
+    var text = this.visibleData[idx][0];
+    
+    if (/NickServ|ChanServ/.test(text)) {
+      return 0;
+    }
+    
     if (this.isContainer(idx)) {
       return 0;
     }
@@ -173,13 +190,19 @@ channelTreeView.prototype = {
 
   setAvatar: function(player, avatarPath) {
     if (player !== null) {
-      channelTreeView.userData[player].avatar = avatarPath;
+      channelTreeView.userData[player].setAvatar(avatarPath);
       channelTreeView.treeBox.invalidate();
     }
   },
 
   getImageSrc: function(idx, column) {
     var avPath = null;
+    var text = this.visibleData[idx][0];
+    
+    if (/NickServ|ChanServ/.test(text)) {
+      return;
+    }
+    
     if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
       var chan = this.visibleData[idx][0].replace(/_/g, ".");
       avPath = Peekko.session.window.getFavicon(chan);
@@ -190,11 +213,11 @@ channelTreeView.prototype = {
       }
       
       if (!this.userData[playerName]) {
-        this.userData[playerName] = {};
+        this.userData[playerName] = new User(playerName);
       }
       
-      if (this.userData[playerName].avatar) {
-        avPath = this.userData[playerName].avatar;
+      if (this.userData[playerName].getAvatar()) {
+        avPath = this.userData[playerName].getAvatar();
       } else {
         Peekko.session.window.getAvatar(playerName, this.setAvatar);
       }
@@ -239,17 +262,18 @@ channelTreeView.prototype = {
     }
 
     var rowName = this.visibleData[idx][0];
-    
-    if (!this.isContainer(idx)) {
+    var neither = /NickServ|ChanServ/.test(rowName);
+    if (!this.isContainer(idx) && !neither) {
       var userObj = this.userData[rowName];
       if (userObj) {
+        properties.AppendElement(this.atomCache["op-" + userObj.isOperator()]);
+        properties.AppendElement(this.atomCache["away-" + userObj.isIdle()]);
+        properties.AppendElement(this.atomCache["player-true"]);
+        // Some stuff we could implement in the future...
         //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
-        properties.AppendElement(this.atomCache["op-" + userObj.isOp]);
         //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
         //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
         //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
-        properties.AppendElement(this.atomCache["away-" + userObj.idle]);
-        properties.AppendElement(this.atomCache["player-true"]);
       }
     } else {
       properties.AppendElement(this.atomCache["player-false"]);
@@ -300,6 +324,7 @@ channelTreeView.prototype = {
 
     if (!matching) {
       this.childData[name] = [];
+      this.channelData[name] = new TreeChannel(name);
       this.visibleData.push([name, true, open, type]);
       this.treeBox.rowCountChanged(this.visibleData.length - 1, 1);
     }
@@ -346,9 +371,11 @@ channelTreeView.prototype = {
     if (!this.hasChannel(channel)) {
       this.addChannel(channel);
     }
-    this.userData[player] = {};
-    this.userData[player].idle = "false";
-    this.userData[player].isOp = /^(@|&)/.test(player);
+    //this.userData[player] = {};
+    //this.userData[player].idle = "false";
+    //this.userData[player].isOp = /^(@|&)/.test(player);
+    this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
+    this.userData[player].addChannel(channel);
     this.addRow(channel, player);
   },
 

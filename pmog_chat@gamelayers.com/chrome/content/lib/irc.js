@@ -365,7 +365,8 @@ irc.Client.prototype = {
         this.connected = false;
         this.connectStartTime = 0;
         // this.out;// = new io.ChatWriter("console", "panel-console");
-        this.out = new io.FakeLogWriter();
+        //this.out = new io.FakeLogWriter();
+        this.out;
         this.err = new io.LogWriter();
         this.channel = new irc.Channel();
         this.channels = new Array();
@@ -388,7 +389,7 @@ irc.Client.prototype = {
     
     createMessage: function(channel, nick, message) {
       var cSentTo = this.cleanChannelName(channel);
-      channelTreeView.userData[nick].idle = "false";
+      channelTreeView.userData[nick].setIdle(false);
       channelTreeView.treeBox.invalidate();
       Peekko.session.window.ioMap[cSentTo].createMessage(channel, nick, message);
     },
@@ -522,7 +523,15 @@ irc.Client.prototype = {
 
     onNotice : function(message, from) {
         if (from) {
-            this.out.print("-" + from + "- " + message);
+          if (/NickServ|ChanServ/.test(from)) {
+            var privChat = Peekko.session.window.getChannelTab(from);
+            if (privChat === undefined) {
+              privChat = Peekko.session.window.addTab(from);
+              Peekko.toolbar.lazyPlaySound("chrome://pmog_chat/skin/sounds/notice.wav");
+            }
+            Peekko.session.window.ioMap[from].createMessage(from, from, message);
+          }
+            //this.out.print("-" + from + "- " + message);
         } else {
             this.out.print(message);
         }
@@ -537,7 +546,7 @@ irc.Client.prototype = {
     },
     
     onErrorMessage : function(msg) {
-        this.broadcast("XXX Error! XXX: " + msg);        
+        this.broadcast("XXX Error! XXX: " + msg);
     },
 
     onJoin : function(nick, channel) {
@@ -663,7 +672,7 @@ irc.Client.prototype = {
     onRegistered : function() {
 
       this.initCommands = new Array();
-      this.initCommands.push("/join #pmog.com");
+      //this.initCommands.push("/join #pmog.com");
       while ((command = this.initCommands.shift()) != null) {
           var oCommand = this.executeLocalInput(command);
           if (oCommand) {
@@ -1098,7 +1107,7 @@ irc.Client.prototype = {
         Reference: http://www.irchelp.org/irchelp/rfc/rfc2812.txt
     */
     processMsg : function(sMsg) {
-        //log("processing message: " + sMsg);
+        log("processing message: " + sMsg);
         if (sMsg == "" || sMsg.match(/^\s*$/)) {
             return;
         }
@@ -1258,8 +1267,11 @@ irc.Client.prototype = {
                 case "VERSION":
                     var c1 = String.fromCharCode(1);
                     this.sendCommand("NOTICE", [ oMsg.nick ], 
-                                     c1 + "VERSION Peekko Chat " + peekko.Version + " - Shane Celis" + c1);
+                                     c1 + "VERSION PMOG Chat " + peekko.Version + " - GameLayers Inc." + c1);
                     break;
+                case "-NickServ-":
+                  log("From NICKSERV: " + oMsg.body);
+                  break;
                 default:                                     
                     log("Cannot dispatch on '" + oMsg.body +"'");
                 }
@@ -1336,8 +1348,8 @@ irc.Client.prototype = {
         case 301 : // away
             this.out.print("301 " + oMsg.parameters[1] + " is away: " + oMsg.body);
             if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
-              channelTreeView.userData[oMsg.parameters[1]].idle = "true";
-              channelTreeView.userData[oMsg.parameters[1]].awayMsg = oMsg.body;
+              channelTreeView.userData[oMsg.parameters[1]].setIdle(true);
+              channelTreeView.userData[oMsg.parameters[1]].setAwayMessage(oMsg.body);
             }
             break;
         case 307 : // nick is a registered nick
@@ -1355,7 +1367,7 @@ irc.Client.prototype = {
         case 313 : // nick is a channel operator
             this.out.print("313 " + oMsg.parameters[1] + " " + oMsg.body);
             if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
-              channelTreeView.userData[oMsg.parameters[1]].isOp = "true";
+              channelTreeView.userData[oMsg.parameters[1]].setOperator(true);
             }
             break;
         case 315 : // ENDOFWHO
@@ -1365,7 +1377,7 @@ irc.Client.prototype = {
             this.out.print("317 " + oMsg.parameters[1] + " has been idle " + oMsg.parameters[2] + " seconds");
             if ((parseInt(oMsg.parameters[2]) / 60) > 5) {
               if (channelTreeView.userData[oMsg.parameters[1]] !== undefined) {
-                channelTreeView.userData[oMsg.parameters[1]].idle = "true";
+                channelTreeView.userData[oMsg.parameters[1]].setIdle(true);
               }
             }
             break;
