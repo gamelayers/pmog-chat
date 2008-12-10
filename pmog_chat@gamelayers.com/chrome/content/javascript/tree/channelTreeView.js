@@ -6,7 +6,7 @@
 function channelTreeView() {
   this.userData = {};
   this.channelData = {};
-  this.childData = {};
+  //this.childData = {};
   this.visibleData = [];
   this.treeBox = null;
   this.selection = null;
@@ -48,7 +48,8 @@ channelTreeView.prototype = {
       
       if (this.isContainer(idx) && this.visibleData[idx][3] === "channel") {
         label = chan.replace(/_/g, ".");
-        var userCount = this.childData[chan].length;
+        //var userCount = this.childData[chan].length;
+        var userCount = this.channelData[chan].getUsers().size();
         var userLabel = (userCount == 1 ? "user": "users");
         label = label + " (" + userCount + " " + userLabel + ")";
       }
@@ -57,7 +58,6 @@ channelTreeView.prototype = {
         label = label + " - " + this.userData[label].getAwayMessage();
       }
       
-      label = label.replace(/^(@|&)/, '');
     } catch(e) {
       label = "";
     }
@@ -79,18 +79,22 @@ channelTreeView.prototype = {
   },
 
   isContainer: function(idx) {
-    var container;
+    var container = false;
     var text = this.visibleData[idx][0];
+    text = this.cleanChannel(text);
     
     if (SPECIAL_USERS.indexOf(text) != -1) {
       return false;
     }
-    
-    try {
-      container = this.visibleData[idx][1];
-    } catch(e) {
-      container = false;
+
+    if (this.channelData[text] && !this.channelData[text].isPrivateChat()) {
+      container = true;
     }
+    // try {
+    //   container = this.visibleData[idx][1];
+    // } catch(e) {
+    //   container = false;
+    // }
     return container;
   },
   
@@ -99,7 +103,14 @@ channelTreeView.prototype = {
   },
   
   isContainerEmpty: function(idx) {
-    return false;
+    var isEmpty = false;
+    var text = this.visibleData[idx][0];
+    
+    if (this.channelData[text].isPrivateChat()) {
+      isEmpty = true;
+    }
+    
+    return isEmpty;
   },
   
   isSeparator: function(idx) {
@@ -180,7 +191,8 @@ channelTreeView.prototype = {
       item[2] = true;
 
       var label = this.visibleData[idx][0];
-      var toinsert = this.childData[label];
+      //var toinsert = this.childData[label];
+      var toinsert = this.channelData[label].sortUsers();
       for (var i = 0; i < toinsert.length; i++) {
         this.visibleData.splice(idx + i + 1, 0, [toinsert[i], false, false]);
       }
@@ -212,9 +224,9 @@ channelTreeView.prototype = {
         playerName = playerName.split(" - ")[0];
       }
       
-      if (!this.userData[playerName]) {
-        this.userData[playerName] = new User(playerName);
-      }
+      // if (!this.userData[playerName]) {
+      //   this.userData[playerName] = new User(playerName);
+      // }
       
       if (this.userData[playerName].getAvatar()) {
         avPath = this.userData[playerName].getAvatar();
@@ -239,7 +251,8 @@ channelTreeView.prototype = {
   performActionOnCell: function(action, index, column) {},
   
   getRowProperties: function(idx, column, properties) {
-    if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+    //if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+    if ((idx < 0) || !properties) {
       return;
     }
 
@@ -252,7 +265,8 @@ channelTreeView.prototype = {
   },
   
   getCellProperties: function(idx, column, properties) {
-    if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+    //if ((idx < 0) || (idx >= this.childData.length) || !properties) {
+    if ((idx < 0) || !properties) {
       return;
     }
 
@@ -264,9 +278,10 @@ channelTreeView.prototype = {
     var rowName = this.visibleData[idx][0];
     var neither = SPECIAL_USERS.indexOf(rowName) != -1;
     if (!this.isContainer(idx) && !neither) {
+      var parentChannel = this.visibleData[this.getParentIndex(idx)][0];
       var userObj = this.userData[rowName];
       if (userObj) {
-        properties.AppendElement(this.atomCache["op-" + userObj.isOperator()]);
+        properties.AppendElement(this.atomCache["op-" + userObj.isOpInChannel(parentChannel)]);
         properties.AppendElement(this.atomCache["away-" + userObj.isIdle()]);
         properties.AppendElement(this.atomCache["player-true"]);
         // Some stuff we could implement in the future...
@@ -296,17 +311,12 @@ channelTreeView.prototype = {
 
     if (index !== undefined) {
       var label = this.visibleData[index][0];
-      var toinsert = this.childData[label];
+      var toinsert = this.channelData[label];
 
-      if (toinsert.indexOf(value) == -1) {
-        toinsert.push(value);
-        //toinsert.sort();
-
-        if (this.isContainerOpen(index)) {
-          this.visibleData.splice(index + toinsert.length, 0, [value, false]);
-          this.treeBox.rowCountChanged(index + toinsert.length - 1, 1);
-          this.treeBox.invalidate();
-        }
+      if (this.isContainerOpen(index)) {
+        this.visibleData.splice(index + toinsert.sortUsers().length, 0, [value, false]);
+        this.treeBox.rowCountChanged(index + toinsert.sortUsers().length - 1, 1);
+        this.treeBox.invalidate();
       }
     }
   },
@@ -315,16 +325,9 @@ channelTreeView.prototype = {
     name = this.cleanChannel(name);
     type = type || "channel";
     var open = (type == "channel" ? true: false);
-    var matching = false;
-    for (var i = 0; i < this.visibleData.length; i++) {
-      if (this.isContainer(i) && this.visibleData[i][0] === name) {
-        matching = true;
-      }
-    }
-
-    if (!matching) {
-      this.childData[name] = [];
-      this.channelData[name] = new TreeChannel(name);
+    
+    if (!this.channelData[name]) {
+      this.channelData[name] = new TreeChannel(name, { type: type });
       this.visibleData.push([name, true, open, type]);
       this.treeBox.rowCountChanged(this.visibleData.length - 1, 1);
     }
@@ -359,37 +362,42 @@ channelTreeView.prototype = {
       this.visibleData.splice(visIndex, deletecount);
       this.treeBox.rowCountChanged(visIndex, -deletecount);
     }
-
-    // Finally, remove them from the actual data collection so we don't get them again.'
-    if (this.childData[name]) {
-      delete this.childData[name];
+    
+    for (var u in this.channelData[name].getUsers()) {
+      u.removeChannel(name);
+    }
+    
+    if (this.channelData[name]) {
+      delete this.channelData[name];
     }
   },
 
   addPlayer: function(channel, player) {
     channel = this.cleanChannel(channel);
-    if (!this.hasChannel(channel)) {
+    if (!this.channelData[channel]) {
       this.addChannel(channel);
     }
-    //this.userData[player] = {};
-    //this.userData[player].idle = "false";
-    //this.userData[player].isOp = /^(@|&)/.test(player);
-    var playerObj;
-    if (!this.userData[player]) {
-      this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
+    
+    var isOp = /^(@|&)/.test(player);
+    var noOpSymb = player;
+    if (isOp) {
+      noOpSymb = player.replace(/^(@|&)/, ""); 
     }
-    //this.userData[player] = new User(player, { isIdle: false, isOperator: /^(@|&)/.test(player) });
-    this.userData[player].addChannel(channel);
-    this.addRow(channel, player);
+    
+    if (!this.userData[noOpSymb]) {
+      this.userData[noOpSymb] = new User(noOpSymb, { isIdle: false });
+    }
+    
+    this.userData[noOpSymb].addChannel(channel, isOp);
+    this.channelData[channel].addUser(noOpSymb);
+    this.addRow(channel, noOpSymb);
   },
 
   hasChannel: function(name) {
     name = this.cleanChannel(name);
     var matching = false;
-    for (var i = 0; i < this.visibleData.length; i++) {
-      if (this.isContainer(i) && this.visibleData[i][0] === name) {
-        matching = true;
-      }
+    if (this.channelData[name]) {
+      matching = true;
     }
     return matching;
   },
@@ -436,10 +444,14 @@ channelTreeView.prototype = {
       }
     }
 
+    this.channelData[channel].removeUser(name);
+
     // Finally, remove them from the actual data collection so we don't get them again.'
-    if (this.childData[channel]) {
-      var index = this.childData[channel].indexOf(name);
-      this.childData[channel].splice(index, 1);
+    //if (this.childData[channel]) {
+    if (this.userData[name]) {
+      //var index = this.childData[channel].indexOf(name);
+      delete this.userData[name];
+    //this.childData[channel].splice(index, 1);
     }
   },
 };

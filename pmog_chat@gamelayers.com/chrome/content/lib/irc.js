@@ -306,16 +306,23 @@ irc.Channel = function(name) {
     }
     
     this.hasUser = function(user) {
-        return new RegExp(user).test(this.users);
+        log("Checking for user: " + user);
+        var doesHave = false;
+        if (new RegExp(user).test(this.users)) {
+          doesHave = true
+        }
+        log("Check says: " + doesHave);
+        return doesHave;
     }
     
     this.addUser = function(user) {
-        if (! this.hasUser(user)) {
+      cUser = user.replace(/^(@|&)/, '');
+        if (! this.hasUser(cUser)) {
             this.users.push(user)
-            if (! this.isPrivate()) {
+            // if (! this.isPrivate()) {
               channelTreeView.addPlayer(this.name, user);
-            }
-            Peekko.ircclient.sendCommand("WHOIS", [user.replace(/^(@|&)/, '')]);
+            // }
+            //Peekko.ircclient.sendCommand("WHOIS", [user.replace(/^(@|&)/, '')]);
         }
     }
     
@@ -479,15 +486,15 @@ irc.Client.prototype = {
         this.broadcast("*** " + oldNick + " is known as " + newNick);
         channelTreeView.userData[newNick] = channelTreeView.userData[oldNick];
         delete channelTreeView.userData[oldNick];
-        for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
-          if (channelTreeView.isContainer(i)) {
-            var cKey = channelTreeView.visibleData[i][0];
-            var cData = channelTreeView.childData[cKey].indexOf(oldNick);
-            if (cData != -1) {
-              channelTreeView.childData[cKey][cData] = newNick;
-            }
-          }
-        }
+        // for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
+        //   if (channelTreeView.isContainer(i)) {
+        //     var cKey = channelTreeView.visibleData[i][0];
+        //     var cData = channelTreeView.childData[cKey].indexOf(oldNick);
+        //     if (cData != -1) {
+        //       channelTreeView.childData[cKey][cData] = newNick;
+        //     }
+        //   }
+        // }
         
         for (var i = channelTreeView.visibleData.length - 1; i >= 0; i--){
           if (channelTreeView.visibleData[i][0] === oldNick) {
@@ -510,7 +517,14 @@ irc.Client.prototype = {
     onText : function(channel, nick, message) {
         if (channel == this.nick) {
             // Private message
-            Peekko.session.window.getOrCreateChannelTab(nick);
+            var firstMsg = false;
+            if (!Peekko.session.window.getChannelTab(channel)) {
+              firstMsg = true;
+            }
+            var chatTab = Peekko.session.window.getOrCreateChannelTab(nick);
+            if (firstMsg) {
+              Peekko.session.window.selectTab(chatTab);
+            }
             Peekko.session.window.ioMap[nick].createMessage(channel, nick, message);
         } else {
             this.createMessage(channel, nick, message);
@@ -520,7 +534,14 @@ irc.Client.prototype = {
     onNotice : function(message, from) {
         if (from) {
           if (SPECIAL_USERS.indexOf(from) != -1) {
-            Peekko.session.window.getOrCreateChannelTab(from);
+            var firstMsg = false;
+            if (!Peekko.session.window.getChannelTab(from)) {
+              firstMsg = true;
+            }
+            var chatTab = Peekko.session.window.getOrCreateChannelTab(from);
+            if (firstMsg) {
+              Peekko.session.window.selectTab(chatTab);
+            }
             Peekko.session.window.ioMap[from].createMessage(from, from, message);
           }
             //this.out.print("-" + from + "- " + message);
@@ -547,7 +568,9 @@ irc.Client.prototype = {
       if (channelTab === undefined) {
         channelTab = Peekko.session.window.addTab(channel);
       }
-      Peekko.session.window.selectTab(channelTab);
+      if (this.nick === nick) {
+        Peekko.session.window.selectTab(channelTab);
+      }
       this.print(channel, "*** " + this.yourNick(nick) + " joined channel " + channel);
     },
     
@@ -1099,7 +1122,7 @@ irc.Client.prototype = {
         Reference: http://www.irchelp.org/irchelp/rfc/rfc2812.txt
     */
     processMsg : function(sMsg) {
-        log("processing message: " + sMsg);
+        //log("processing message: " + sMsg);
         if (sMsg == "" || sMsg.match(/^\s*$/)) {
             return;
         }

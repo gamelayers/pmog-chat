@@ -41,6 +41,7 @@ User.prototype = {
   initChannels: function() {
     if (!this._channels) {
       this._channels = [];
+      this._opInChannels = [];
     }
   },
   
@@ -48,15 +49,28 @@ User.prototype = {
     return this._channels.indexOf(channel) != -1;
   },
   
-  addChannel: function(channel) {
+  isOpInChannel: function(channel) {
+    return this._opInChannels.indexOf(channel) != -1;
+  },
+  
+  addChannel: function(channel, isOp) {
+    var isOp = isOp || false;
     if (!this.inChannel(channel)) {
       this._channels.push(channel);
+      
+      if (isOp) {
+        this._opInChannels.push(channel);
+      }
     }
   },
   
   removeChannel: function(channel) {
     if (this.inChannel(channel)) {
       this._channels.splice(this._channels.indexOf(channel), 1);
+    }
+    
+    if (this.isOpInChannel(channel)) {
+      this._opInChannels.splice(this._opInChannels.indexOf(channel), 1);
     }
   },
   

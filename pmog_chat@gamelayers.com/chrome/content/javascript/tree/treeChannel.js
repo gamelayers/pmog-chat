@@ -1,5 +1,7 @@
-var TreeChannel = function(name) {
+var TreeChannel = function(name, props) {
   this.setName(name);
+  var props = props || {};
+  this.setChatType(props.type);
   this.initUsers();
 }
 
@@ -33,7 +35,15 @@ TreeChannel.prototype = {
   },
   
   sortUsers: function() {
-    return this._users.sort();
+    return this._users.sortBy(function(s) { return s.toLowerCase(); });
+  },
+  
+  setChatType: function(type) {
+    this._type = type || "channel";
+  },
+  
+  isPrivateChat: function() {
+    return this._type === "private";
   }
 }
 
