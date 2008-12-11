@@ -687,7 +687,7 @@ irc.Client.prototype = {
     onRegistered : function() {
 
       this.initCommands = new Array();
-      //this.initCommands.push("/join #pmog.com");
+      this.initCommands.push("/join #pmog.com");
       while ((command = this.initCommands.shift()) != null) {
           var oCommand = this.executeLocalInput(command);
           if (oCommand) {
