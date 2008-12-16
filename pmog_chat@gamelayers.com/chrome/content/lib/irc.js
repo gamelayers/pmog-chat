@@ -517,12 +517,8 @@ irc.Client.prototype = {
     onText : function(channel, nick, message) {
         if (channel == this.nick) {
             // Private message
-            var firstMsg = false;
-            if (!Peekko.session.window.getChannelTab(channel)) {
-              firstMsg = true;
-            }
             var chatTab = Peekko.session.window.getOrCreateChannelTab(nick);
-            if (firstMsg) {
+            if (Peekko.session.window.tabcontainer.tabs.itemCount <= 1) {
               Peekko.session.window.selectTab(chatTab);
             }
             Peekko.session.window.ioMap[nick].createMessage(channel, nick, message);
@@ -534,12 +530,8 @@ irc.Client.prototype = {
     onNotice : function(message, from) {
         if (from) {
           if (SPECIAL_USERS.indexOf(from) != -1) {
-            var firstMsg = false;
-            if (!Peekko.session.window.getChannelTab(from)) {
-              firstMsg = true;
-            }
             var chatTab = Peekko.session.window.getOrCreateChannelTab(from);
-            if (firstMsg) {
+            if (Peekko.session.window.tabcontainer.tabs.itemCount <= 1) {
               Peekko.session.window.selectTab(chatTab);
             }
             Peekko.session.window.ioMap[from].createMessage(from, from, message);
