@@ -97,7 +97,7 @@ profileButton: function() {
     var user = channelTreeView.getCellText(channelTreeView.treeBox.view.selection.currentIndex);
 
     //user = user.replace(/\@/, '');
-    newWindow.getBrowser().addTab(newWindow.jQuery.pmog.BASE_URL + "/users/" + user);
+    newWindow.getBrowser().addTab(newWindow.Pmog.BASE_URL + "/users/" + user);
 
   },
 
@@ -307,7 +307,7 @@ End of Events
 connect: function() {
     if (!this.ircclient) {
 
-    var pmogUsername = getBrowserWindow().jQuery.pmog.pmog.user.login;
+    var pmogUsername = getBrowserWindow().Pmog.user.login;
     if (pmogUsername) {
       peekko.prefs.setCharPref("extensions.pmog.chat.irc.username", pmogUsername);
       peekko.prefs.setCharPref("extensions.pmog.chat.irc.nick", pmogUsername);

@@ -28,9 +28,9 @@
               insertbefore="pmog_action_menu_separator" />
   </menupopup>
 
-  <toolbar id="pmog_toolbar">
+  <toolbar id="pmog_hud">
     <toolbarbutton id="pmog_chat_button"
-                  insertbefore="pmog_avatar"
+                  insertbefore="profile-button"
                   observes="Tasks:OpenChat"
                   image="chrome://pmog_chat/skin/images/chat-24-gold.png"
                   label="Chat"

@@ -66,7 +66,7 @@ function log(msg) {
   }
   
   function openChatLink(event) {
-    getBrowserWindow().jQuery.pmog.pmog.hud.openAndReuseOneTabPerURL(event.target.getAttribute('lnk'));
+    getBrowserWindow().Pmog.hud.openAndReuseOneTabPerURL(event.target.getAttribute('lnk'));
   }
   
   /**

@@ -369,7 +369,7 @@ tabChange: function() {
 getAvatar: function(player, callback) {
         var newWindow = getBrowserWindow();
 
-        newWindow.jQuery.pmog.getAvatar(player, callback);
+        newWindow.Pmog.getAvatar(player, callback);
 
     }
 
