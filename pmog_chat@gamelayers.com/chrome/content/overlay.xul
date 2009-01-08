@@ -32,8 +32,8 @@
     <toolbarbutton id="pmog_chat_button"
                   insertbefore="profile-button"
                   observes="Tasks:OpenChat"
-                  image="chrome://pmog_chat/skin/images/chat-24-gold.png"
+                  image="chrome://pmog_chat/skin/images/chat-16-gold.png"
                   label="Chat"
-                  tiptext="CHAT across websites" />
+                  tiptext="Chat across websites" />
   </toolbar>
 </overlay>
