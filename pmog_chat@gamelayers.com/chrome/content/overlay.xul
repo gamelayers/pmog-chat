@@ -34,6 +34,7 @@
                   observes="Tasks:OpenChat"
                   image="chrome://pmog_chat/skin/images/chat-16-gold.png"
                   label="Chat"
+                  class="icononly toolbar-button"
                   tiptext="Chat across websites" />
   </toolbar>
 </overlay>
