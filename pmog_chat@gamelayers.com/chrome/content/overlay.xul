@@ -30,7 +30,7 @@
 
   <toolbar id="pmog_hud">
     <toolbarbutton id="pmog_chat_button"
-                  insertbefore="profile-button"
+                  insertbefore="messageform-button"
                   observes="Tasks:OpenChat"
                   image="chrome://pmog_chat/skin/images/chat-16-gold.png"
                   label="Chat"
