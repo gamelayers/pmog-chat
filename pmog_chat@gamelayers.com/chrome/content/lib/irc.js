@@ -939,10 +939,6 @@ irc.Client.prototype = {
                     break;
                 case "j":
                 case "join":
-                    if (args.length != 1) {
-                        this.out.print("*** join <channel>");
-                        return null;
-                    }
                     var channel = args[0];
                     var oChannel = this.getChannel(channel);
                     if (oChannel) {
