@@ -1,4 +1,4 @@
-<!ENTITY pmogchat.title              "PMOG Chat">
+<!ENTITY pmogchat.title              "The Nethernet Chat">
 
 <!ENTITY file.label                  "File">
 <!ENTITY file.accesskey              "F">
@@ -34,8 +34,8 @@
 <!ENTITY toolsOptions.accesskey      "O">
 <!ENTITY toolsOptions.tooltip        "Edit chat preferences">
 
-<!ENTITY help.label                  "#pmog-help">
-<!ENTITY help.tooltip                "Join the PMOG help chat channel">
+<!ENTITY help.label                  "#thenethernet-help">
+<!ENTITY help.tooltip                "Join the The Nethernet help chat channel">
 <!ENTITY help.accesskey              "H">
 
 <!ENTITY helpAbout.label             "About">

@@ -15,7 +15,7 @@
 
   <menupopup id="menu_ToolsPopup">
     <menuitem id="menu_pmogchat"
-              label="PMOG Chat"
+              label="The Nethernet Chat"
               observes="Tasks:OpenChat"
               class="menu-iconic-wide" />
   </menupopup>
@@ -23,7 +23,7 @@
   <menupopup id="pmog_actions">
     <menuitem id="pmog_chat_menu"
               class="menu-iconic globe_icon pmog_menu_item"
-              label="PMOG Chat"
+              label="The Nethernet Chat"
               observes="Tasks:OpenChat"
               insertbefore="pmog_action_menu_separator" />
   </menupopup>

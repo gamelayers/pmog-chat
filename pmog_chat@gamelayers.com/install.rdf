@@ -26,8 +26,8 @@
       </Description>
     </em:targetApplication>
 
-    <em:name>Pmog Chat</em:name>
-    <em:description>Chat with your PMOG friends on your favorite websites</em:description>
+    <em:name>The Nethernet Chat</em:name>
+    <em:description>Chat with your Nethernet friends on your favorite websites</em:description>
     <em:creator>GameLayers</em:creator>
     <em:iconURL>chrome://pmog_chat/skin/images/chat-32-gold.png</em:iconURL>
     <em:homepageURL>http://pmog.com/</em:homepageURL>
