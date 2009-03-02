@@ -30,7 +30,7 @@
     <em:description>Chat with your Nethernet friends on your favorite websites</em:description>
     <em:creator>GameLayers</em:creator>
     <em:iconURL>chrome://pmog_chat/skin/images/chat-32-gold.png</em:iconURL>
-    <em:homepageURL>http://pmog.com/</em:homepageURL>
+    <em:homepageURL>http://thenethernet.com/</em:homepageURL>
     <em:optionsURL>chrome://pmog_chat/content/options.xul</em:optionsURL>
     </Description>
 </RDF>

@@ -108,7 +108,7 @@ var chatController = {
       }
       case "Tasks:JoinHelp": 
       {
-        Peekko.joinChannel('#pmog-help');
+        Peekko.joinChannel('#thenethernet-help');
         break;
       }
       case "Tasks:ClearChat":

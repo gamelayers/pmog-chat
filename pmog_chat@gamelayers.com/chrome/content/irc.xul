@@ -102,7 +102,7 @@
       <toolbarbutton orient="vertical" id="updateButton" label="&refresh.label;" tooltiptext="&refresh.tooltip;" command="Tasks:Refresh" />
       <toolbarbutton orient="vertical" id="joinButton" label="&join.label;" tooltiptext="&join.tooltip;" command="Tasks:JoinChannel" />
       <toolbaritem orient="vertical" pack="center">
-        <label id="joinChannelLabel" value="#pmog.com" />
+        <label id="joinChannelLabel" value="#thenethernet.com" />
       </toolbaritem>
       <toolbarspring flex="1" />
       <toolbarbutton orient="vertical" id="preferencesButton" label="&toolsOptions.label;" tooltiptext="&toolsOptions.tooltip;" command="Tasks:ChatOptions" key="Key:Options" />
