@@ -418,9 +418,14 @@ treechildren:-moz-tree-cell(op-true) {
   background-color: rgba(255,0,0,0.34);
 }
 
-treechildren:-moz-tree-cell-text(op-true) {
-	color: #fff;
+treechildren:-moz-tree-cell-text(op-true),
+treechildren:-moz-tree-cell-text(halfop-true) {
+	color: #4c4c4c;
 	font-weight: bold;
+}
+
+treechildren:-moz-tree-cell(halfop-true) {
+  background-color: rgba(255,121,0,0.35);
 }
 
 treechildren:-moz-tree-cell-text(player-false) {

@@ -316,7 +316,7 @@ irc.Channel = function(name) {
     }
     
     this.addUser = function(user) {
-      cUser = user.replace(/^(@|&)/, '');
+      cUser = user.replace(/^(@|&|%)/, '');
         if (! this.hasUser(cUser)) {
             this.users.push(user)
             // if (! this.isPrivate()) {

@@ -42,6 +42,7 @@ User.prototype = {
     if (!this._channels) {
       this._channels = [];
       this._opInChannels = [];
+      this._halfOpInChannels = [];
     }
   },
   
@@ -53,13 +54,23 @@ User.prototype = {
     return this._opInChannels.indexOf(channel) != -1;
   },
   
-  addChannel: function(channel, isOp) {
-    var isOp = isOp || false;
+  isHalfOpInChannel: function(channel) {
+    return this._halfOpInChannels.indexOf(channel) != -1;
+  },
+  
+  addChannel: function(channel, options) {
+    var opts = options || {};
+    var isOp = opts["isOperator"] || false;
+    var isHalfOp = opts["isHalfOperator"] || false;
     if (!this.inChannel(channel)) {
       this._channels.push(channel);
       
       if (isOp) {
         this._opInChannels.push(channel);
+      }
+      
+      if (isHalfOp) {
+        this._halfOpInChannels.push(channel);
       }
     }
   },

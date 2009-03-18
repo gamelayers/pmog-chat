@@ -286,7 +286,7 @@ channelTreeView.prototype = {
         properties.AppendElement(this.atomCache["player-true"]);
         // Some stuff we could implement in the future...
         //properties.AppendElement(this.atomCache["voice-" + userObj.isVoice]);
-        //properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOp]);
+        properties.AppendElement(this.atomCache["halfop-" + userObj.isHalfOpInChannel(parentChannel)]);
         //properties.AppendElement(this.atomCache["admin-" + userObj.isAdmin]);
         //properties.AppendElement(this.atomCache["founder-" + userObj.isFounder]);
       }
@@ -379,16 +379,20 @@ channelTreeView.prototype = {
     }
     
     var isOp = /^(@|&)/.test(player);
+    var isHalfOp = /^(%)/.test(player);
     var noOpSymb = player;
+    
     if (isOp) {
       noOpSymb = player.replace(/^(@|&)/, ""); 
+    } else if (isHalfOp) {
+      noOpSymb = player.replace(/^(%)/, "");
     }
     
     if (!this.userData[noOpSymb]) {
       this.userData[noOpSymb] = new User(noOpSymb, { isIdle: false });
     }
     
-    this.userData[noOpSymb].addChannel(channel, isOp);
+    this.userData[noOpSymb].addChannel(channel, {isOperator: isOp, isHalfOperator: isHalfOp});
     this.channelData[channel].addUser(noOpSymb);
     this.addRow(channel, noOpSymb);
   },
