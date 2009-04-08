@@ -28,13 +28,15 @@
               insertbefore="pmog_action_menu_separator" />
   </menupopup>
 
-  <toolbar id="pmog-toolbar">
+  <toolbox id="navigator-toolbox">
+    <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton id="pmog_chat_button"
                   insertbefore="messageform-button"
                   observes="Tasks:OpenChat"
                   image="chrome://pmog_chat/skin/images/chat-16-gold.png"
-                  label="Chat"
+                  label=""
                   class="toolbar-button"
                   tiptext="Chat across websites" />
-  </toolbar>
+    </toolbarpalette>
+  </toolbox>
 </overlay>
