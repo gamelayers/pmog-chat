@@ -11,5 +11,6 @@
 <!ENTITY caption.autocomplete.info "Autocomplete Info">
 <!ENTITY label.reset.history "Reset History">
 <!ENTITY button.reset.command.history "Reset Command History">
+<!ENTITY button.esc "Or, press Escape to close">
 <!ENTITY button.reset "Reset">
 <!ENTITY button.close "Ok">

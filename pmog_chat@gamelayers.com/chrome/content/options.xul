@@ -57,6 +57,7 @@
     <hbox pack="end">
       <button label="&button.reset;" oncommand="resetPrefs();" />
       <button label="&button.close;" oncommand="this.close();" />
+    	<caption label="&button.esc;" />
     </hbox>
   </prefpane>
 </prefwindow>
