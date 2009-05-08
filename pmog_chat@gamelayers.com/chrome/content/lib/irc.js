@@ -679,7 +679,7 @@ irc.Client.prototype = {
     onRegistered : function() {
 
       this.initCommands = new Array();
-      this.initCommands.push("/join #thenethernet.com");
+      this.initCommands.push("/join #thenethernet-help");
       while ((command = this.initCommands.shift()) != null) {
           var oCommand = this.executeLocalInput(command);
           if (oCommand) {

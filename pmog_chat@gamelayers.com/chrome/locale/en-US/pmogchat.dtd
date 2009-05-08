@@ -34,8 +34,8 @@
 <!ENTITY toolsOptions.accesskey      "O">
 <!ENTITY toolsOptions.tooltip        "Edit chat preferences">
 
-<!ENTITY help.label                  "#thenethernet-help">
-<!ENTITY help.tooltip                "Join the The Nethernet help chat channel">
+<!ENTITY help.label                  "#thenethernet.com">
+<!ENTITY help.tooltip                "Join the The Nethernet main channel">
 <!ENTITY help.accesskey              "H">
 
 <!ENTITY helpAbout.label             "About">
